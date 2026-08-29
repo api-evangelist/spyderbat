@@ -64,5 +64,19 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Spyderbat is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Spyderbat is a cloud-native runtime security company delivering cloud detection and
+response (CDR) for Linux, containers and Kubernetes. An eBPF-based Nano Agent streams
+kernel-level activity into a causal graph, where Spydertraces link related processes,
+connections and red flags into scored attack paths that can be replayed at any point in
+the past.
+
+Spyderbat publishes a first-party OpenAPI 3.0.1 contract of 197 operations across 30
+resource groups, a documented remote MCP server, an `llms.txt` documentation index, and
+the open-source `spyctl` CLI.
+
+- Website: https://spyderbat.com/
+- Documentation: https://docs.spyderbat.com/
+- API reference: https://api.spyderbat.com/openapi
+- OpenAPI: https://api.spyderbat.com/openapi.json
+- MCP server: https://api.spyderbat.com/mcp/v1/mcp
+- GitHub: https://github.com/spyderbat

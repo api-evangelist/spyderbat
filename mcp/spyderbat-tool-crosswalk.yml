@@ -1,0 +1,189 @@
+generated: '2026-08-29'
+method: derived
+source: >-
+  mcp/spyderbat-mcp.yml (tool names from https://docs.spyderbat.com/installation/mcp.md)
+  bound by name and semantics to operationIds verified present in
+  openapi/spyderbat-openapi.json
+note: >-
+  The live MCP tools/list is auth-gated (HTTP 403 anonymous), so tool inputSchemas could
+  not be read. Every REST operationId below was grepped out of the saved OpenAPI and is
+  real; the BINDING between an MCP tool and its operation is inferred from the tool's
+  documented purpose, and confidence is set accordingly. Nothing here is a fabricated
+  tool or a fabricated operation.
+surfaces:
+- kind: openapi
+  url: https://api.spyderbat.com/openapi.json
+  file: openapi/spyderbat-openapi.json
+  gated: false
+  operations: 197
+- kind: mcp
+  url: https://api.spyderbat.com/mcp/v1/mcp
+  gated: true
+  gate: 'API key bearer token; anonymous tools/list returns HTTP 403'
+- kind: graphql
+  present: false
+crosswalk:
+- tool: list_organizations
+  category: organization
+  rest:
+  - OrgList
+  binding: direct
+  confidence: high
+  note: >-
+    Docs say the tool "returns org names and UIDs"; OrgList is GET /api/v1/org/ and is the
+    exact call the API-key tutorial uses for the same purpose.
+- tool: get_objects
+  category: investigation
+  rest:
+  - Objects
+  binding: direct
+  confidence: medium
+  note: >-
+    Docs describe resolving object UIDs (e.g. pod_uid) into full objects. Objects is
+    POST /api/v1/org/{orgUID}/objects/. ObjectsWalkGraph may also back the process-tree
+    walk the docs describe.
+- tool: get_objects
+  category: investigation
+  rest:
+  - ObjectsWalkGraph
+  binding: composite
+  confidence: low
+  note: Candidate backing for the documented ppuid parent-child tree walk.
+- tool: suppress_trace
+  category: response
+  rest:
+  - SuppressTrace
+  binding: direct
+  confidence: high
+  note: >-
+    POST /api/v1/org/{orgUID}/suppress/trace — the only suppression operation in the spec,
+    and the docs describe the tool's preview=true / apply flow against it.
+- tool: search_docs
+  category: orientation
+  rest: []
+  binding: none
+  confidence: high
+  note: Documentation search; no REST counterpart in the Spyderbat API.
+- tool: get_current_time
+  category: utility
+  rest: []
+  binding: none
+  confidence: high
+  note: Client-side/server-side clock helper; no REST counterpart.
+- tool: onboard
+  category: orientation
+  rest: []
+  binding: none
+  confidence: high
+- tool: prime
+  category: orientation
+  rest: []
+  binding: none
+  confidence: high
+- tool: get_trace_contents
+  category: investigation
+  rest:
+  - Search
+  - Results
+  binding: composite
+  confidence: medium
+  note: >-
+    Docs describe pulling processes, connections and red flags linked to a Spydertrace.
+    The public spec exposes this through the adhoc search job surface — Search
+    (POST /api/v1/org/{orgUID}/search/) then Results (POST .../search/{jobID}) — rather
+    than a single trace-contents operation.
+- tool: '<search on model_spydertrace | model_connection | event_redflag>'
+  category: search
+  rest:
+  - Search
+  - Results
+  - Schema
+  - Validate
+  - Parse Search Query
+  binding: composite
+  confidence: medium
+  note: >-
+    The MCP docs describe searching named schemas with operators and time ranges. The REST
+    equivalents are the AdhocSearch tag: Schema lists available schemas, Validate and
+    Parse Search Query check a query, Search submits a job and Results collects it.
+mcp_only:
+- tool: onboard
+  reason: Assistant orientation — teaches the tool set; no data operation behind it.
+- tool: prime
+  reason: Loads investigation workflows into context; no REST counterpart.
+- tool: search_docs
+  reason: Searches docs.spyderbat.com content, not the Spyderbat API.
+- tool: get_current_time
+  reason: Time helper for bounding search windows; not an API resource.
+rest_only:
+- tag: Cases
+  operations: 43
+  reason: >-
+    The entire case-management surface (create, claim, assign, merge, snooze, close,
+    reopen, notes, helpers, escalation and 10 statistics operations) has no documented MCP
+    tool.
+- tag: AnalyticsPolicy
+  operations: 5
+  reason: Guardian policy management is exposed via REST and spyctl, not the documented MCP tool set.
+- tag: AnalyticsRuleset
+  operations: 5
+  reason: Ruleset management is REST/spyctl only.
+- tag: NotificationTarget
+  operations: 11
+  reason: Notification target CRUD is REST/spyctl only.
+- tag: NotificationTemplate
+  operations: 11
+  reason: Notification template CRUD is REST/spyctl only.
+- tag: Notifications
+  operations: 7
+  reason: Notification configuration is REST/spyctl only.
+- tag: NotificationsAgentHealth
+  operations: 5
+  reason: Agent-health notification configuration is REST/spyctl only.
+- tag: Agent
+  operations: 4
+  reason: Agent management has no documented MCP tool.
+- tag: Agent Action
+  operations: 6
+  reason: Agent actions have no documented MCP tool.
+- tag: Agent Registration
+  operations: 6
+  reason: Agent registration has no documented MCP tool.
+- tag: AgentWork
+  operations: 6
+  reason: Agent work queue has no documented MCP tool.
+- tag: Source
+  operations: 8
+  reason: Source/agent inventory has no documented MCP tool.
+- tag: Investigation
+  operations: 7
+  reason: Flashback investigations are REST/console only in the documented tool set.
+- tag: SavedQuery
+  operations: 8
+  reason: Saved-query CRUD is REST/spyctl only.
+- tag: SearchSet
+  operations: 5
+  reason: Search-set CRUD is REST/spyctl only.
+- tag: CustomFlag
+  operations: 7
+  reason: Custom flag definitions are REST/spyctl only.
+- tag: Watchlist
+  operations: 5
+  reason: Watchlists are REST/console only.
+- tag: Spyctl
+  operations: 12
+  reason: The spyctl resource surface is CLI-facing.
+- tag: ForwardedEvents
+  operations: 1
+  reason: SIEM forwarding poll surface, consumed by the Event Forwarder.
+coverage:
+  mcp_tools_documented: 8
+  mcp_tools_bound_to_rest: 4
+  mcp_only: 4
+  rest_operations_total: 197
+  rest_operations_reachable_via_documented_tools: 6
+  rest_only_operations_estimate: 191
+  note: >-
+    Roughly 3% of the REST surface is reachable through the documented MCP tool set. The
+    MCP server is oriented at read-and-triage (search, investigate, suppress) rather than
+    at the full management surface, which stays on REST and spyctl.

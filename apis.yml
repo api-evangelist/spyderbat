@@ -1,18 +1,72 @@
 aid: spyderbat
 name: Spyderbat
-description: 'Spyderbat is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Spyderbat is an Austin, Texas cloud-native runtime security company whose platform
+  delivers cloud detection and response (CDR) for Linux servers, containers and Kubernetes.
+  A lightweight eBPF-based Nano Agent captures kernel-level process, connection, container
+  and Kubernetes activity and streams it into Spyderbat's causal-graph backend, where
+  Spydertraces link related processes, network connections and red flags into scored,
+  attack-path units that analysts can replay at any point in the past. The platform spans
+  Scout (behavioral detection and custom flags), Flashback (time-travel investigations),
+  Guardian (workload and ruleset policies that lock down critical workloads), suppression,
+  notifications, dashboards and SIEM forwarding. Everything the console does is backed by
+  a public REST API at api.prod.spyderbat.com, documented by a published OpenAPI 3.0.1
+  contract of 197 operations across 30 resource groups, authenticated with a bearer API
+  key bound to an RBAC role. Spyderbat also ships a remote Model Context Protocol server,
+  the open-source spyctl CLI, spydertop, and an event forwarder for SIEM integration.
 url: https://raw.githubusercontent.com/api-evangelist/spyderbat/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-29'
 modified: '2026-08-29'
+image: https://spyderbat.com/favicon.ico
 tags:
 - Company
-apis: []
+- Security
+- Cloud Security
+- Runtime Security
+- Cloud Detection and Response
+- Kubernetes
+- Containers
+- eBPF
+- Linux
+- Observability
+- Threat Detection
+- Incident Response
+- DevSecOps
+- SIEM
+- Monitoring
+apis:
+- aid: spyderbat:spyderbat-api
+  name: Spyderbat API
+  description: >-
+    The Spyderbat public REST API — the same surface the Spyderbat console is built on.
+    197 operations across 30 resource groups cover organizations and RBAC, sources and
+    agents, agent registration and agent work, adhoc and saved search, search sets,
+    investigations and cases, analytics policies and rulesets, custom flags, watchlists,
+    suppression, notification targets, templates and configurations, agent-health
+    notifications, forwarded events for SIEM integration, fingerprint data, archives and
+    the spyctl resource surface. Authenticated with a bearer API key (JWT) bound to a user
+    account and its organization role.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Security
+  - Runtime Security
+  - Kubernetes
+  - Search
+  - Investigations
+  - Notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-openapi.json
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +74,145 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://spyderbat.com/
+- type: Documentation
+  url: https://docs.spyderbat.com/
+- type: APIReference
+  url: https://api.spyderbat.com/openapi
+- type: GettingStarted
+  url: https://docs.spyderbat.com/getting-started
+- type: Support
+  url: https://docs.spyderbat.com/getting-started/help-and-support
+- type: Blog
+  url: https://spyderbat.com/blog
+- type: GitHubOrganization
+  url: https://github.com/spyderbat
+- type: SignUp
+  url: https://app.spyderbat.com/
+- type: PrivacyPolicy
+  url: https://spyderbat.com/privacy-en
+- type: OpenAPI
+  url: openapi/spyderbat-openapi.json
+- type: LLMsTxt
+  url: llms/spyderbat-llms.txt
+- type: MCPServer
+  url: mcp/spyderbat-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/spyderbat-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Authentication
+  url: authentication/spyderbat-authentication.yml
+- type: Conventions
+  url: conventions/spyderbat-conventions.yml
+- type: ErrorCatalog
+  url: errors/spyderbat-problem-types.yml
+- type: DataModel
+  url: data-model/spyderbat-data-model.yml
+- type: Lifecycle
+  url: lifecycle/spyderbat-lifecycle.yml
+- type: ChangeLog
+  url: changelog/spyderbat-changelog.yml
+- type: Conformance
+  url: conformance/spyderbat-conformance.yml
+- type: Webhooks
+  url: asyncapi/spyderbat-events-webhooks.yml
+- type: Packages
+  url: packages/spyderbat-packages.yml
+- type: CLI
+  url: cli/spyderbat-cli.yml
+- type: Overlay
+  url: overlays/spyderbat-api-overlay.yaml
+- type: Plans
+  url: plans/spyderbat-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/spyderbat-rate-limits.yml
+- type: DomainSecurity
+  url: security/spyderbat-domain-security.yml
+x-pointers-not-emitted:
+  note: >-
+    Recorded deliberately so a later pass does not re-hunt them. Each was probed and is
+    genuinely absent from Spyderbat's public surface; emitting the pointer would be a
+    false claim made on the provider's behalf.
+  absent:
+  - type: WellKnown
+    reason: >-
+      Every /.well-known/* path 404s on api.spyderbat.com, spyderbat.com and
+      docs.spyderbat.com; app.spyderbat.com returns the console SPA shell with HTTP 200
+      for every path, which is not a document. See well-known/spyderbat-well-known.yml.
+  - type: SecurityTxt
+    reason: 'spyderbat.com/.well-known/security.txt returns 404 {"message":"security.txt not found"}.'
+  - type: AgentCard
+    reason: /.well-known/agent-card.json and /.well-known/agent.json 404 on every real host.
+  - type: Idempotency
+    reason: >-
+      No Idempotency-Key header or idempotency parameter exists in the contract or the
+      docs, including on the three irreversible agent response actions.
+  - type: SDKs
+    reason: >-
+      Spyderbat publishes first-party PACKAGES (spyctl, spydertop, event-forwarder) but no
+      client SDK library in any language. Packages is emitted; SDKs is not.
+  - type: StatusPage
+    reason: status.spyderbat.com does not resolve and no status page exists.
+  - type: Deprecation
+    reason: No deprecation or sunset policy is published and no operation is marked deprecated.
+  - type: Security
+    reason: >-
+      No security.txt, vulnerability disclosure policy or bug bounty program was found on
+      any Spyderbat host.
+  - type: Compliance
+    reason: >-
+      No SOC 2, ISO 27001, PCI, HIPAA or FedRAMP claim appears on the site, in the docs or
+      in the contract.
+  - type: TrustCenter
+    reason: trust.spyderbat.com does not resolve and spyderbat.com/security 404s.
+  - type: AsyncAPI
+    reason: >-
+      No AsyncAPI document is published. A real event surface exists and is captured under
+      type Webhooks instead.
+  - type: TermsOfService
+    reason: >-
+      The OpenAPI declares info.termsOfService https://www.spyderbat.com/terms-of-use/,
+      which returns 404, and no terms page exists elsewhere on the site.
+  - type: Pricing
+    reason: spyderbat.com/pricing returns 404 and the site carries no pricing link.
+  - type: Roadmap
+    reason: spyderbat.com/roadmap and docs.spyderbat.com/roadmap both 404.
+  - type: Postman
+    reason: The Postman public search API returns zero results for "spyderbat".
+  - type: Sandbox
+    reason: >-
+      No test/live key modes, no sandbox environment and no test fixtures are published.
+      The API reference viewer is ReDoc, which has no try-it console.
+  - type: Protobuf
+    reason: No .proto is published in the GitHub org or referenced in the docs.
+  - type: WSDL
+    reason: '?wsdl returns 404 on api.spyderbat.com and api.prod.spyderbat.com.'
+  - type: GraphQL
+    reason: No /graphql surface exists on any host and none is documented.
+  - type: OAuthScopes
+    reason: >-
+      Bearer-JWT key auth with RBAC roles; the contract declares no oauth2 securityScheme,
+      so there is no scope surface. Authorization is carried by authentication/ instead.
+  - type: DeclineCodes
+    reason: Not a payments or authorization provider.
+x-enrichment:
+  date: '2026-08-29'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v1
+x-coverage:
+  state: covered
+  reason: n/a
+  detail: >-
+    Spyderbat serves a real, rich, first-party OpenAPI 3.0.1 at
+    https://api.spyderbat.com/openapi.json (197 operations, 226 schemas) plus a documented
+    remote MCP server and an llms.txt; nothing was gated or unreadable.
+  evidence:
+  - url: https://api.spyderbat.com/openapi.json
+    status: 200
+  - url: https://docs.spyderbat.com/llms.txt
+    status: 200
+  - url: https://api.spyderbat.com/mcp/v1/mcp
+    status: 403
+  checked: '2026-08-29'

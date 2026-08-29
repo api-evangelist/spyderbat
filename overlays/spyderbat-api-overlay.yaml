@@ -1,0 +1,108 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Spyderbat API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-29'
+  method: generated
+  source: openapi/spyderbat-openapi.json
+  extends: openapi/spyderbat-openapi.json
+  note: >-
+    Captures API Evangelist's derived annotations WITHOUT mutating the provider's spec.
+    Every value below is either read from the provider's own contract/docs or is an
+    explicit statement about an ABSENCE we verified. No operation, parameter, schema or
+    response is invented.
+actions:
+- target: $.info
+  description: Record the correct terms and reference URLs, and flag the dead ToS link.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/spyderbat
+      reference-viewer: https://api.spyderbat.com/openapi
+      spec-url: https://api.spyderbat.com/openapi.json
+      docs: https://docs.spyderbat.com/
+      llms-txt: https://docs.spyderbat.com/llms.txt
+      terms-of-service-status: >-
+        info.termsOfService (https://www.spyderbat.com/terms-of-use/) returned HTTP 404
+        on 2026-08-29; no terms-of-service page could be found on spyderbat.com.
+      license-note: >-
+        info.license declares MIT, which describes neither the API nor the service and
+        appears to be a scaffold default on a commercial contract.
+- target: $
+  description: Declare the agent-facing surfaces that exist alongside this REST contract.
+  update:
+    x-agent-surfaces:
+      mcp:
+        endpoint: https://api.spyderbat.com/mcp/v1/mcp
+        transport: streamable-http
+        auth: api-key bearer
+        gated: true
+        docs: https://docs.spyderbat.com/installation/mcp
+      llms_txt: https://docs.spyderbat.com/llms.txt
+      markdown_docs: append `.md` to any docs.spyderbat.com page URL
+      agent_card: none published
+      crosswalk: mcp/spyderbat-tool-crosswalk.yml
+- target: $
+  description: Record the cross-cutting runtime semantics an agent needs before calling.
+  update:
+    x-conventions:
+      tenancy:
+        parameter: orgUID
+        coverage: 192 of 197 operations
+        hazard: >-
+          A wrong orgUID returns zero results with NO error, per the provider's own
+          documentation. Resolve the org with OrgList before any other call.
+      idempotency: not supported — no Idempotency-Key on any operation
+      request_id: not supported — no correlation header declared
+      rate_limit_headers: none declared; 429 appears on 3 operations only
+      pagination: page / page_size on 14 operations; sort_by + reversed
+      async_search: submit with Search, poll with Results, cancel with ObjectsStopQuery
+- target: $.paths['/api/v1/org/{orgUID}/response/agent/killpod/{podUID}'].post
+  description: Mark the destructive, irreversible, rate-limited response action.
+  update:
+    x-consequence: irreversible
+    x-action-class: destructive
+    x-reversal: none — no undo operation exists in this contract
+    x-rate-limited: true
+- target: $.paths['/api/v1/org/{orgUID}/response/agent/killprocess/{processUID}'].post
+  description: Mark the destructive, irreversible, rate-limited response action.
+  update:
+    x-consequence: irreversible
+    x-action-class: destructive
+    x-reversal: none — no undo operation exists in this contract
+    x-rate-limited: true
+- target: $.paths['/api/v1/org/{orgUID}/response/agent/scancontainer/{containerUID}'].post
+  description: Mark the rate-limited agent scan action.
+  update:
+    x-consequence: side-effecting
+    x-action-class: operational
+    x-rate-limited: true
+- target: $.paths['/api/v1/org/{orgUID}/suppress/trace'].post
+  description: Record the documented preview/dry-run affordance.
+  update:
+    x-dry-run:
+      supported: true
+      parameter: preview
+      source: https://docs.spyderbat.com/installation/mcp.md
+      note: >-
+        preview=true renders the suppression policy, its warnings and its scope before it
+        is applied.
+- target: $.paths['/api/v1/org/{orgUID}/cases/{caseID}/merge'].post
+  description: Record that case merge has no reversal.
+  update:
+    x-consequence: irreversible
+    x-reversal: none — no unmerge operation exists in this contract
+- target: $.components.securitySchemes.apiToken
+  description: Record the RBAC model behind the bearer token.
+  update:
+    x-authorization-model:
+      style: rbac
+      binding: an API key is bound to one user account and inherits that user's role per organization
+      roles:
+      - Admin
+      - Read Only
+      named_capabilities:
+      - 'org:ManageSiemForwarding'
+      preflight: POST /api/v1/rbac/capabilities/ (CanUserPerform) tests an action before attempting it
+      expiry: keys may carry an expiration date and are rotated from the console
+      docs: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api

@@ -1,0 +1,41 @@
+generated: '2026-08-29'
+method: searched
+source: https://spyderbat.com/
+plan_count: 0
+note: >-
+  Spyderbat publishes no pricing page. https://www.spyderbat.com/pricing and
+  https://spyderbat.com/pricing/ both return HTTP 404, and the site navigation and footer
+  carry no pricing link — the commercial call to action is "Book Demo"
+  (https://spyderbat.com/bookdemo) and "Contact" (https://spyderbat.com/contact). The docs
+  reference a free "Spyderbat Community Edition" tier by name
+  (https://docs.spyderbat.com/getting-started/three-things-to-try-with-spyderbat-community-edition)
+  but attach no price, quota or overage to it, so it is recorded below as a named tier
+  with unpublished commercial terms rather than as a priced plan. plan_count is 0 because
+  zero tiers have published prices.
+plans: []
+named_tiers_without_published_pricing:
+- name: Spyderbat Community Edition
+  price: not published
+  source: https://docs.spyderbat.com/getting-started/three-things-to-try-with-spyderbat-community-edition
+  note: >-
+    Named in the getting-started docs as a self-serve entry point. No price, quota,
+    overage or limit is published for it.
+- name: Commercial / enterprise
+  price: not published
+  source: https://spyderbat.com/bookdemo
+  note: Sales-led; the only documented path is booking a demo or contacting sales.
+runtime_quota_endpoints:
+  note: >-
+    Although pricing is unpublished, plan-derived quotas are readable at runtime through
+    the API for an authenticated customer.
+  operations:
+  - OrgTypeLoad
+  - OrgTypeLimitActiveSources
+  - OrgTypeLimitOrgRoles
+evidence:
+- url: https://www.spyderbat.com/pricing
+  status: 404
+- url: https://spyderbat.com/pricing/
+  status: 404
+- url: https://spyderbat.com/bookdemo
+  status: 200

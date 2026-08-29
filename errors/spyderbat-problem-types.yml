@@ -1,0 +1,122 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/spyderbat-openapi.json
+format: non-rfc9457
+envelope:
+  note: >-
+    The Spyderbat API does NOT use RFC 9457 application/problem+json. Only 400 responses
+    declare a body at all (application/json); 403, 404, 409, 422 and 429 are declared with
+    a description and no schema, so an agent has the status code and the human-readable
+    description but no machine-readable error object contract for those classes.
+  schemas:
+  - name: ValidationError
+    used_for: 400 Validation error
+    fields:
+    - field: err_msg
+      description: Message regarding the validation failure
+    - field: field
+      description: Field name which failed validation
+    - field: property
+      description: JSON property name of the field which failed validation
+    - field: tags
+      description: Validation tag which failed
+  - name: Orc_apiAgentActionError
+    used_for: agent action errors
+    fields:
+    - field: message
+      description: Human-readable error message with context (max 1024 chars)
+    - field: reason
+      description: A short, predictable string identifying the type of error (max 128 chars)
+    note: >-
+      `reason` is the closest thing in this contract to a stable machine-readable error
+      code, and it is scoped to the agent-action surface only.
+problem_types:
+- status: 400
+  title: Bad request
+  occurrences: 80
+  content_type: application/json
+  variants:
+  - invalid input parameters (62)
+  - Validation error (6)
+  - bad request (6)
+  - invalid query parameters (2)
+  - invalid agent ID (1)
+  - invalid pipeline/agent combination (1)
+  - A resource_name is not a valid Spyderbat Resource Name (1)
+  - invalid input (1)
+  remediation: >-
+    Re-read the operation's parameters and requestBody in the OpenAPI. Validation failures
+    return a ValidationError naming the offending field, property and validation tag.
+- status: 403
+  title: Permission denied
+  occurrences: 188
+  content_type: none declared
+  variants:
+  - permission denied (186)
+  - permission denied — caller is not the note author (1)
+  - permission denied — caller is not the assignee (1)
+  remediation: >-
+    Spyderbat uses RBAC; an API key inherits the role of the user who created it. Confirm
+    the key's org role permits the operation, and note that some capabilities require a
+    named permission such as `org:ManageSiemForwarding`. POST /api/v1/rbac/capabilities/
+    (CanUserPerform) can be called first to test whether the caller may perform an action.
+  note: >-
+    403 is the single most common declared failure, on 188 of 197 operations — a key with
+    the wrong role is the dominant error mode of this API.
+- status: 404
+  title: Not found
+  occurrences: 75
+  content_type: none declared
+  variants:
+  - not found (69)
+  - agent action not found (1)
+  - analytics ruleset not found (1)
+  - target case not found (1)
+  - case or note not found (1)
+  - cluster not found (1)
+  - search set not found (1)
+  remediation: >-
+    Verify the orgUID and the resource UID. The API-key tutorial warns explicitly that
+    using the wrong org UID produces zero results with no error, so a 404 usually means a
+    genuinely missing resource rather than a wrong org.
+- status: 409
+  title: Conflict — case state forbids augmentation
+  occurrences: 1
+  operations:
+  - CaseAugment
+  remediation: Check the case lifecycle state before augmenting.
+- status: 422
+  title: Unprocessable — case state blocks the operation
+  occurrences: 2
+  variants:
+  - target case is snoozed or closed
+  - case is in a frozen state
+  operations:
+  - CaseMerge
+  - CasePatch
+  remediation: >-
+    Wake a snoozed case (CaseWake) or reopen a closed one (CaseReopen) before retrying.
+- status: 429
+  title: Too many requests
+  occurrences: 3
+  operations:
+  - AgentKillPod
+  - AgentKillProcess
+  - AgentScanContainer
+  remediation: >-
+    Back off and retry. The spec declares no Retry-After header and no RateLimit-* headers,
+    so the retry interval is not discoverable from the contract. See
+    rate-limits/spyderbat-rate-limits.yml.
+  note: >-
+    429 is declared ONLY on the three live agent response actions — the operations that
+    kill a pod, kill a process, or scan a container on a monitored host. No other
+    operation in the contract declares a rate-limit response.
+gaps:
+- >-
+  No 5xx responses are declared anywhere in the contract. An agent has no documented
+  behaviour for a Spyderbat-side failure.
+- >-
+  403, 404, 409, 422 and 429 declare no response body schema, so there is no stable error
+  code an agent can branch on for the five most common failure classes.
+- >-
+  No RFC 9457 problem+json envelope and no top-level error-code registry is published.

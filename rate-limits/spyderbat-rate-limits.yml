@@ -1,0 +1,52 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/spyderbat-openapi.json
+docs: https://docs.spyderbat.com/
+limit_count: 0
+note: >-
+  Spyderbat publishes NO numeric rate limits. The docs were searched (docs.spyderbat.com
+  llms.txt index, the API-key tutorial, the MCP install page) and no rate-limit reference
+  page exists. The OpenAPI declares an HTTP 429 "too many requests" response on exactly
+  three operations and nowhere else, and declares no rate-limit response headers at all.
+  limit_count is therefore an honest 0: the throttle demonstrably exists on the agent
+  response actions, but its window, ceiling and retry interval are not published anywhere
+  a consumer or an agent can read them.
+limits: []
+throttled_operations:
+- operationId: AgentKillPod
+  method: POST
+  path: /api/v1/org/{orgUID}/response/agent/killpod/{podUID}
+  status_on_exhaustion: 429
+  window: not published
+  limit: not published
+- operationId: AgentKillProcess
+  method: POST
+  path: /api/v1/org/{orgUID}/response/agent/killprocess/{processUID}
+  status_on_exhaustion: 429
+  window: not published
+  limit: not published
+- operationId: AgentScanContainer
+  method: POST
+  path: /api/v1/org/{orgUID}/response/agent/scancontainer/{containerUID}
+  status_on_exhaustion: 429
+  window: not published
+  limit: not published
+response_headers:
+  x_ratelimit: not declared
+  ratelimit_standard: not declared
+  retry_after: not declared
+  note: >-
+    The contract declares no X-RateLimit-*, no RFC 9331 RateLimit-* and no Retry-After
+    header on any response, so a client that receives a 429 has no runtime signal telling
+    it how long to wait.
+related_quotas:
+- name: active source limit
+  operationId: OrgTypeLimitActiveSources
+  path: /api/v1/org/{orgUID}/type/limit/active_sources
+  note: >-
+    Not a request-rate limit — an account-plan quota on how many monitored sources an org
+    may run, readable at runtime through the API.
+- name: org role limit
+  operationId: OrgTypeLimitOrgRoles
+  path: /api/v1/org/{orgUID}/type/limit/org_roles
+  note: Account-plan quota on org roles, readable at runtime.

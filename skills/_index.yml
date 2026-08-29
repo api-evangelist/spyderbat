@@ -1,0 +1,47 @@
+generated: '2026-08-29'
+method: generated
+source: >-
+  openapi/spyderbat-openapi.json (every operationId verified present in the spec) plus
+  https://docs.spyderbat.com/ product documentation
+note: >-
+  Packaged Agent Skills for the marquee Spyderbat flows. Every operationId referenced was
+  grepped out of the saved OpenAPI before the skill was written; no operation, parameter
+  or error is invented. Skills deliberately record what Spyderbat does NOT publish
+  (idempotency, retry policy, webhook signing, reversal windows) because those absences
+  are what an agent needs to know before it acts.
+skills:
+- name: spyderbat-api-key-and-org-setup
+  file: spyderbat-api-key-and-org-setup.md
+  summary: >-
+    Create a key, find the org UID, understand the RBAC role it inherits, make the first
+    call. The prerequisite for every other skill.
+  operations: 7
+  risk: read-only
+- name: spyderbat-triage-spydertraces
+  file: spyderbat-triage-spydertraces.md
+  summary: >-
+    Work the alert queue — search model_spydertrace by score and time window through the
+    submit-then-poll job API, pull the trace contents, attribute the workload.
+  operations: 7
+  risk: read-only
+- name: spyderbat-suppress-noisy-detections
+  file: spyderbat-suppress-noisy-detections.md
+  summary: >-
+    Preview a suppression policy and its scope with the only dry-run affordance in the
+    API, then apply it with human confirmation.
+  operations: 5
+  risk: write — no documented unsuppress operation
+- name: spyderbat-agent-response-actions
+  file: spyderbat-agent-response-actions.md
+  summary: >-
+    Kill a pod, kill a process, or scan a container on a live monitored host. The only
+    rate-limited operations in the contract, and the only irreversible ones.
+  operations: 6
+  risk: destructive — irreversible, no dry run, no idempotency key
+- name: spyderbat-forward-events-to-siem
+  file: spyderbat-forward-events-to-siem.md
+  summary: >-
+    Enable SIEM forwarding on a saved query and consume the events iterator, or configure
+    email/Slack/PagerDuty/webhook notification targets and test them.
+  operations: 14
+  risk: write — configuration only

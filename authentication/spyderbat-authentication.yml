@@ -1,0 +1,13 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/spyderbat-openapi.json
+summary:
+  types:
+  - http
+schemes:
+- name: apiToken
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/spyderbat-openapi.json

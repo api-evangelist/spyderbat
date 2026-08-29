@@ -1,0 +1,47 @@
+generated: '2026-08-29'
+method: searched
+source: https://api.github.com/repos/spyderbat/spyctl-cli/releases
+scope: spyctl CLI only
+api_changelog_published: false
+note: >-
+  Spyderbat publishes NO changelog or release notes for the API itself.
+  docs.spyderbat.com/release-notes, docs.spyderbat.com/changelog,
+  spyderbat.com/changelog and spyderbat.com/release-notes all return 404, and the docs
+  index at docs.spyderbat.com/llms.txt lists no release-notes page. The only dated,
+  structured release surface Spyderbat operates is GitHub releases on the open-source
+  spyctl CLI, recorded below. It is a client-tooling changelog, not an API changelog —
+  the `ChangeLog` pointer this file carries should be read with that scope in mind.
+scheme: semver
+current_version: v0.24.2
+entries:
+- version: v0.24.2
+  date: '2026-04-09'
+  source: https://github.com/spyderbat/spyctl-cli/releases/tag/v0.24.2
+- version: v0.24.1
+  date: '2025-09-08'
+  source: https://github.com/spyderbat/spyctl-cli/releases/tag/v0.24.1
+- version: v0.24.0
+  date: '2025-09-04'
+  source: https://github.com/spyderbat/spyctl-cli/releases/tag/v0.24.0
+- version: v0.24.0-beta
+  date: '2025-09-04'
+- version: v0.23.0
+  date: '2025-05-14'
+- version: v0.23.0-beta
+  date: '2025-05-14'
+- version: v0.22.4
+  date: '2025-03-05'
+- version: v0.22.3
+  date: '2025-03-05'
+breaking_changes:
+  note: >-
+    Release titles are bare version strings with no categorised notes, so breaking versus
+    additive changes cannot be read from the release surface. Nothing is asserted here
+    that the provider did not publish.
+evidence:
+- url: https://docs.spyderbat.com/release-notes
+  status: 404
+- url: https://docs.spyderbat.com/changelog
+  status: 404
+- url: https://spyderbat.com/changelog
+  status: 404

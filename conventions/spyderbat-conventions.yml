@@ -1,0 +1,220 @@
+generated: '2026-08-29'
+method: derived
+source: >-
+  openapi/spyderbat-openapi.json plus
+  https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api.md
+  and https://docs.spyderbat.com/installation/mcp.md
+authentication:
+  style: bearer
+  scheme: 'Authorization: Bearer <api-key>'
+  format: JWT (keys begin `eyJ`)
+  applied: >-
+    globally — top-level `security: [{apiToken: []}]` applies to the whole contract
+  model: >-
+    An API key is bound to a single user account. The account maps to a role in each
+    organization it belongs to, and the key inherits that role's permissions. Two roles
+    are named in the docs, Admin and Read Only, with additional named capabilities such as
+    `org:ManageSiemForwarding`. Keys may carry an expiration date and are rotated from the
+    console.
+  scopes: >-
+    none — this API has no OAuth scope surface; authorization is RBAC role-based
+  cross_ref: authentication/spyderbat-authentication.yml
+tenancy:
+  model: organization
+  parameter: orgUID
+  note: >-
+    192 of 197 operations are scoped by an `orgUID` path parameter. The org UID is read
+    out of the console URL between `org/` and the next `/`, or copied from the API-key
+    Example Usage dialog. The docs warn that supplying the WRONG org UID returns zero
+    results with no error — a silent-empty failure mode an agent must guard against by
+    confirming the org UID with OrgList first.
+pagination:
+  style: page-number
+  params:
+  - name: page
+    in: query
+  - name: page_size
+    in: query
+  coverage: 14 operations
+  sorting:
+  - name: sort_by
+  - name: reversed
+  note: >-
+    Pagination is NOT applied uniformly — most list operations declare no page/page_size,
+    and the adhoc search surface uses an asynchronous job model instead (see async_jobs).
+async_jobs:
+  style: submit-then-poll
+  note: >-
+    Adhoc search is a job API rather than a synchronous query. Submit with Search
+    (POST /api/v1/org/{orgUID}/search/) or ObjectsStartQuery, poll with Results
+    (POST /api/v1/org/{orgUID}/search/{jobID}) or ObjectsPollResults, and cancel with
+    ObjectsStopQuery. Schema, Validate and `Parse Search Query` let a client check a query
+    before spending a job on it.
+  operations:
+  - Search
+  - Results
+  - Schema
+  - Validate
+  - Parse Search Query
+  - Convert
+  - ObjectsStartQuery
+  - ObjectsPollResults
+  - ObjectsStopQuery
+filtering:
+  style: suffix-operator query parameters
+  operators:
+  - _equals
+  - _contains
+  - has_tags
+  examples:
+  - name_equals
+  - name_contains
+  - uid_equals
+  - name_or_uid_contains
+  - agent_uid_equals
+  - action_taken_equals
+  time_window:
+  - start
+  - end
+  note: >-
+    Search itself has its own query language documented at
+    https://docs.spyderbat.com/reference/search/search-operators and
+    https://docs.spyderbat.com/reference/search/search-fields, separate from these REST
+    query parameters.
+field_expansion:
+  supported: false
+  note: No expand/fields/sparse-fieldset parameter appears anywhere in the contract.
+metadata:
+  supported: partial
+  note: >-
+    Several resources accept `tags` with `has_tags` filtering and `clear_tags` /
+    `clear_description` mutators, but there is no generic key-value metadata bag.
+request_id_tracing:
+  supported: false
+  note: >-
+    No request-id or correlation-id header is declared on any request or response in the
+    contract, and none is documented. An agent cannot quote a request id to support.
+versioning:
+  style: URI path
+  current: v1
+  path_prefix: /api/v1
+  spec_version: 1.0.0
+  note: >-
+    Every operation sits under /api/v1. The OpenAPI info.version is a static 1.0.0 and has
+    no relationship to a dated release. No header-based or query-based version negotiation
+    exists.
+error_envelope:
+  format: non-rfc9457
+  cross_ref: errors/spyderbat-problem-types.yml
+  note: >-
+    Only 400 declares a JSON body. 403/404/409/422/429 declare a description and no
+    schema. No problem+json, no error-code registry.
+rate_limit_signaling:
+  headers: none declared
+  status: >-
+    429 on three agent response actions only
+  cross_ref: rate-limits/spyderbat-rate-limits.yml
+idempotency:
+  supported: false
+  grade: absent
+  note: >-
+    No Idempotency-Key header, no idempotency parameter and no idempotency documentation
+    exists anywhere in the contract or the docs. This matters here more than on a typical
+    read API: the write surface includes AgentKillPod, AgentKillProcess and
+    AgentScanContainer, which take real destructive action on a monitored host. A retried
+    POST after a timeout has no deduplication guarantee. No `type: Idempotency` pointer is
+    emitted for this provider, because none is supported.
+dry_run_mode:
+  supported: partial
+  grade: documented
+  note: >-
+    SuppressTrace supports a documented `preview` mode — the MCP documentation describes
+    calling suppress_trace with `preview=true` to generate and display the suppression
+    policy, its warnings and its scope before applying it. This is the only rehearsal
+    affordance in the API; the agent response actions have no dry-run.
+  source: https://docs.spyderbat.com/installation/mcp.md
+reversibility:
+  grade: documented
+  note: >-
+    Reversal operations exist and are named in the contract, but NO window is stated
+    anywhere in the docs for any of them, so this grades `documented` rather than
+    `verified`. The most consequential write operations — the three agent response actions
+    — are irreversible by nature and have no reversal path at all, which is the finding
+    an agent most needs before acting.
+  surfaces:
+  - action: Close a case
+    operationId: CaseClose
+    reversal: CaseReopen
+    window: not stated
+    docs: https://api.spyderbat.com/openapi
+  - action: Snooze a case
+    operationId: CaseSnooze
+    reversal: CaseWake
+    window: not stated
+    note: CaseWake is DELETE on the same /snooze path.
+  - action: Assign a case
+    operationId: CaseAssign
+    reversal: CaseUnassign
+    window: not stated
+  - action: Watch a case
+    operationId: CaseWatch
+    reversal: CaseUnwatch
+    window: not stated
+  - action: Prioritize a case
+    operationId: CaseSetUserPrioritized
+    reversal: CaseUnsetUserPrioritized
+    window: not stated
+  - action: Add a helper to a case
+    operationId: CaseAddHelper
+    reversal: CaseRemoveHelper
+    window: not stated
+  - action: Add a note to a case
+    operationId: CaseAddNote
+    reversal: CaseEditNote
+    window: not stated
+    note: >-
+      A note can be edited but the contract exposes no note delete, and editing is
+      restricted — 403 "permission denied — caller is not the note author".
+  - action: Merge cases
+    operationId: CaseMerge
+    reversal: none
+    window: n/a
+    note: >-
+      No unmerge operation exists. CaseBulkMerge has the same property. Merging is a
+      one-way operation on this API.
+  - action: Create an investigation
+    operationId: InvestigationCreate
+    reversal: InvestigationDelete
+    window: not stated
+    note: >-
+      Investigations are versioned — InvestigationListVersions and InvestigationLoadVersion
+      allow an earlier version to be read back, but there is no restore-version operation.
+  - action: Kill a pod on a monitored host
+    operationId: AgentKillPod
+    reversal: none
+    window: n/a
+    note: IRREVERSIBLE. No undo path exists and none is documented.
+  - action: Kill a process on a monitored host
+    operationId: AgentKillProcess
+    reversal: none
+    window: n/a
+    note: IRREVERSIBLE. No undo path exists and none is documented.
+  - action: Suppress a Spydertrace
+    operationId: SuppressTrace
+    reversal: not exposed as a distinct operation
+    window: not stated
+    note: >-
+      Suppression produces a policy object; the docs describe previewing before applying,
+      and policies are managed objects, but the public contract exposes no explicit
+      unsuppress operation.
+  - action: Delete a source
+    operationId: SrcDelete
+    reversal: none
+    window: not stated
+    note: No restore or soft-delete window is documented.
+cross_references:
+  errors: errors/spyderbat-problem-types.yml
+  lifecycle: lifecycle/spyderbat-lifecycle.yml
+  authentication: authentication/spyderbat-authentication.yml
+  rate_limits: rate-limits/spyderbat-rate-limits.yml
+  mcp: mcp/spyderbat-mcp.yml

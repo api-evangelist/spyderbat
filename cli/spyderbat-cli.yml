@@ -1,0 +1,94 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://docs.spyderbat.com/installation/spyctl.md,
+  https://docs.spyderbat.com/reference/spyctl/spyctl-commands.md,
+  https://github.com/spyderbat/spyctl-cli
+clis:
+- name: spyctl
+  official: true
+  open_source: true
+  license_repo: https://github.com/spyderbat/spyctl-cli
+  package: spyctl
+  registry: pypi
+  version: 0.24.2
+  published: '2026-04-09'
+  docs: https://docs.spyderbat.com/installation/spyctl
+  command_reference: https://spyctl.readthedocs.io/en/latest/commands.html
+  description: >-
+    The Spyderbat command line tool for viewing and managing Spyderbat resources. It is
+    the primary documented management surface — most Spyderbat tutorials (Guardian
+    policies, rulesets, notification targets and templates, agent-health notifications)
+    are written against spyctl rather than against raw REST.
+  prerequisites: Python 3.8 or newer
+  install:
+  - method: pipx
+    command: pipx install spyctl
+    note: Recommended on Debian/Ubuntu; requires `sudo apt install pipx` first.
+  - method: pip
+    command: pip install spyctl
+    note: Windows, macOS and other Linux; a virtualenv install is also documented.
+  verify: spyctl --version
+  configuration:
+    docs: https://docs.spyderbat.com/installation/spyctl/spyctl-initial-configuration
+    directory: ~/.spyctl
+  shell_completion:
+    supported: true
+    shells:
+    - bash
+    - zsh
+    - fish
+    pattern: _SPYCTL_COMPLETE=<shell>_source spyctl > ~/.spyctl/spyctl-complete.<shell>
+    note: >-
+      macOS ships a Bash too old for programmable completion; the docs link out to a
+      newer-Bash install guide.
+  resource_surface:
+  - group: Guardian policies
+    docs: https://docs.spyderbat.com/reference/spyctl/guardian-policy-management-spyctl
+    api_tags:
+    - AnalyticsPolicy
+    - AnalyticsRuleset
+  - group: Notification templates
+    docs: https://docs.spyderbat.com/reference/spyctl/notification-template-management-spyctl
+    api_tags:
+    - NotificationTemplate
+  - group: Notification targets
+    docs: https://docs.spyderbat.com/reference/spyctl/notification-targets-management-spyctl
+    api_tags:
+    - NotificationTarget
+  - group: Notification configuration
+    example: spyctl notifications configure saved-query QUERY_UID --target TARGET --target-map TARGET=TEMPLATE
+    api_tags:
+    - Notifications
+    - NotificationsAgentHealth
+  - group: Spyctl resources
+    api_tags:
+    - Spyctl
+    note: >-
+      The published OpenAPI carries a dedicated `Spyctl` tag with 12 operations — the REST
+      surface the CLI itself is built on.
+  resource_manifest_format:
+    style: Kubernetes-like YAML
+    example_fields:
+    - apiVersion (spyderbat/v1)
+    - kind (e.g. NotificationTarget)
+    - metadata.name
+    - metadata.type
+    - spec
+- name: spydertop
+  official: true
+  open_source: true
+  package: spydertop
+  registry: pypi
+  version: 1.4.0
+  published: '2025-03-04'
+  repo: https://github.com/spyderbat/spydertop
+  docs: https://docs.spyderbat.com/installation/spydertop
+  description: >-
+    htop-like terminal UI over the Spyderbat public APIs, letting an analyst inspect
+    process and resource state at any point in the past rather than only right now.
+  kind: analysis-tui
+note: >-
+  A third CLI-shaped artifact exists — spyderbat/mcp-client-py, a CLI chat loop that
+  drives the Spyderbat MCP server through OpenAI tool-calling. It is a reference client
+  rather than a supported product CLI and is recorded in packages/ instead.

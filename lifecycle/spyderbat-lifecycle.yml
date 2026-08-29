@@ -1,0 +1,69 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://docs.spyderbat.com/llms.txt, https://api.spyderbat.com/openapi.json,
+  https://github.com/spyderbat/spyctl-cli/releases
+versioning:
+  style: URI path
+  current: v1
+  prefix: /api/v1
+  spec_version: 1.0.0
+  policy_published: false
+  note: >-
+    No versioning policy document exists. The path carries v1 and the OpenAPI info.version
+    is a static 1.0.0 that has never been tied to a dated release.
+deprecation:
+  policy_published: false
+  deprecated_operations: []
+  sunset_header: not declared
+  deprecation_header: not declared
+  rfc8594: false
+  note: >-
+    Not one of the 197 operations carries `deprecated: true`, and no deprecation or sunset
+    policy is published. RFC 8594 Sunset/Deprecation headers are not declared on any
+    response. No `Deprecation` pointer is emitted, because none is published.
+status_page:
+  published: false
+  probed:
+  - url: https://status.spyderbat.com/
+    status: 000
+    note: DNS does not resolve — no status subdomain exists.
+  note: >-
+    Spyderbat operates no public status page. The documented escalation path for an outage
+    is the help-and-support page. No `StatusPage` pointer is emitted.
+sla:
+  published: false
+  note: No SLA or uptime commitment is published on the public site or in the docs.
+support:
+  url: https://docs.spyderbat.com/getting-started/help-and-support
+  email: support@spyderbat.com
+  source: OpenAPI info.contact.email
+release_history:
+  scope: client tooling only
+  note: >-
+    The API itself publishes no changelog or release notes. The only dated release surface
+    Spyderbat operates is GitHub releases on the open-source spyctl CLI.
+  cross_ref: changelog/spyderbat-changelog.yml
+contract_defects_observed:
+- issue: info.termsOfService points at a dead page
+  value: https://www.spyderbat.com/terms-of-use/
+  status: 404
+  note: >-
+    The OpenAPI declares a terms-of-service URL that returns 404. No terms-of-service page
+    could be found anywhere on spyderbat.com, so no `TermsOfService` pointer is emitted.
+- issue: info.contact.url points at the ReDoc viewer, not a support page
+  value: https://api.prod.spyderbat.com/openapi
+  status: 200
+- issue: openapi.pdf is not a PDF
+  value: https://api.spyderbat.com/openapi.pdf
+  status: 200
+  note: >-
+    The API-key tutorial links to https://api.spyderbat.com/openapi.pdf as "the Spyderbat
+    API documentation". It returns a 477-byte HTML page that mounts the ReDoc viewer
+    against /openapi.json — the content is correct but the .pdf extension is misleading,
+    and a client fetching it expecting a PDF gets HTML.
+- issue: license declared MIT on a commercial API contract
+  value: 'info.license: MIT (https://mit-license.org/)'
+  note: >-
+    The published contract declares an MIT license, which is a default left in place
+    rather than a considered statement about a commercial security API.

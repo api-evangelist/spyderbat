@@ -1,0 +1,348 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/spyderbat-openapi.json
+note: >-
+  Derived from the 226 component schemas and the id-reference fields they declare, plus
+  the path hierarchy of the 197 operations. Relationships marked `via` name a field that
+  genuinely appears in the contract; nothing is inferred from naming alone without a
+  matching field or path segment.
+root:
+  entity: Organization
+  id_field: org_uid
+  path_parameter: orgUID
+  note: >-
+    Organization is the tenancy root — 192 of 197 operations hang off
+    /api/v1/org/{orgUID}. Almost every other entity belongs_to an Organization.
+entities:
+- name: Organization
+  api_tag: Org
+  id: org_uid
+  operations:
+  - OrgList
+  - OrgLoad
+  - OrgUpdate
+  - OrgInviteUsers
+  relationships:
+  - has_many: Source
+    via: org_uid
+  - has_many: Cluster
+    via: org_uid
+  - has_many: Case
+    via: org_uid
+  - has_many: Investigation
+    via: org_uid
+  - has_many: SavedQuery
+    via: org_uid
+  - has_many: SearchSet
+    via: org_uid
+  - has_many: NotificationTarget
+    via: org_uid
+  - has_many: NotificationTemplate
+    via: org_uid
+  - has_many: CustomFlag
+    via: org_uid
+  - has_many: Watchlist
+    via: org_uid
+  - has_many: AnalyticsPolicy
+    via: org_uid
+  - has_many: AnalyticsRuleset
+    via: org_uid
+  - has_one: OrgType
+    via: org_type_uid
+  - has_many: Role
+    via: role_uid
+- name: OrgType
+  api_tag: OrgType
+  id: org_type_uid
+  operations:
+  - OrgTypeLoad
+  - OrgTypeLimitActiveSources
+  - OrgTypeLimitOrgRoles
+  note: Carries the plan-derived quotas an organization is subject to.
+- name: Role
+  api_tag: Org / RBAC
+  id: role_uid
+  operations:
+  - ListRoles
+  - OrgListRole
+  - OrgAssignRole
+  - OrgUnassignRole
+  - CanUserPerform
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: User
+    via: user_uid
+- name: Source
+  api_tag: Source
+  id: source_uid
+  aliases:
+  - src_uid
+  operations:
+  - SrcList
+  - SrcCreate
+  - SrcLoad
+  - SrcUpdate
+  - SrcDelete
+  - SrcSendData
+  - SrcListCount
+  - SrcAggregateCount
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: Agent
+    via: agent_uid
+  note: A Source is a monitored machine, VM or cluster node in the org's scope.
+- name: Agent
+  api_tag: Agent
+  id: agent_uid
+  operations:
+  - AgentKillPod
+  - AgentKillProcess
+  - AgentScanContainer
+  relationships:
+  - belongs_to: Source
+    via: source_uid
+  - has_one: AgentRegistration
+    via: agent_registration_uid
+  - has_many: AgentWork
+    via: agent_work_id
+  - has_many: AgentAction
+    via: action_uid
+  note: >-
+    The Nano Agent. The three Agent operations above are the only live response actions in
+    the API and the only ones that carry a 429.
+- name: AgentRegistration
+  api_tag: Agent Registration
+  id: agent_registration_uid
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+- name: AgentWork
+  api_tag: AgentWork
+  id: agent_work_id
+  aliases:
+  - user_work_id
+  relationships:
+  - belongs_to: Agent
+    via: agent_uid
+- name: Cluster
+  api_tag: Cluster
+  id: cluster_uid
+  operations:
+  - ClusterList
+  - ClusterLoad
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: Source
+    via: source_uid
+- name: Case
+  api_tag: Cases
+  id: caseID
+  operations_count: 43
+  operations:
+  - CaseList
+  - CaseCreate
+  - CaseLoad
+  - CasePatch
+  - CaseDelete
+  - CaseSearch
+  - CaseAssign
+  - CaseUnassign
+  - CaseClaim
+  - CaseClose
+  - CaseReopen
+  - CaseSnooze
+  - CaseWake
+  - CaseMerge
+  - CaseBulkMerge
+  - CaseAddNote
+  - CaseEditNote
+  - CaseAddHelper
+  - CaseRemoveHelper
+  - CaseWatch
+  - CaseUnwatch
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: Note
+    via: noteID
+  - has_many: Helper
+    via: userID
+  - belongs_to: User
+    via: user_uid
+    role: assignee
+  note: >-
+    The largest single entity in the contract. It carries a state machine — start, stop,
+    snooze, wake, claim, assign, close, reopen, merge, escalate to senior AI — plus ten
+    statistics operations over queues, throughput, transitions and escalation.
+- name: Investigation
+  api_tag: Investigation
+  id: investigationUID
+  operations:
+  - InvestigationList
+  - InvestigationCreate
+  - InvestigationLoad
+  - InvestigationUpdate
+  - InvestigationDelete
+  - InvestigationListVersions
+  - InvestigationLoadVersion
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: InvestigationVersion
+    via: version
+  note: Flashback investigations are versioned — earlier versions are readable, not restorable.
+- name: SavedQuery
+  api_tag: SavedQuery
+  id: saved_query_uid
+  operations:
+  - SavedQueryList
+  - SavedQueryCreate
+  - SavedQueryLoad
+  - SavedQueryUpdate
+  - SavedQueryDelete
+  - SavedQueryDependentsList
+  - SavedQueryShowAdditionalSettings
+  - SavedQueryUpdateLastUsed
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: NotificationSettings
+    via: ref_uid
+  - has_many: ForwardedEvent
+    via: SIEM forwarding toggle in additional settings
+  note: >-
+    The hinge of the event surface — SIEM forwarding and notifications are both attached
+    to a SavedQuery rather than configured globally.
+- name: SearchSet
+  api_tag: SearchSet
+  id: searchsetUID
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+- name: CustomFlag
+  api_tag: CustomFlag
+  id: customFlagUID
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: NotificationSettings
+    via: ref_uid
+- name: Watchlist
+  api_tag: Watchlist
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+- name: AnalyticsPolicy
+  api_tag: AnalyticsPolicy
+  id: analytic_uid
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - belongs_to: AnalyticsRuleset
+  note: Guardian workload policies.
+- name: AnalyticsRuleset
+  api_tag: AnalyticsRuleset
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: AnalyticsPolicy
+- name: NotificationTarget
+  api_tag: NotificationTarget
+  id: target_uid
+  aliases:
+  - notificationTargetUID
+  subtypes:
+  - email
+  - slack
+  - webhook
+  - pagerduty
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+- name: NotificationTemplate
+  api_tag: NotificationTemplate
+  id: template_uid
+  aliases:
+  - notificationTemplateUID
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - has_many: NotificationTarget
+    via: target-map
+- name: NotificationSettings
+  api_tag: Notifications
+  id: notification_settings_uid
+  aliases:
+  - nsUID
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - belongs_to: SavedQuery
+    via: ref_uid
+  - belongs_to: CustomFlag
+    via: ref_uid
+  - has_many: NotificationTarget
+    via: target_uid
+  - has_one: NotificationTemplate
+    via: template_uid
+- name: ForwardedEvent
+  api_tag: ForwardedEvents
+  operations:
+  - ForwardEvents
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+  - belongs_to: SavedQuery
+    via: forwarding-enabled saved query
+  note: Cursor-based iterator surface consumed by the Event Forwarder.
+- name: SearchJob
+  api_tag: AdhocSearch
+  id: query_id
+  aliases:
+  - jobID
+  operations:
+  - Search
+  - Results
+  - ObjectsStartQuery
+  - ObjectsPollResults
+  - ObjectsStopQuery
+  relationships:
+  - belongs_to: Organization
+    via: org_uid
+search_object_model:
+  note: >-
+    The security data an analyst actually queries is NOT modelled as REST resources — it
+    lives behind the adhoc search surface as named schemas, documented at
+    https://docs.spyderbat.com/reference/search/search-fields. The REST contract exposes
+    them only as opaque search results.
+  schemas:
+  - name: model_spydertrace
+    description: >-
+      A scored causal unit bundling related processes, connections and red flags into one
+      attack path. Carries a `score`; the MCP docs use `score > 50` as a triage threshold.
+  - name: model_connection
+    description: A network connection, searchable by IP, resolving to pod_uid / node.
+  - name: event_redflag
+    description: >-
+      A detection with `severity` and a MITRE ATT&CK mapping (for example TA0004.T1548
+      root_shell), plus a score.
+  cross_entity_ids:
+  - pod_uid
+  - ppuid
+  - containerID
+  - imageID
+  - machineUID
+  - cluster_name
+  - namespace
+  note: >-
+    `ppuid` is the parent-process link the docs use to walk a process tree; `pod_uid`
+    resolves through get_objects / Objects into pod name, namespace and node.
+cloud_identifiers:
+  note: Cloud attribution fields present in the schemas.
+  fields:
+  - cloud_account_id
+  - cloud_instance_id
+  - cloud_image_id

@@ -1,0 +1,105 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://docs.spyderbat.com/concepts/integrations/siem-forwarding.md,
+  https://docs.spyderbat.com/concepts/notifications/notification-targets.md,
+  openapi/spyderbat-openapi.json
+asyncapi_published: false
+note: >-
+  Spyderbat publishes no AsyncAPI document. /asyncapi.yaml and /asyncapi.json were not
+  served on any host and no event catalog exists in the docs index. Spyderbat DOES operate
+  a real event surface, in two distinct shapes recorded below: an outbound webhook /
+  notification-target system that the API configures, and a pull-based SIEM forwarding
+  feed. This file captures that surface as a webhook catalog; `type: Webhooks` is emitted,
+  `type: AsyncAPI` is NOT, because no spec exists to point at.
+delivery_models:
+- name: Outbound notifications
+  direction: outbound (Spyderbat -> customer endpoint)
+  transport: HTTPS POST, email, Slack incoming webhook, PagerDuty Events routing key, AWS SNS
+  configured_by: REST API and spyctl
+  trigger: >-
+    Notifications are attached to a Notifiable Object — usually a saved query or a custom
+    flag. When a record matches, the configured targets fire.
+  payload_contract: >-
+    Not published. Notification templates are customer-authored via NotificationTemplate
+    resources, so the delivered body is defined by the customer's template rather than by
+    a fixed provider schema. No sample webhook payload is published in the docs.
+  signing: not documented
+  retries: not documented
+  note: >-
+    A webhook target holds a single generic URL and nothing else — there is no shared
+    secret, signature header or verification handshake documented, so a receiver cannot
+    verify that a delivery came from Spyderbat.
+- name: SIEM forwarding
+  direction: pull (customer polls Spyderbat, or the Event Forwarder polls on their behalf)
+  transport: HTTPS long-poll iterator
+  configured_by: >-
+    A per-saved-query "SIEM Forwarding" toggle in Additional Settings; the API surfaces it
+    through SavedQueryShowAdditionalSettings and the SavedQuery resources.
+  operation: ForwardEvents
+  path: /api/v1/org/{orgUID}/events/*iterator
+  consumer: >-
+    github.com/spyderbat/event-forwarder, which polls, enriches each record with a
+    runtime_details object of host metadata, and writes to file, webhook, stdout or syslog.
+  permission: 'org:ManageSiemForwarding'
+  note: >-
+    Forwarding is not retroactive — enabling it forwards only records created afterwards.
+    A record matching several forwarding-enabled queries is forwarded once. Polling the
+    API directly instead of running the Event Forwarder requires the caller to manage the
+    cursor themselves.
+target_types:
+- type: email
+  create: NotificationTargetEmailCreate
+  update: NotificationTargetEmailUpdate
+  spec_field: emails[]
+- type: slack
+  create: NotificationTargetSlackCreate
+  update: NotificationTargetSlackUpdate
+  spec_field: url (Slack hook URL)
+- type: webhook
+  create: NotificationTargetWebhookCreate
+  update: NotificationTargetWebhookUpdate
+  spec_field: url (generic HTTPS endpoint)
+- type: pagerduty
+  create: NotificationTargetPagerDutyCreate
+  update: NotificationTargetPagerDutyUpdate
+  spec_field: routing_key
+- type: aws-sns
+  create: not exposed as a distinct operation in the public contract
+  note: >-
+    AWS SNS is named as a supported notification destination in the notification-targets
+    documentation but has no dedicated create operation in the published OpenAPI.
+lifecycle_operations:
+- NotificationTargetList
+- NotificationTargetLoad
+- NotificationTargetDelete
+- NotificationSettingsInitialize
+- NotificationSettingsSet
+- NotificationSettingsEnable
+- NotificationSettingsDisable
+- NotificationSettingsList
+- NotificationSettingsLoad
+- NotificationSettingsTest
+- OrgTestNotificationTarget
+- OrgLoadNotificationPolicy
+- OrgUpdateNotificationPolicy
+testing:
+  note: >-
+    Two test operations exist — NotificationSettingsTest (POST /test_notification) and
+    OrgTestNotificationTarget (POST /notification_policy/test_target) — so a target can be
+    fired on demand before it is relied on. This is the closest thing Spyderbat publishes
+    to a webhook sandbox.
+event_schemas:
+  note: >-
+    Forwarded records are Spyderbat search-schema objects, not a separate event vocabulary.
+    Schemas named in the SIEM forwarding and MCP documentation.
+  schemas:
+  - model_spydertrace
+  - model_connection
+  - event_redflag
+  reference: https://docs.spyderbat.com/reference/search/search-fields
+gaps:
+- No AsyncAPI or other machine-readable event contract is published.
+- No webhook payload schema or example payload is published.
+- No webhook signature, shared secret or verification mechanism is documented.
+- No webhook retry or delivery-guarantee policy is documented.

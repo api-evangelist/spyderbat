@@ -1,0 +1,89 @@
+generated: '2026-08-29'
+method: probed
+source: live GET of /.well-known/* on every Spyderbat host
+note: >-
+  Every /.well-known/* path probed on every Spyderbat host returned 404 or an HTML
+  shell. api.prod.spyderbat.com / api.spyderbat.com return a plain-text "404 page not
+  found" for all five paths. spyderbat.com returns a JSON 404 body
+  {"message":"security.txt not found"} for security.txt and the marketing 404 page for
+  the rest. docs.spyderbat.com (GitBook) 404s all five. app.spyderbat.com is a
+  single-page-app catch-all that answers HTTP 200 with the identical 5,597-byte console
+  HTML shell for EVERY path including /.well-known/agent-card.json — those 200s are NOT
+  documents and are recorded as misses. Because no path returned a real document, this
+  file carries NO WellKnown and NO SecurityTxt pointer in apis.yml; it records a verified
+  absence, not a presence.
+hosts:
+- host: api.spyderbat.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: spyderbat.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: 'JSON body: {"message":"security.txt not found"}'
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: docs.spyderbat.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: app.spyderbat.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss
+  - path: /.well-known/api-catalog
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss
+  - path: /.well-known/agent.json
+    status: 200
+    note: SPA catch-all HTML shell, not a document — treated as a miss

@@ -1,0 +1,136 @@
+generated: '2026-08-29'
+method: searched
+source: >-
+  https://pypi.org/pypi/spyctl/json, https://pypi.org/pypi/spydertop/json,
+  https://proxy.golang.org/github.com/spyderbat/event-forwarder/@latest,
+  https://api.github.com/orgs/spyderbat/repos
+note: >-
+  Spyderbat's first-party client tooling is Python and Go. npm, Maven Central, NuGet,
+  RubyGems, Packagist and crates.io were checked and carry no Spyderbat package. There is
+  no generated per-language REST SDK — the documented integration path is the CLI, the
+  raw REST API with a bearer key, or the MCP server.
+packages:
+- name: spyctl
+  registry: pypi
+  url: https://pypi.org/project/spyctl/
+  official: true
+  language: python
+  version: 0.24.2
+  published: '2026-04-09'
+  source_code: https://github.com/spyderbat/spyctl-cli
+  docs: https://docs.spyderbat.com/installation/spyctl
+  description: >-
+    The Spyderbat command line tool for viewing and managing Spyderbat resources —
+    policies, rulesets, notification targets and templates, saved queries and sources.
+    Installed with pipx or pip; the open-source version lives in spyderbat/spyctl-cli.
+  kind: cli
+  note: >-
+    The PyPI project_urls still point Source at github.com/spyderbat/spyctl while the docs
+    and the active repo are github.com/spyderbat/spyctl-cli (last push 2026-08-26). The
+    published GitHub release v0.24.2 (2026-04-09) matches the PyPI version, so the
+    registry is current with the tagged release even though repo activity is more recent.
+- name: spydertop
+  registry: pypi
+  url: https://pypi.org/project/spydertop/
+  official: true
+  language: python
+  version: 1.4.0
+  published: '2025-03-04'
+  source_code: https://github.com/spyderbat/spydertop
+  docs: https://docs.spyderbat.com/installation/spydertop
+  description: >-
+    htop-like terminal UI for any point in time, built on the Spyderbat public APIs — lets
+    an analyst replay process and resource state days or months after the fact.
+  kind: cli
+  note: >-
+    Last release 2025-03-04, roughly 18 months before this pass; the repo's last push
+    matches the release date, so the tool appears feature-complete rather than actively
+    developed.
+- name: github.com/spyderbat/event-forwarder
+  registry: go
+  url: https://pkg.go.dev/github.com/spyderbat/event-forwarder
+  official: true
+  language: go
+  version: v0.0.0-20250515150500-12da3abe5ba8
+  published: '2025-05-15'
+  source_code: https://github.com/spyderbat/event-forwarder
+  docs: https://docs.spyderbat.com/installation/spyderbat-event-forwarder
+  description: >-
+    Polls the Spyderbat SIEM forwarding API and delivers events to a SIEM, log management
+    platform or any HTTP endpoint. Distributed as a Helm chart and a traditional installer
+    as well as Go source.
+  kind: integration
+  note: >-
+    No semantic version tag has been published to the Go module proxy — the latest is a
+    pseudo-version from the default branch, so consumers cannot pin a release.
+- name: nanoagent_helmchart
+  registry: helm
+  url: https://github.com/spyderbat/nanoagent_helmchart
+  official: true
+  language: helm
+  version: null
+  published: '2026-08-11'
+  source_code: https://github.com/spyderbat/nanoagent_helmchart
+  docs: https://docs.spyderbat.com/installation/spyderbat-nano-agent/kubernetes
+  description: Public Helm chart for deploying the Spyderbat Nano Agent to a Kubernetes cluster.
+  kind: agent
+  note: >-
+    version is null because a Helm repository index was not read in this pass — the date
+    recorded is the repository's last push, not a chart release. Checked, nothing
+    registry-dated to record.
+- name: aws_agent_helmchart
+  registry: helm
+  url: https://github.com/spyderbat/aws_agent_helmchart
+  official: true
+  language: helm
+  version: null
+  published: '2025-04-09'
+  source_code: https://github.com/spyderbat/aws_agent_helmchart
+  docs: https://docs.spyderbat.com/installation/spyderbat-aws-agent/aws-agent-helm
+  description: Public Helm chart for the Spyderbat AWS Agent.
+  kind: agent
+  note: version is null for the same reason as nanoagent_helmchart; date is last repo push.
+- name: mcp-client-py
+  registry: github
+  url: https://github.com/spyderbat/mcp-client-py
+  official: true
+  language: python
+  version: null
+  published: '2026-06-04'
+  source_code: https://github.com/spyderbat/mcp-client-py
+  description: >-
+    Reference MCP client — a CLI chat loop and FastAPI server that connect to the
+    Spyderbat MCP server and drive it with OpenAI tool-calling. A client for the MCP
+    server, not the server itself.
+  kind: example
+  note: >-
+    Not published to any package registry; installed from source with uv. version is null
+    because no registry entry exists to read one from. Date is last repo push.
+- name: api_examples
+  registry: github
+  url: https://github.com/spyderbat/api_examples
+  official: true
+  language: python
+  version: null
+  published: '2025-07-18'
+  source_code: https://github.com/spyderbat/api_examples
+  description: Provider-published Python examples of calling the Spyderbat public API.
+  kind: examples
+  note: Not a package; no registry entry, so version is null. Date is last repo push.
+registries_checked:
+- registry: npm
+  result: no Spyderbat package (spyderbat 404, @spyderbat/mcp 404)
+- registry: pypi
+  result: spyctl and spydertop found; spyderbat, spyderbat-api, spyctl-api all 404
+- registry: go
+  result: event-forwarder resolves via proxy.golang.org, pseudo-version only
+- registry: maven-central
+  result: not checked in registry API; no Java SDK referenced anywhere in the docs or org
+- registry: nuget
+  result: no Spyderbat package referenced in docs or GitHub org
+- registry: rubygems
+  result: no Spyderbat package referenced in docs or GitHub org
+- registry: crates.io
+  result: no Spyderbat package referenced in docs or GitHub org
+- registry: packagist
+  result: no Spyderbat package referenced in docs or GitHub org

@@ -1,0 +1,106 @@
+generated: '2026-08-29'
+method: searched
+source: https://docs.spyderbat.com/installation/mcp.md
+name: Spyderbat MCP Server
+description: >-
+  A first-party, provider-hosted Model Context Protocol server that exposes Spyderbat's
+  search, investigation and management surface to MCP-compatible AI clients. Documented
+  and supported by Spyderbat with one-click installers for Cursor, VS Code and LM Studio
+  and a documented `claude mcp add` command. Transport is streamable-HTTP; authentication
+  is an API key presented as `Authorization: Bearer <api-key>` — the same key used for the
+  REST API, inheriting the creating user's RBAC role. The docs state plainly that OAuth is
+  not currently supported.
+status: published
+deployment:
+  mode: remote
+  endpoint: https://api.spyderbat.com/mcp/v1/mcp
+  auth: api-key
+  verified: probed
+  transport: streamable-http
+  protocol_version_header: MCP-Protocol-Version
+  regions:
+  - region: US
+    endpoint: https://api.spyderbat.com/mcp/v1/mcp
+  - region: Mumbai
+    endpoint: https://api.mum.prod.spyderbat.com/mcp/v1/mcp
+  install_command: >-
+    claude mcp add --transport http -s user spyderbat https://api.spyderbat.com/mcp/v1/mcp
+    --header "Authorization: Bearer <your-api-key>"
+x-evidence:
+  fetched: '2026-08-29'
+  tools_list_probe:
+    url: https://api.spyderbat.com/mcp/v1/mcp
+    method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    http_status: 403
+    result: >-
+      Anonymous tools/list is rejected with HTTP 403 and no WWW-Authenticate challenge —
+      the server exists and is auth-gated behind an API key. The response advertised
+      MCP-Protocol-Version and Mcp-Session-Id in access-control-allow-headers, confirming
+      a live MCP endpoint rather than a generic 403 page.
+  oauth_discovery:
+  - url: https://api.spyderbat.com/.well-known/oauth-protected-resource
+    http_status: 404
+  - url: https://api.spyderbat.com/.well-known/oauth-authorization-server
+    http_status: 404
+  note: >-
+    No OAuth discovery documents are served, consistent with the docs statement that the
+    MCP server authenticates by API key only. Tool inputSchemas therefore require
+    authenticated introspection; the tools below are the ones Spyderbat names in its own
+    documentation, with names and purposes verbatim from the docs — NOT a live tools/list
+    dump, and NOT derived from the OpenAPI.
+tools:
+- name: onboard
+  description: Teach the assistant what Spyderbat tools exist and how to use them.
+  category: orientation
+  source: docs
+- name: prime
+  description: Load Spyderbat investigation workflows and schemas into the assistant's context.
+  category: orientation
+  source: docs
+- name: search_docs
+  description: Search the Spyderbat documentation for query syntax, schemas and concepts.
+  category: orientation
+  source: docs
+- name: list_organizations
+  description: List the organizations the calling API key has access to, with names and UIDs.
+  category: organization
+  source: docs
+- name: get_current_time
+  description: Return the current time, used to bound and validate search time ranges.
+  category: utility
+  source: docs
+- name: get_trace_contents
+  description: >-
+    Pull the processes, connections and red flags linked to a Spydertrace, walking the
+    process tree via ppuid to show parent-child relationships.
+  category: investigation
+  source: docs
+- name: get_objects
+  description: >-
+    Resolve object UIDs (for example a pod_uid) into full objects — pod name, namespace
+    and node.
+  category: investigation
+  source: docs
+- name: suppress_trace
+  description: >-
+    Generate a suppression policy for a Spydertrace, with preview=true to render the
+    policy and its scope before it is applied.
+  category: response
+  source: docs
+  write: true
+  reversible_via: Suppression policies are managed objects and can be deleted or edited after creation.
+search_schemas:
+  note: >-
+    The docs describe search as running against named schemas rather than as one tool per
+    schema. Schemas named explicitly in the MCP documentation.
+  schemas:
+  - model_spydertrace
+  - model_connection
+  - event_redflag
+clients_documented:
+- Claude Code
+- Cursor
+- Windsurf
+- VS Code (Cline / Continue)
+- LM Studio
+- MCP Inspector

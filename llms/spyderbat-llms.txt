@@ -1,0 +1,89 @@
+# Spyderbat
+
+## Spyderbat
+
+- [Spyderbat Product Docs](https://docs.spyderbat.com/readme.md): Everything you need to know about our cloud-native runtime security platform that will provide you with continuous security monitoring, improved observability and timely alerting.
+- [Getting Started](https://docs.spyderbat.com/getting-started.md): Introduction to essential features and functionality of the Spyderbat console.
+- [Create an Organization](https://docs.spyderbat.com/getting-started/create-an-organization.md): Spyderbat Accounts are tied to one or more Organizations. Membership to an Organization is a requirement for installing the Spyderbat Nano Agent and fully utilizing Spyderbat as a whole.
+- [Install the Nano Agent](https://docs.spyderbat.com/getting-started/install-the-nano-agent.md): Once you have successfully logged into your organization, the next step is to install the Nano Agent
+- [Three Things to Try with Spyderbat Community Edition](https://docs.spyderbat.com/getting-started/three-things-to-try-with-spyderbat-community-edition.md): Review your security monitoring scope, trace your own activity at runtime, and validate detected suspicious activity via Spyderbat flags.
+- [Manage Users and Roles](https://docs.spyderbat.com/getting-started/spyderbat-user-and-role-management-overview.md): Manage team members and control their access levels in your Spyderbat organization.
+- [Help and Support](https://docs.spyderbat.com/getting-started/help-and-support.md): How to get help, report issues, and find the right contact for your question.
+- [Installation](https://docs.spyderbat.com/installation.md): Spyderbat Nano Agent installation and deployment configuration options.
+- [Spyderbat Nano Agent](https://docs.spyderbat.com/installation/spyderbat-nano-agent.md): Nano Agent operational principles, compatibility, network requirements and proxy support, general FAQ
+- [Kubernetes](https://docs.spyderbat.com/installation/spyderbat-nano-agent/kubernetes.md): Nano Agent install via public or locally hosted Helm Chart or manually via daemonset; configuring parameters (memory and CPU resources, priority class), and validating install into a K8s cluster.
+- [Pre Deployment Environment Data Collection Script](https://docs.spyderbat.com/installation/spyderbat-nano-agent/kubernetes/spyderbat-pre-deployment-environment-data-collection.md): Optimize your Helm Chart values to ensure proper sizing of the Spyderbat Nano Agent parameters for your K8s environment.
+- [Linux Standalone](https://docs.spyderbat.com/installation/spyderbat-nano-agent/linux-vm.md): This section covers: adding a source to your monitoring scope in Spyderbat console, generating installation scripts/commands, and running the agent installer on the target machine.
+- [AWS Unattended Install](https://docs.spyderbat.com/installation/spyderbat-nano-agent/aws-unattended-install.md): Automatic installation of the Spyderbat Nano Agent on an AWS EC2 instance with auto-scaling groups using the instance launch wizard.
+- [Secure your Registration Code with AWS Secrets Manager](https://docs.spyderbat.com/installation/spyderbat-nano-agent/aws-unattended-install/aws-secrets-manager-overview.md): Learn how to leverage AWS Secrets Manager as a secret store for the Nano Agent Registration Code (There is an assumption that you are familiar with AWS, IAM, and EKS and how the 3 interact).
+- [Create a Golden Image with the Nano Agent Pre-Installed](https://docs.spyderbat.com/installation/spyderbat-nano-agent/creating-vm-golden-images-that-include-spyderbats-nano-agent.md): Template Spyderbat Nano Agent install via Golden Image for environments with auto-scaling and automation requirements.
+- [Spyderbat AWS Agent](https://docs.spyderbat.com/installation/spyderbat-aws-agent.md): Overview of the AWS Agent, deployment options and how to get started
+- [AWS Linux VM](https://docs.spyderbat.com/installation/spyderbat-aws-agent/aws-agent-vm.md): Automatic installation of the Spyderbat AWS Agent on an AWS EC2 instance
+- [Kubernetes](https://docs.spyderbat.com/installation/spyderbat-aws-agent/aws-agent-helm.md): Automatic installation of the Spyderbat AWS Agent on a Kubernetes Cluster
+- [Configuration Guide - AWS Linux VM](https://docs.spyderbat.com/installation/spyderbat-aws-agent/aws-agent-vm-configuration.md): Detailed configuration guide for the Spyderbat AWS Agent installed on an AWS VM
+- [Configuration Guide - Kubernetes](https://docs.spyderbat.com/installation/spyderbat-aws-agent/aws-agent-helm-configuration.md)
+- [Install Spyctl CLI](https://docs.spyderbat.com/installation/spyctl.md): Spyctl, an open source CLI tool, allows you to view and manage resources within your Spyderbat environment.
+- [Initial Configuration](https://docs.spyderbat.com/installation/spyctl/spyctl-initial-configuration.md): Learn how to quickly configure Spyctl to interact with your Spyderbat data
+- [Install Spydertop CLI](https://docs.spyderbat.com/installation/spydertop.md): Learn how Spyderbat leverages kernel-level system monitoring and public APIs to expand HTOP functionality to allow analysts to look into system anomalies days or even months later.
+- [Install the Spyderbat Event Forwarder](https://docs.spyderbat.com/installation/spyderbat-event-forwarder.md): Install the Spyderbat Event Forwarder to deliver SIEM-forwarded events from Spyderbat to your SIEM, Splunk, or any HTTP endpoint.
+- [Helm Chart](https://docs.spyderbat.com/installation/spyderbat-event-forwarder/helm-chart.md): Install the Spyderbat Event Forwarder on Kubernetes using the Helm chart.
+- [Traditional Installer](https://docs.spyderbat.com/installation/spyderbat-event-forwarder/traditional-installer.md): Install the Spyderbat Event Forwarder on Linux using the traditional installer.
+- [Install the Spyderbat MCP Server](https://docs.spyderbat.com/installation/mcp.md): Model Context Protocol (MCP) server for LLMs to interact with Spyderbat's API, enabling AI assistants to search, query, and manage Spyderbat resources.
+- [Concepts](https://docs.spyderbat.com/concepts.md): The Concepts section helps you learn about the Spyderbat Platform. This section is designed to provide a comprehensive understanding of the fundamental ideas and principles that let you view and secur
+- [Guardian & Interceptor](https://docs.spyderbat.com/concepts/guardian.md)
+- [Ruleset Policies](https://docs.spyderbat.com/concepts/guardian/ruleset_policies.md)
+- [Workload Policies](https://docs.spyderbat.com/concepts/guardian/workload_policies.md): Workload Policies define allowed process and network activity for containers and Linux services, alerting or blocking deviations from expected behavior.
+- [Flashback (Go Back In Time)](https://docs.spyderbat.com/concepts/flashback.md)
+- [Investigations](https://docs.spyderbat.com/concepts/flashback/investigations.md): Overview of Process Investigations in the Spyderbat Console — the Records Panel, Causal Tree, and Details Panel for visual causal analysis of Spydertraces.
+- [Search](https://docs.spyderbat.com/concepts/search.md): Detailed overview of the Search tab in the console and the Spyderbat search language it uses.
+- [Saved Searches](https://docs.spyderbat.com/concepts/search/saved-search.md): Store and reuse search queries in Spyderbat. Enable notifications and SIEM forwarding on saved queries to automate alerting and event delivery.
+- [Summarize](https://docs.spyderbat.com/concepts/summarize.md)
+- [Spydertrace Summarize](https://docs.spyderbat.com/concepts/summarize/spydertrace-summarize.md)
+- [Dashboards](https://docs.spyderbat.com/concepts/dashboards.md): Detailed overview of the Dashboard section of the console, including collected types of data, data management (sorting, filtering and grouping), and shortest path to investigating suspicious activity.
+- [Dashboard Categories](https://docs.spyderbat.com/concepts/dashboards/spyderbat-dashboard-categories.md): The seven built-in dashboard categories in Spyderbat: Security, User Tracking, Policy, Operations, Network, Inventory, and Kubernetes. Includes the full list of default cards in each category.
+- [Reports](https://docs.spyderbat.com/concepts/reports.md): Overview of the Reporting section of the console, including report creation, review, download and printing.
+- [Notifications](https://docs.spyderbat.com/concepts/notifications.md): Get notified when Spyderbat detects operations issues or suspicious behavior at runtime in your environment.
+- [Notification Targets](https://docs.spyderbat.com/concepts/notifications/notification-targets.md)
+- [Notification Templates](https://docs.spyderbat.com/concepts/notifications/notification-templates.md)
+- [Actions](https://docs.spyderbat.com/concepts/actions.md): Overview of manual response actions that can be executed in the UI, including killing a process or killing a pod.
+- [Integrations](https://docs.spyderbat.com/concepts/integrations.md): Integrate Spyderbat with your existing security infrastructure — route events to your SIEM, connect AWS accounts, and forward data to external tools.
+- [SIEM Forwarding](https://docs.spyderbat.com/concepts/integrations/siem-forwarding.md): How Spyderbat SIEM forwarding works — enabling forwarding on saved queries and deploying the Event Forwarder to deliver events to your SIEM.
+- [AWS Integration](https://docs.spyderbat.com/concepts/integrations/aws.md): Overview of the AWS Context Integration using the AWS Agent
+- [Spyderbat Event Forwarder](https://docs.spyderbat.com/concepts/integrations/spyderbat-event-forwarder.md): The Spyderbat Event Forwarder polls the SIEM forwarding API and delivers events to your SIEM, log management platform, or any HTTP endpoint.
+- [Suppression & Tuning](https://docs.spyderbat.com/concepts/suppression.md)
+- [Scout (Detections)](https://docs.spyderbat.com/concepts/scout.md)
+- [Spydertraces](https://docs.spyderbat.com/concepts/scout/spydertraces.md): A Spydertrace is a causally connected record of system activity. This page explains how traces are triggered, scored, and reviewed by analysts.
+- [Custom Flags](https://docs.spyderbat.com/concepts/scout/custom-flags.md)
+- [Tutorials](https://docs.spyderbat.com/tutorials.md)
+- [Flashback](https://docs.spyderbat.com/tutorials/flashback.md)
+- [How to Use the Investigations Feature in Spyderbat](https://docs.spyderbat.com/tutorials/flashback/how-to-investigate-in-spyderbat.md): How to use the Causal Tree in a Process Investigation — adding and removing nodes, toolbar controls, right-click context menus, data layers, and sharing investigation links.
+- [Guardian](https://docs.spyderbat.com/tutorials/guardian.md)
+- [How to Lock Down Your Workloads With Guardian Policies Using Spyctl](https://docs.spyderbat.com/tutorials/guardian/how-to-lock-down-your-critical-workloads-with-policies-spyctl.md): This page will teach you about Guardian Workload Policies. It will explain what they are, how to create them, how to apply them, and how to manage them.
+- [How to Put Guardrails Around Your K8s Clusters Using Spyctl](https://docs.spyderbat.com/tutorials/guardian/how-to-put-guardrails-around-your-k8s-cluster-spyctl.md): This tutorial will walk you through the creation, tuning, and management of Cluster Ruleset Policies.
+- [Integrations](https://docs.spyderbat.com/tutorials/integrations.md): Step-by-step guides for integrating Spyderbat with external tools and SIEMs.
+- [SIEM Forwarding Quickstart](https://docs.spyderbat.com/tutorials/integrations/siem-forwarding-quickstart.md): Set up SIEM forwarding end to end — enable a saved search, install the Event Forwarder, and verify events reach your SIEM.
+- [Panther Webhook Configuration](https://docs.spyderbat.com/tutorials/integrations/forwarder-panther-config.md): Configure the Spyderbat Event Forwarder to send events to Panther via webhook.
+- [How to Set Up Spyderbat to Ingest Falco Alerts](https://docs.spyderbat.com/tutorials/integrations/falco-connector-deployment.md): Let's talk about the most optimal way to integrate Falco security detections with Spyderbat platform to further enhance the cloud-native runtime security monitoring value of Spyderbat.
+- [How to Create and Use a Spyderbat API Key](https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api.md): Spyderbat leverages API very heavily. To configure a variety of inbound and outbound API integrations, you will need to generate your API key. Learn how to create, maintain and manage your API keys.
+- [Notifications](https://docs.spyderbat.com/tutorials/notifications.md)
+- [How to Set Up Notifications Using Spyctl](https://docs.spyderbat.com/tutorials/notifications/how-to-set-up-spyderbat-notifications-spyctl.md): Configure Notifications using Spyctl to receive alerts for significant Security or Operations events.
+- [How to Set up Agent-Health Notifications Using Spyctl](https://docs.spyderbat.com/tutorials/notifications/how-to-set-up-agent-health-notifications-in-spyctl.md)
+- [Dashboards](https://docs.spyderbat.com/tutorials/how-to-create-custom-dashboards.md): Learn about how to create custom Spyderbat dashboards and dashboard cards using Athena Search or existing dashboard templates, as well as how to share and manage access to the custom dashboards.
+- [Miscellaneous](https://docs.spyderbat.com/tutorials/miscellaneous.md)
+- [Scout (Detections)](https://docs.spyderbat.com/tutorials/scout.md)
+- [How to Set Up Custom Flags Using Spyctl CLI](https://docs.spyderbat.com/tutorials/scout/setup-custom-flags.md)
+- [Reference](https://docs.spyderbat.com/reference.md)
+- [Policies](https://docs.spyderbat.com/reference/policies.md)
+- [Response Actions](https://docs.spyderbat.com/reference/policies/response-actions.md)
+- [Rulesets](https://docs.spyderbat.com/reference/rulesets.md)
+- [Selectors](https://docs.spyderbat.com/reference/selectors.md)
+- [Notifications](https://docs.spyderbat.com/reference/notifications.md)
+- [Spyctl CLI](https://docs.spyderbat.com/reference/spyctl.md)
+- [Spyctl Commands](https://docs.spyderbat.com/reference/spyctl/spyctl-commands.md)
+- [Guardian Policy Management using Spyctl](https://docs.spyderbat.com/reference/spyctl/guardian-policy-management-spyctl.md): This reference page details the commands used to manage Guardian Workload Policies
+- [Notification Template Management using Spyctl](https://docs.spyderbat.com/reference/spyctl/notification-template-management-spyctl.md)
+- [Notification Target Management using Spyctl](https://docs.spyderbat.com/reference/spyctl/notification-targets-management-spyctl.md)
+- [Search](https://docs.spyderbat.com/reference/search.md)
+- [All Operators](https://docs.spyderbat.com/reference/search/search-operators.md)
+- [All Fields](https://docs.spyderbat.com/reference/search/search-fields.md)
+- [All Related Objects](https://docs.spyderbat.com/reference/search/search-joins.md)
