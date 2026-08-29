@@ -1,0 +1,112 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat RBAC API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged RBAC across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: RBAC
+  description: "# Introduction \n\nThis RBAC model is based off of Amazon's model with some simplifications and generic assumptions\n\nA user has some number of roles on some number of organizations, each role defines some statements\nwhich determine determine if the user has access to some resources. These role based statements\nare combined with a policy which may be attached to the resource to be accessed. \n\nSo essentially acccess is determined by the combination of identity based polices and resource\nbased policies. \n\nAll associated statements from both the user's roles and the resources policy are considered before\naccess is granted. If any statement denies access then access is denied, at least one statement\nmust explicitly grant access to the resource, and if no statement denies or grants access then \naccess is not granted. \n\n\nThe resulting access decision is a combination of:\n\n```\nEvaluate(Roles(User,Org),Resource) - will evaluate all possible user roles on the resource\nEvaluate(GlobalRoles(User),Resource) - will evaluate all possible user roles on the resource\nEvaluate(CrossOrgRoles(User,Org),Resource) - will evaluate all possible cross org roles on the resource\nEvaluate(Resource.Policy,User) - will evalute the requesting user against the resource policy\n```\n\nThis means that a user role can specify what the user can access, while a specific resource\npolicy has the ability to deny access to a single user, or a user based upon roles or\ntags. \n\n# Example user role\n\n```json\n{\n\t\"name\":\"CatFeeder\",\n\t\"version\":\"1.0.0\",\n\t\"statements\":[\n\t\t{\n\t\t\t\"sid\":\"FeedCats\",\n\t\t\t\"effect\":\"allow\",\n\t\t\t\"actions\":[ \"cat:feed\" ],\n\t\t\t\"resources\":[ \"srn:cat:::*\" ],\n\t\t\t\"condition\": { \"not\": { \"has_tag\":\"obese\"}}\n\t\t}\n\n\t]\n}\n```\n\nThis example user role defines a role called 'CatFeeder', which is allowed to perform 'cat:feed' on all resources which match 'srn\\:cat\\:::\\*', as long as the cat the role\nis being used on does not have the tag 'obese'.\n\n# Global vs Organization roles\n\nA global role is a role which does not have a specific context, it is 'global' in that it \napplies to all resources a user might interact with. An organizational role is assigned to a\nspecific organization, and therefore limited to the context of that organization. \n\nFor example a global role is one which allows a user to change their own password, or\nperform other actions which do not involve an organization. An organizational role\nis a role which allows actions on resources owned by an organization. \n\nAn example of this is a typical user:\n\n * Global Role (User) \n  * Allows the user to modify their own settings, change their password, etc. \n * Org Role (OrgOwner) \n  * Allows the user to modify an organization\n  * Applied to specific organizations\n\n# User Roles\n\nUsers may zero or more roles defined on different organizations, along with global roles\n, a role is defined with the following attributes\n\n * Name - Name of the policy, used to match to roles associated with users\n * Version  - Version of the role schema\n * Statements - Some number of statements\n\n# Resource Policy\n\nA resource may have a single policy with multiple statements associated with it, it has\nthe following attributes\n \n * Name - Name of the policy, used to match to roles associated with users\n * Version  - Version of the role schema\n * Statements - Some number of statements\n\n# Statement\n\nEach role or policy has some statements defined with it, each statement defines\nwhat actions are allowed or dissallowed\n\nStatements have the following attributes\n\n * SID - statment ID used for debugging and identification\n * Effect - the result of the statement (deny, allow)\n * Actions - a list of actions \n * Resources - a list of resource queries\n * Condition - an optional condition that will be applied to statements to determine if they apply\n\n## Statement Effects\n\nTo determine if access may be granted the statements associated with the user roles,\ncross account roles, and resources are evaluated. If any statement returns a deny then \nall further evaluation is stopped and the result is a denial. At least one statement\nmust allow access for access to be granted. If no statement denies or allows access\nthen the system will not allow access.\n\n## Actions\n\nActions are a combination of Service:Action, and also have a few wild card patterns:\n\n```\n* \t\t- match any action\nservice:* \t- match any action on this service\nservice:action\t- match this explicit combination of action and service\n```\n\n## Spyderbat Resource Names\n\nEach resource in the RBAC system is given a name like so:\n\n```\nsrn:service:region:org:resource\n```\n\nThe resource name is expected to expand into a path like resource name when a hierarchy is needed, \nfor example:\n\n```\nsrn:report:aws-us-west-1:org-1:agent-usage-report/download.pdf\n```\n\nThese resource names are matched in policies against resource queries:\n\n```\nsrn:report:::*/*.pdf\n```\n\nIs an example of resource query which would match the above resource. \n\nThe following globs are supported in resource names\n\n```\n/**/   - match zero or more directories\n{a,b}  - match a or b, no spaces\n*      - match any non-separator char\n?      - match a single non-separator char\n**/    - match any directory, start of pattern only\n/**    - match any this directory, end of pattern only\n!      - removes matches from resultset, start of pattern only\n```\n\n```\n* \t\t\t- match all resources\nsrn::::*\t \t- match all resources\nsrn:report::::* \t- match all report resources\nsrn:report::org-1:* \t- match all resources in a specific org\n```\n\n## Conditions\n\nThe system will first evalute if the requested resource and the requested action\nmatch, if so then the system will evaluate any conditions which are specified on \nthe statement. \n\nThe following conditions are supported:\n\n```\n{ not: condition } - not of the specified condition\n{ and: [....] }\t - and of all contained conditions\n{ or: [....] } \t - or of all contained conditions\n{ has_tag:\"tag\"}\t -  returns true if the resource has the associated tag\n{ has_role:\"role\", on_org:\"org-1\" } - returns true if the user has a role of 'role' on 'org-1'\n```\n\n# User Roles\n\nUsers are mapped to roles within an organization via a userToRole relationship, \nwhich allows for a user to have many roles on many organizations. \n\n```\n(User, Org, Role)...\n```\n\n*This means that a user can have many different roles on different organizations* \n\nFor example the user David may have roles on multiple organizations:\n\n````\nDavid\n\tOrg1: Analyat\n\tOrg1: Operator\n\tOrg2: Analyst\n\t...\n````\n\nThese roles are mapped by name to a specific role implementation.\n\n## Cross Org Roles\n\nCross org roles for use by MSSPs are supported by having the managed \norganization defining a special cross-org role with the following\nattributes:\n\n * Org - The org the cross org role applies to\n * Condition - The condition to evaluate\n * AssumeRole - The role the user may assume\n\n## Example cross org role\n\n```json\n{\n\t\"org\":\"house-1\",\n\t\"assume_role\":\"CatPetter\",\n\t\"version\":\"1.0.1\",\n\t\"condition\": { \"has_role\":\"CatPetter\", \"on_org\":\"house-2\" }\n}\n```\n\nThis role will allow any user who has the role 'CatPetter' in the org 'house-2' to assume\nthe role 'CatPetter' in 'house-1'\n\n\n\n\n\n\n"
+paths:
+  /api/v1/rbac/capabilities/:
+    post:
+      tags:
+      - RBAC
+      summary: Query allows actions on objects
+      description: "Allows for querying of what actions a user can perform; results may be cached for a short period of time.\n\nEach action names the resource it is queried against with a Spyderbat Resource Name (SRN) in\n'resource_name'. An SRN has five colon-separated fields:\n\n    srn:<service>:<region>:<org>:<resource>\n\nA field left empty matches broadly for that dimension. To query an org-scoped action without\ntargeting a specific org — for example a global \"load expired orgs\" check — use the org-less SRN\n'srn:org:::' rather than an empty string. A malformed 'resource_name' cannot be evaluated and is\nrejected with a 400 rather than reported as a denied ('can_perform: false') result.\n\nAn unrecognized 'action' does not fail the request: that entry is returned with 'can_perform' false\nand an 'error' set, so a caller probing a mix of actions still gets answers for the valid ones."
+      operationId: CanUserPerform
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanUserPerformInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiRBACActions'
+        '400':
+          description: A resource_name is not a valid Spyderbat Resource Name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    ApiRBACActions:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RBACAction'
+          maxItems: 25
+    RBACAction:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Action which meets the requirements of RBAC action naming
+          maxLength: 32
+        can_perform:
+          type: boolean
+          description: Return result of querying the users RBAC capabilities
+        error:
+          type: string
+          description: Error returned from permission checking
+        resource_name:
+          type: string
+          description: ResourceName which meets the requirements of RBAC resource naming
+          maxLength: 128
+    CanUserPerformInput:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RBACAction'
+          maxItems: 25
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

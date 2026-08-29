@@ -1,0 +1,296 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Agent Work API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged AgentWork across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: AgentWork
+  description: "\nAgentWork API is intended for use by the UI to convey work & configuration to agents, this data can be specific to an agent or gloal to an organization. \n\nAn example use case is configuration data for a specific bat. The agents then overlay the global work data atop, the organizationan work (if defined), atop the specific agent work. \n\n\t"
+paths:
+  /api/v1/org/{orgUID}/agent/{agentUID}/work:
+    get:
+      tags:
+      - AgentWork
+      summary: Get agent work data for a specific agent
+      description: "\nGet the work data for a specified agent.\n\n * Requires *agent_data:GetAgentData*\n"
+      operationId: AgentGetAgentWork
+      parameters:
+      - name: agentUID
+        in: path
+        description: Agent UID
+        required: true
+        schema:
+          type: string
+          description: Agent UID
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAgentWorkOutput'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    post:
+      tags:
+      - AgentWork
+      summary: Set agent work data for a specific agent
+      description: "\nSet the work data for a specified agent.\n\n * Requires *agent_data:Set* \n"
+      operationId: AgentSetAgentWork
+      parameters:
+      - name: agentUID
+        in: path
+        description: Agent UID
+        required: true
+        schema:
+          type: string
+          description: Agent UID
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentSetAgentWorkInput'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    delete:
+      tags:
+      - AgentWork
+      summary: Delete agent work data for a specific agent
+      description: "\nDelet the work data for a specified agent.\n\n * Requires *agent_data:Delete* \n"
+      operationId: AgentDeleteAgentWork
+      parameters:
+      - name: agentUID
+        in: path
+        description: Agent UID
+        required: true
+        schema:
+          type: string
+          description: Agent UID
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/agent_work:
+    get:
+      tags:
+      - AgentWork
+      summary: Get agent work data for the organization
+      description: "\nGet the work data for all agents associated with the organization.\n\n * Requires *agent_data:GetOrgData*\n"
+      operationId: AgentGetOrgWork
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAgentWorkOutput'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    post:
+      tags:
+      - AgentWork
+      summary: Set agent work data for a specific agent
+      description: "\nSet the work data for a specified agent.\n\n * Requires *agent_data:SetData*\n"
+      operationId: AgentSetOrgWork
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentSetOrgWorkInput'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    delete:
+      tags:
+      - AgentWork
+      summary: Delete agent work for an org
+      description: "\nDelete the work data for all agents for an organization.\n\n * Requires *agent_data:Delete* \n"
+      operationId: AgentDeleteOrgWork
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    AgentSetAgentWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+    ApiAgentWorkOutput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+    Orc_apiBatWork:
+      type: object
+      properties:
+        arguments:
+          type: array
+          items:
+            type: string
+          description: arguments to pass to the commandline
+          maxItems: 64
+        bat_uid:
+          type: string
+          description: ID of this specific type of bat, specified by Spyderbat
+          maxLength: 32
+        enabled:
+          type: boolean
+          description: Execute this bat or not?
+        parameters:
+          type: object
+          additionalProperties: {}
+          description: input parameters to the bat
+        start_order:
+          type: integer
+          description: Order in which to start this bat
+          format: int32
+        uid:
+          type: string
+          description: uid of the specific bat work for a specific agent
+          maxLength: 32
+        version:
+          type: object
+          additionalProperties: {}
+          description: Newest version of the bat from the repository
+    Orc_apiAgentWork:
+      type: object
+      properties:
+        work:
+          type: array
+          items:
+            $ref: '#/components/schemas/Orc_apiBatWork'
+          description: Array of bats to execute
+          maxItems: 32
+      description: Agent work, which is sent to the agents
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    AgentSetOrgWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

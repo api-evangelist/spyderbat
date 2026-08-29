@@ -1,0 +1,844 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Source API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Source across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Source
+  description: "\nSources are used to represent a container for source of security data, such as a machine,\nor other potential source. \n\nThe source itself has data associated with the source, see the 'Source Data' APIs for \naccess to source data.\n"
+paths:
+  /api/v1/integration/soar/org/{orgUID}/source/:
+    get:
+      tags:
+      - Source
+      summary: List sources for integration with SOARs
+      description: "\nLists the sources of data that match the specified query parameters, and return \nURL entry points into the UI for matching sources. \n\n* Requires the action  *org:ListSources* on the organization\n"
+      operationId: IntegrationSoarSrcList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: et
+        in: query
+        description: optional end time of the query
+        schema:
+          type: integer
+          description: optional end time of the query
+          format: int64
+      - name: hostname
+        in: query
+        description: A single hostname to match
+        schema:
+          type: string
+          description: A single hostname to match
+          maxLength: 128
+      - name: ip_address
+        in: query
+        description: A single IP address to match
+        schema:
+          type: string
+          description: A single IP address to match
+          maxLength: 128
+      - name: mac_address
+        in: query
+        description: A single mac address to match
+        schema:
+          type: string
+          description: A single mac address to match
+          maxLength: 128
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          maximum: 100
+      - name: st
+        in: query
+        description: optional start time of the query, if only a start time is provided, end time will be start+10m
+        schema:
+          type: integer
+          description: optional start time of the query, if only a start time is provided, end time will be start+10m
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSOARListHandlerOutput'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/source/:
+    get:
+      tags:
+      - Source
+      summary: List sources
+      description: '
+
+        Lists the sources of data for an organization
+
+
+        * Requires the action  *org:ListSources* on the organization
+
+        '
+      operationId: SrcList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: agent_uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: description_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 32
+      - name: filter
+        in: query
+        schema:
+          type: string
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+        style: form
+        explode: true
+      - name: is_archived
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: is_not_archived
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: original_association
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          maximum: 100
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: within_retention
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Source'
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - Source
+      summary: Create a source
+      description: '
+
+        Creates a new source of data
+
+
+        * Requires the action  *org:CreateSource* on the organization
+
+        '
+      operationId: SrcCreate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this source is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this source is associated with
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SrcCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSourceCreateHandlerOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/source/{sourceUID}:
+    get:
+      tags:
+      - Source
+      summary: Load a source
+      description: '
+
+        Loads the meta data for a source of data
+
+
+        * Requires the action  *org:LoadSource* on the organization
+
+        '
+      operationId: SrcLoad
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sourceUID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    put:
+      tags:
+      - Source
+      summary: Update a source
+      description: '
+
+        Updates the meta data for a source of data
+
+
+        * Requires the action  *org:UpdateSource* on the organization
+
+        '
+      operationId: SrcUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this source is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this source is associated with
+          maxLength: 64
+      - name: sourceUID
+        in: path
+        description: The UID of the source
+        required: true
+        schema:
+          type: string
+          description: The UID of the source
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SrcUpdateInput'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    delete:
+      tags:
+      - Source
+      summary: Delete a source
+      description: '
+
+        Delete a source
+
+
+        * Requires the action  *org:DeleteSource* on the organization
+
+        '
+      operationId: SrcDelete
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sourceUID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/sourceaggregate/:
+    get:
+      tags:
+      - Source
+      summary: Count sources aggregated by a property
+      description: '
+
+        Count the sources of data for an organization with various filtering options
+
+
+        * Requires the action  *org:ListSources* on the organization
+
+        '
+      operationId: SrcAggregateCount
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: agent_uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: count_by
+        in: query
+        description: Aggregate source counts by this property. One of [status|type]
+        schema:
+          type: string
+          description: Aggregate source counts by this property. One of [status|type]
+      - name: description_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 32
+      - name: filter
+        in: query
+        schema:
+          type: string
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+        style: form
+        explode: true
+      - name: within_retention
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DaoSourceAgg'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/sourcecount/:
+    get:
+      tags:
+      - Source
+      summary: Count sources
+      description: '
+
+        Count the sources of data for an organization with various filtering options
+
+
+        * Requires the action  *org:ListSources* on the organization
+
+        '
+      operationId: SrcListCount
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: agent_uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: description_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 32
+      - name: filter
+        in: query
+        schema:
+          type: string
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+        style: form
+        explode: true
+      - name: is_archived
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: is_not_archived
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: original_association
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          maximum: 100
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: within_retention
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCountResponse'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SrcCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: User supplied description of the source
+          maxLength: 256
+        name:
+          type: string
+          description: User supplied name of the source
+          maxLength: 32
+        runtime_description:
+          type: string
+          description: Description of the runtime of the source
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: Type of source
+        uid:
+          type: string
+          description: The UID of the source
+          maxLength: 64
+    ApiCountResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
+    SrcUpdateInput:
+      type: object
+      properties:
+        active:
+          type: integer
+          description: Is this source considered active
+          format: int32
+        agent_uid:
+          type: string
+          description: The agent this source is associated with
+        archived:
+          type: boolean
+          description: Is the source archived?
+        description:
+          type: string
+          description: User supplied description of the source
+          maxLength: 256
+        last_data:
+          type: string
+          format: date-time
+        last_ingest_chunk_end_time:
+          type: string
+          description: The end of the last chunk ingested from the agent
+          format: date-time
+        last_stored_chunk_end_time:
+          type: string
+          description: The end of the last chunk stored from the agent
+          format: date-time
+        name:
+          type: string
+          description: User supplied name of the source
+          maxLength: 32
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        runtime_description:
+          type: string
+          description: Description of the runtime of the source
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: Type of source
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    DaoSourceAgg:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The count for the property value
+          format: int64
+        propertyvalue:
+          type: string
+          description: The value of a property being aggregated upon
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    ApiSOARListHandlerOutput:
+      type: object
+      properties:
+        investigate_source_url:
+          type: string
+        source:
+          $ref: '#/components/schemas/Source'
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    Source:
+      type: object
+      properties:
+        active:
+          type: integer
+          description: Is this source considered active
+          format: int32
+        agent_uid:
+          type: string
+          description: The agent this source is associated with
+        archived:
+          type: boolean
+          description: Is the source archived?
+        description:
+          type: string
+          description: User supplied description of the source
+          maxLength: 256
+        last_data:
+          type: string
+          format: date-time
+        last_ingest_chunk_end_time:
+          type: string
+          description: The end of the last chunk ingested from the agent
+          format: date-time
+        last_stored_chunk_end_time:
+          type: string
+          description: The end of the last chunk stored from the agent
+          format: date-time
+        name:
+          type: string
+          description: User supplied name of the source
+          maxLength: 32
+        org_uid:
+          type: string
+          description: The org this source is associated with
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        runtime_description:
+          type: string
+          description: Description of the runtime of the source
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: Type of source
+        uid:
+          type: string
+          description: The UID of the source
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+      required:
+      - uid
+    ApiSourceCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    Orc_apiRuntimeDetails:
+      type: object
+      properties:
+        agent_arch:
+          type: string
+        agent_registration_uid:
+          type: string
+        agent_status:
+          type: string
+        agent_type:
+          type: integer
+          format: int32
+        agent_uid:
+          type: string
+        agent_version:
+          type: string
+        boot_time:
+          type: number
+          format: double
+        cloud_account_id:
+          type: string
+        cloud_image_id:
+          type: string
+        cloud_instance_id:
+          type: string
+        cloud_region:
+          type: string
+        cloud_tags:
+          type: array
+          items:
+            type: string
+        cloud_type:
+          type: string
+        cpu_cores:
+          type: integer
+          format: int32
+        cpu_make:
+          type: string
+        cpu_model:
+          type: string
+        error_msg:
+          type: string
+        hostname:
+          type: string
+        ip_addresses:
+          type: array
+          items:
+            type: string
+        live_test_ran:
+          type: integer
+          format: int32
+        live_test_result:
+          type: integer
+          format: int32
+        mac_addresses:
+          type: array
+          items:
+            type: string
+        memory_total_bytes:
+          type: integer
+          format: int64
+        memory_total_gb:
+          type: number
+          format: double
+        os_name:
+          type: string
+        os_pretty_name:
+          type: string
+        request_ip:
+          type: string
+        spyder_tags:
+          type: object
+          additionalProperties:
+            type: string
+        src_uid:
+          type: string
+        uname:
+          type: string
+      description: Runtime details
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

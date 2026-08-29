@@ -1,0 +1,362 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Search Set API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged SearchSet across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: SearchSet
+  description: '
+
+    An API to allow the management of search sets. Search sets can be used to augment queries in search.'
+paths:
+  /api/v1/org/{orgUID}/searchset/:
+    get:
+      tags:
+      - SearchSet
+      summary: List search sets
+      description: "\nThis will list the search sets for an org with specific parameters\n\n* Requires the action  *org:ListSearchSet* on the organization\n\t\t\t"
+      operationId: SearchSetList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: from_archive
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 30
+        style: form
+        explode: true
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: type
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DaoOutputSearchSet'
+        '403':
+          description: permission denied
+    put:
+      tags:
+      - SearchSet
+      summary: Update an search set
+      description: "\nThis will update a specific search set for an org\n\n* Requires the action  *org:UpdateSearchSet* on the organization\n\t\t\t"
+      operationId: SearchSetUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this source is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this source is associated with
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchSetUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOutputSearchSet'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: search set not found
+    post:
+      tags:
+      - SearchSet
+      summary: Create a search set
+      description: "\nThis will create a new search set for an org\n\n* Requires the action  *org:CreateSearchSet* on the organization\n\t\t"
+      operationId: SearchSetCreate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this search set is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this search set is associated with
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchSetCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSearchSetCreateHandlerOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/searchset/{searchsetUID}:
+    get:
+      tags:
+      - SearchSet
+      summary: Load an search set
+      description: "\nThis will retrieve a specific search set for an org\n\n* Requires the action  *org:LoadSearchSet* on the organization\n\t\t\t"
+      operationId: SearchSetLoad
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: searchsetUID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 64
+      - name: archive_version
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: latest_archive_version
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOutputSearchSet'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - SearchSet
+      summary: Delete an search set
+      description: "\nThis will delete the specified searchset from an org\n\n* Requires the action  *org:DeleteSearchSet* on the organization\n\t\t\t"
+      operationId: SearchSetDelete
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: searchsetUID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SearchSetUpdateInput:
+      type: object
+      properties:
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - searchset
+    DaoOutputSearchSet:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: Created by, the principal who created this object
+        last_updated:
+          type: string
+          description: Last updated date, the date this object was last updated
+          format: date-time
+        last_updated_by:
+          type: string
+          description: Last updated by, the principal who last updated this object
+        name:
+          type: string
+          description: Name of the analytics searchset
+          maxLength: 64
+          minLength: 3
+        orgid:
+          type: string
+          description: Org UID
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: type
+          maxLength: 64
+        uid:
+          type: string
+          description: Search Set UID
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: SearchSet version
+          format: int32
+      required:
+      - name
+      - type
+    SearchSetCreateInput:
+      type: object
+      properties:
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - searchset
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    ApiSearchSetCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    DaoSearchSetObject:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: API Version
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: array
+          items:
+            type: string
+          description: Spec
+      description: User supplied searchset
+      required:
+      - apiVersion
+      - metadata
+      - spec
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

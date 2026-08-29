@@ -1,0 +1,864 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Notification Target API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged NotificationTarget across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: NotificationTarget
+  description: '
+
+    An API to allow the management of notification targets. Notification targets allow users to define where notifications are sent.'
+paths:
+  /api/v1/org/{orgUID}/notificationtarget/:
+    get:
+      tags:
+      - NotificationTarget
+      summary: List notification targets
+      description: "\nThis will list all notification targets for an org\n* Requires the action  *org:ListNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: action_taken_equals
+        in: query
+        description: Filter by the action taken on the notification target(s). Pulls from the history database table. One of [insert|update|delete]
+        schema:
+          type: string
+          description: Filter by the action taken on the notification target(s). Pulls from the history database table. One of [insert|update|delete]
+      - name: from_history
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: include_target_data
+        in: query
+        description: Include the potentially sensitive target data in the response. This could be emails, webhooks, keys, etc. Increased permissions are required to view this data.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Include the potentially sensitive target data in the response. This could be emails, webhooks, keys, etc. Increased permissions are required to view this data.
+      - name: latest_version
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+      - name: name_equals
+        in: query
+        schema:
+          type: string
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+      - name: name_or_uid_equals
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: reversed
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: sort_by
+        in: query
+        description: Sort the results by a field. One of [name|description|create_time|last_updated|type]
+        schema:
+          type: string
+          description: Sort the results by a field. One of [name|description|create_time|last_updated|type]
+      - name: tags_contain
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+      - name: type_equals
+        in: query
+        schema:
+          type: string
+      - name: type_not_equals
+        in: query
+        schema:
+          type: string
+      - name: uid_equals
+        in: query
+        schema:
+          type: string
+      - name: uid_in_list
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+      - name: version
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionNotificationTargetListOutput'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/email/:
+    post:
+      tags:
+      - NotificationTarget
+      summary: Create an email notification target.
+      description: "\nThis will create a new email notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetEmailCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetEmailCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTargetOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/email/{notificationTargetUID}:
+    put:
+      tags:
+      - NotificationTarget
+      summary: Update a notification target.
+      description: "\nThis will update a specific email notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetEmailUpdate
+      parameters:
+      - name: notificationTargetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification target.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification target.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetEmailUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionNotificationTargetUpdateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/pagerduty/:
+    post:
+      tags:
+      - NotificationTarget
+      summary: Create a pagerduty notification target.
+      description: "\nThis will create a new pagerduty notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetPagerDutyCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetPagerDutyCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTargetOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/pagerduty/{notificationTargetUID}:
+    put:
+      tags:
+      - NotificationTarget
+      summary: Update a notification target.
+      description: "\nThis will update a specific pagerduty notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetPagerDutyUpdate
+      parameters:
+      - name: notificationTargetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification target.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification target.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetPagerDutyUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionNotificationTargetUpdateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/slack/:
+    post:
+      tags:
+      - NotificationTarget
+      summary: Create a slack notification target.
+      description: "\nThis will create a new slack notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetSlackCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetSlackCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTargetOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/slack/{notificationTargetUID}:
+    put:
+      tags:
+      - NotificationTarget
+      summary: Update a notification target.
+      description: "\nThis will update a specific slack notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetSlackUpdate
+      parameters:
+      - name: notificationTargetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification target.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification target.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetSlackUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionNotificationTargetUpdateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/webhook/:
+    post:
+      tags:
+      - NotificationTarget
+      summary: Create a webhook notification target.
+      description: "\nThis will create a new webhook notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetWebhookCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetWebhookCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTargetOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/webhook/{notificationTargetUID}:
+    put:
+      tags:
+      - NotificationTarget
+      summary: Update a notification target.
+      description: "\nThis will update a specific webhook notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetWebhookUpdate
+      parameters:
+      - name: notificationTargetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification target.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification target.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification target.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTargetWebhookUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionNotificationTargetUpdateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notificationtarget/{notificationTargetUID}:
+    get:
+      tags:
+      - NotificationTarget
+      summary: Load a notification target
+      description: "\nThis will retrieve a specific notification target for an org\n* Requires the action  *org:LoadNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetLoad
+      parameters:
+      - name: notificationTargetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: include_target_data
+        in: query
+        description: Include the potentially sensitive target data in the response. This could be emails, webhooks, keys, etc. Increased permissions are required to view this data.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Include the potentially sensitive target data in the response. This could be emails, webhooks, keys, etc. Increased permissions are required to view this data.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionNotificationTargetLoadOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - NotificationTarget
+      summary: Delete a notification target.
+      description: "\nThis will delete a specific notification target for an org\n* Requires the action  *org:DeleteNotificationTarget* on the organization\n\t\t\t"
+      operationId: NotificationTargetDelete
+      parameters:
+      - name: notificationTargetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    NotificationTargetSlackCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the notification to.
+      required:
+      - name
+      - url
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    NotificationTargetPagerDutyUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        routing_key:
+          type: string
+          description: Routing key for the PagerDuty service.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - routing_key
+    SessionCreateNotificationTargetOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SessionNotificationTargetLoadOutput:
+      type: object
+      properties:
+        notification_target:
+          $ref: '#/components/schemas/SessionOutputNotificationTarget'
+    SessionNotificationTargetListOutput:
+      type: object
+      properties:
+        notification_targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputNotificationTarget'
+        search_total:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_targets:
+          type: integer
+          format: int32
+    SessionNotificationTargetUpdateOutput:
+      type: object
+      properties:
+        notification_target:
+          $ref: '#/components/schemas/SessionOutputNotificationTarget'
+    SessionOutputNotificationTarget:
+      type: object
+      properties:
+        action_taken:
+          type: string
+        action_time:
+          type: integer
+          format: int64
+        action_user:
+          type: string
+        created_by:
+          type: string
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        last_updated:
+          type: integer
+          format: int64
+        last_updated_by:
+          type: string
+        name:
+          type: string
+          description: Name of the notification target.
+        org_uid:
+          type: string
+        revision:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        target_data:
+          type: object
+          additionalProperties: {}
+        target_type:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int32
+      required:
+      - name
+    NotificationTargetWebhookUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        password:
+          type: string
+          description: Optional password for basic auth.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the webhook to.
+        user_name:
+          type: string
+          description: Optional username for basic auth.
+      required:
+      - name
+      - url
+    NotificationTargetEmailCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        emails:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send notifications to.
+          maxItems: 100
+          minItems: 1
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - emails
+      - name
+    NotificationTargetEmailUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        emails:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send notifications to.
+          maxItems: 100
+          minItems: 1
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - emails
+      - name
+    NotificationTargetSlackUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the notification to.
+      required:
+      - name
+      - url
+    NotificationTargetWebhookCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        password:
+          type: string
+          description: Optional password for basic auth.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the webhook to.
+        user_name:
+          type: string
+          description: Optional username for basic auth.
+      required:
+      - name
+      - url
+    NotificationTargetPagerDutyCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        routing_key:
+          type: string
+          description: Routing key for the PagerDuty service.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - routing_key
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

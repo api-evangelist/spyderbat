@@ -38,35 +38,614 @@ tags:
 - SIEM
 - Monitoring
 apis:
-- aid: spyderbat:spyderbat-api
-  name: Spyderbat API
-  description: >-
-    The Spyderbat public REST API — the same surface the Spyderbat console is built on.
-    197 operations across 30 resource groups cover organizations and RBAC, sources and
-    agents, agent registration and agent work, adhoc and saved search, search sets,
-    investigations and cases, analytics policies and rulesets, custom flags, watchlists,
-    suppression, notification targets, templates and configurations, agent-health
-    notifications, forwarded events for SIEM integration, fingerprint data, archives and
-    the spyctl resource surface. Authenticated with a bearer API key (JWT) bound to a user
-    account and its organization role.
+- aid: spyderbat:spyderbat-adhocsearch-api
+  name: Spyderbat Adhoc Search API
+  description: Ad-hoc Search interface for complex queries
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
-  - Security
-  - Runtime Security
-  - Kubernetes
-  - Search
-  - Investigations
-  - Notifications
+  - AdhocSearch
   properties:
   - type: OpenAPI
-    url: openapi/spyderbat-openapi.json
+    url: openapi/spyderbat-adhocsearch-api-openapi.yml
   - type: Documentation
     url: https://docs.spyderbat.com/
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-agent-action-api
+  name: Spyderbat Agent Action API
+  description: >-
+    Agent Action defines actions that can be executed on remote agents in response to events.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Agent Action
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-agent-action-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-agent-api
+  name: Spyderbat Agent API
+  description: Agents represent a sepecific agent which collects data for one or more sources.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Agent
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-agent-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-agent-registration-api
+  name: Spyderbat Agent Registration API
+  description: Agents registrations are used to authorize and group agents by the registration.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Agent Registration
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-agent-registration-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-agentwork-api
+  name: Spyderbat Agent Work API
+  description: "AgentWork API is intended for use by the UI to convey work & configuration to agents,\
+    \ this data can be specific to an agent or gloal to an organization. \n\nAn example use case is configuration\
+    \ data for a specific bat. The agents then overlay the global work data atop, the organizationan work\
+    \ (if defined), atop the specific agent work."
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - AgentWork
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-agentwork-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-analyticspolicy-api
+  name: Spyderbat Analytics Policy API
+  description: >-
+    An API to allow management of the organizations analytics policies.  These will be used throughout
+    the system to take various actions.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - AnalyticsPolicy
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-analyticspolicy-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-analyticsruleset-api
+  name: Spyderbat Analytics Ruleset API
+  description: >-
+    An API to allow the management of analytics rulesets. Analytics rulesets are used within some types
+    of analytics rulesets.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - AnalyticsRuleset
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-analyticsruleset-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-archive-api
+  name: Spyderbat Archive API
+  description: Access to raw agent archive data.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Archive
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-archive-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-cases-api
+  name: Spyderbat Cases API
+  description: Cases management API
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Cases
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-cases-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-cluster-api
+  name: Spyderbat Cluster API
+  description: >-
+    Cluster represents known clusters, such as Kubernetes clusters running an appropriate agent.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Cluster
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-cluster-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-customflag-api
+  name: Spyderbat Custom Flag API
+  description: >-
+    An API to allow the management of custom flags. Custom flags allow users to define custom detections
+    within Spyderbat.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - CustomFlag
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-customflag-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-fingerprintdata-api
+  name: Spyderbat Fingerprint Data API
+  description: Each source may send fingerprint data which is stored and processed by the system.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - FingerprintData
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-fingerprintdata-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-forwardedevents-api
+  name: Spyderbat Forwarded Events API
+  description: An API to allow retrieval of observations for a SIEM.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - ForwardedEvents
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-forwardedevents-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-investigation-api
+  name: Spyderbat Investigation API
+  description: >-
+    Investigations can be created by users as a way to have an investigation into a potential attack,
+    allowing users to associate data from one or more sources into a single investigation. An investigation
+    may be utilized by multiple users as part of it's work flow. Investigations have a version history,
+    each change to an investigation will result in a copy of the investigation to be captured and saved,
+    prior versions can then be inspected later.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Investigation
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-investigation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-notifications-api
+  name: Spyderbat Notifications API
+  description: An API for retrieving, enabling, and disabling notification settings.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-notifications-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-notificationsagenthealth-api
+  name: Spyderbat Notifications Agent Health API
+  description: >-
+    An API for creating, retrieving, updating, and deleting agent health notification settings.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - NotificationsAgentHealth
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-notificationsagenthealth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-notificationtarget-api
+  name: Spyderbat Notification Target API
+  description: >-
+    An API to allow the management of notification targets. Notification targets allow users to define
+    where notifications are sent.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - NotificationTarget
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-notificationtarget-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-notificationtemplate-api
+  name: Spyderbat Notification Template API
+  description: >-
+    An API to allow the management of notification templates. Notification templates allow users to define
+    custom notifications within Spyderbat.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - NotificationTemplate
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-notificationtemplate-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-org-api
+  name: Spyderbat Org API
+  description: >-
+    Organizations hold resources & data associated with an organization, users must be associated via
+    roles with an organization to have permissions to interact with the organization. Each user my have
+    multiple and different roles on different organizations and each organization may have multiple users
+    with roles on the organization. Each user is has an organization assigned to the user during signup.
+    Users may then assign other users various roles on the organization.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Org
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-org-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-orgtype-api
+  name: Spyderbat Org Type API
+  description: >-
+    Organizational types specify both limits and defaults for organizations, they are used by the system
+    to determine the resource utilization for an organization and associated settings.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - OrgType
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-orgtype-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-rbac-api
+  name: Spyderbat RBAC API
+  description: "# Introduction \n\nThis RBAC model is based off of Amazon's model with some simplifications\
+    \ and generic assumptions\n\nA user has some number of roles on some number of organizations, each\
+    \ role defines some statements\nwhich determine determine if the user has access to some resources.\
+    \ These role based statements\nare combined with a policy which may be attached to the resource to\
+    \ be accessed. \n\nSo essentially acccess is determined by the combination of identity based polices\
+    \ and resource\nbased policies. \n\nAll associated statements from both the user's roles and the resources\
+    \ policy are considered before\naccess is granted. If any statement denies access then access is denied,\
+    \ at least one statement\nmust explicitly grant access to the resource, and if no statement denies\
+    \ or grants access then \naccess is not granted. \n\n\nThe resulting access decision is a combination\
+    \ of:\n\n```\nEvaluate(Roles(User,Org),Resource) - will evaluate all possible user roles on the resource\n\
+    Evaluate(GlobalRoles(User),Resource) - will evaluate all possible user roles on the resource\nEvaluate(CrossOrgRoles(User,Org),Resource)\
+    \ - will evaluate all possible cross org roles on the resource\nEvaluate(Resource.Policy,User) - will\
+    \ evalute the requesting user against the resource policy\n```\n\nThis means that a user role can\
+    \ specify what the user can access, while a specific resource\npolicy has the ability to deny access\
+    \ to a single user, or a user based upon roles or\ntags. \n\n# Example user role\n\n```json\n{\n\t\
+    \"name\":\"CatFeeder\",\n\t\"version\":\"1.0.0\",\n\t\"statements\":[\n\t\t{\n\t\t\t\"sid\":\"FeedCats\"\
+    ,\n\t\t\t\"effect\":\"allow\",\n\t\t\t\"actions\":[ \"cat:feed\" ],\n\t\t\t\"resources\":[ \"srn:cat:::*\"\
+    \ ],\n\t\t\t\"condition\": { \"not\": { \"has_tag\":\"obese\"}}\n\t\t}\n\n\t]\n}\n```\n\nThis example\
+    \ user role defines a role called 'CatFeeder', which is allowed to perform 'cat:feed' on all resources\
+    \ which match 'srn\\:cat\\:::\\*', as long as the cat the role\nis being used on does not have the\
+    \ tag 'obese'.\n\n# Global vs Organization roles\n\nA global role is a role which does not have a\
+    \ specific context, it is 'global' in that it \napplies to all resources a user might interact with.\
+    \ An organizational role is assigned to a\nspecific organization, and therefore limited to the context\
+    \ of that organization. \n\nFor example a global role is one which allows a user to change their own\
+    \ password, or\nperform other actions which do not involve an organization. An organizational role\n\
+    is a role which allows actions on resources owned by an organization. \n\nAn example of this is a\
+    \ typical user:\n\n * Global Role (User) \n  * Allows the user to modify their own settings, change\
+    \ their password, etc. \n * Org Role (OrgOwner) \n  * Allows the user to modify an organization\n\
+    \  * Applied to specific organizations\n\n# User Roles\n\nUsers may zero or more roles defined on\
+    \ different organizations, along with global roles\n, a role is defined with the following attributes\n\
+    \n * Name - Name of the policy, used to match to roles associated with users\n * Version  - Version\
+    \ of the role schema\n * Statements - Some number of statements\n\n# Resource Policy\n\nA resource\
+    \ may have a single policy with multiple statements associated with it, it has\nthe following attributes\n\
+    \ \n * Name - Name of the policy, used to match to roles associated with users\n * Version  - Version\
+    \ of the role schema\n * Statements - Some number of statements\n\n# Statement\n\nEach role or policy\
+    \ has some statements defined with it, each statement defines\nwhat actions are allowed or dissallowed\n\
+    \nStatements have the following attributes\n\n * SID - statment ID used for debugging and identification\n\
+    \ * Effect - the result of the statement (deny, allow)\n * Actions - a list of actions \n * Resources\
+    \ - a list of resource queries\n * Condition - an optional condition that will be applied to statements\
+    \ to determine if they apply\n\n## Statement Effects\n\nTo determine if access may be granted the\
+    \ statements associated with the user roles,\ncross account roles, and resources are evaluated. If\
+    \ any statement returns a deny then \nall further evaluation is stopped and the result is a denial.\
+    \ At least one statement\nmust allow access for access to be granted. If no statement denies or allows\
+    \ access\nthen the system will not allow access.\n\n## Actions\n\nActions are a combination of Service:Action,\
+    \ and also have a few wild card patterns:\n\n```\n* \t\t- match any action\nservice:* \t- match any\
+    \ action on this service\nservice:action\t- match this explicit combination of action and service\n\
+    ```\n\n## Spyderbat Resource Names\n\nEach resource in the RBAC system is given a name like so:\n\n\
+    ```\nsrn:service:region:org:resource\n```\n\nThe resource name is expected to expand into a path like\
+    \ resource name when a hierarchy is needed, \nfor example:\n\n```\nsrn:report:aws-us-west-1:org-1:agent-usage-report/download.pdf\n\
+    ```\n\nThese resource names are matched in policies against resource queries:\n\n```\nsrn:report:::*/*.pdf\n\
+    ```\n\nIs an example of resource query which would match the above resource. \n\nThe following globs\
+    \ are supported in resource names\n\n```\n/**/   - match zero or more directories\n{a,b}  - match\
+    \ a or b, no spaces\n*      - match any non-separator char\n?      - match a single non-separator\
+    \ char\n**/    - match any directory, start of pattern only\n/**    - match any this directory, end\
+    \ of pattern only\n!      - removes matches from resultset, start of pattern only\n```\n\n```\n* \t\
+    \t\t- match all resources\nsrn::::*\t \t- match all resources\nsrn:report::::* \t- match all report\
+    \ resources\nsrn:report::org-1:* \t- match all resources in a specific org\n```\n\n## Conditions\n\
+    \nThe system will first evalute if the requested resource and the requested action\nmatch, if so then\
+    \ the system will evaluate any conditions which are specified on \nthe statement. \n\nThe following\
+    \ conditions are supported:\n\n```\n{ not: condition } - not of the specified condition\n{ and: [....]\
+    \ }\t - and of all contained conditions\n{ or: [....] } \t - or of all contained conditions\n{ has_tag:\"\
+    tag\"}\t -  returns true if the resource has the associated tag\n{ has_role:\"role\", on_org:\"org-1\"\
+    \ } - returns true if the user has a role of 'role' on 'org-1'\n```\n\n# User Roles\n\nUsers are mapped\
+    \ to roles within an organization via a userToRole relationship, \nwhich allows for a user to have\
+    \ many roles on many organizations. \n\n```\n(User, Org, Role)...\n```\n\n*This means that a user\
+    \ can have many different roles on different organizations* \n\nFor example the user David may have\
+    \ roles on multiple organizations:\n\n````\nDavid\n\tOrg1: Analyat\n\tOrg1: Operator\n\tOrg2: Analyst\n\
+    \t...\n````\n\nThese roles are mapped by name to a specific role implementation.\n\n## Cross Org Roles\n\
+    \nCross org roles for use by MSSPs are supported by having the managed \norganization defining a special\
+    \ cross-org role with the following\nattributes:\n\n * Org - The org the cross org role applies to\n\
+    \ * Condition - The condition to evaluate\n * AssumeRole - The role the user may assume\n\n## Example\
+    \ cross org role\n\n```json\n{\n\t\"org\":\"house-1\",\n\t\"assume_role\":\"CatPetter\",\n\t\"version\"\
+    :\"1.0.1\",\n\t\"condition\": { \"has_role\":\"CatPetter\", \"on_org\":\"house-2\" }\n}\n```\n\nThis\
+    \ role will allow any user who has the role 'CatPetter' in the org 'house-2' to assume\nthe role 'CatPetter'\
+    \ in 'house-1'"
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - RBAC
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-rbac-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-savedquery-api
+  name: Spyderbat Saved Query API
+  description: >-
+    An API to allow the management of saved queries. Saved queries are used to quickly run Athena searches.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - SavedQuery
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-savedquery-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-searchset-api
+  name: Spyderbat Search Set API
+  description: >-
+    An API to allow the management of search sets. Search sets can be used to augment queries in search.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - SearchSet
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-searchset-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-source-api
+  name: Spyderbat Source API
+  description: "Sources are used to represent a container for source of security data, such as a machine,\n\
+    or other potential source. \n\nThe source itself has data associated with the source, see the 'Source\
+    \ Data' APIs for \naccess to source data."
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Source
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-source-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-sourcedata-api
+  name: Spyderbat Source Data API
+  description: >-
+    Each source may send data which is stored and processed by the system. So for example a machine will
+    send data
+
+    in a raw form which is then analyzed, both the raw machine data and the analyzed data is available
+    for querying.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - SourceData
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-sourcedata-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-spyctl-api
+  name: Spyderbat Spyctl API
+  description: A way to execute specific Spyctl logic via the API.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Spyctl
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-spyctl-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-sts-api
+  name: Spyderbat STS API
+  description: >-
+    Security Token Service endpoints. Trusted services assume a role on a single org and receive a short-lived,
+    org-locked JWT for downstream consumers. The caller's authority to assume is gated by the sts:AssumeRole
+    action on srn:sts::<org>:<role_uid>; the resulting token carries the assumed role on the assumed org
+    only.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - STS
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-sts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-suppress-api
+  name: Spyderbat Suppress API
+  description: An API that provides direct access to Spyderbat's tuning features.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Suppress
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-suppress-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-watchlist-api
+  name: Spyderbat Watchlist API
+  description: An API to manage the watchlist for files within an organization.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Watchlist
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-watchlist-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

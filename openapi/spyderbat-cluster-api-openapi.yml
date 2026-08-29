@@ -1,0 +1,219 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Cluster API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Cluster across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Cluster
+  description: '
+
+    Cluster represents known clusters, such as Kubernetes clusters running an appropriate agent.'
+paths:
+  /api/v1/org/{orgUID}/cluster/:
+    get:
+      tags:
+      - Cluster
+      summary: List clusters
+      description: "\nLists known clusters by by org.\n\n * Requires action org:ListClusters"
+      operationId: ClusterList
+      parameters:
+      - name: orgUID
+        in: path
+        description: Org UID
+        required: true
+        schema:
+          type: string
+          description: Org UID
+          maxLength: 32
+      - name: within_retention
+        in: query
+        description: Only return clusters with data within the org retention period
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Only return clusters with data within the org retention period
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterDetails'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cluster/{clusterUID}:
+    get:
+      tags:
+      - Cluster
+      summary: Load cluster details
+      description: "\nLoads details for a cluster by org and cluster.\n * Requires action org:LoadCluster"
+      operationId: ClusterLoad
+      parameters:
+      - name: clusterUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterDetails'
+        '403':
+          description: permission denied
+        '404':
+          description: cluster not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
+    ClusterDetails:
+      type: object
+      properties:
+        cluster_details:
+          $ref: '#/components/schemas/Orc_apiClusterDetails'
+        last_data:
+          type: string
+          format: date-time
+        name:
+          type: string
+          description: User supplied name of the cluster
+          maxLength: 32
+        org_uid:
+          type: string
+          description: The org this source is associated with
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        uid:
+          type: string
+          description: The UID of the cluster
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    Orc_apiClusterDetails:
+      type: object
+      properties:
+        agent_uid:
+          type: string
+          maxLength: 64
+        cluid:
+          type: string
+          maxLength: 64
+        cluster_name:
+          type: string
+          maxLength: 64
+        cluster_uid:
+          type: string
+        spyder_tags:
+          type: object
+          additionalProperties:
+            type: string
+        src_uid:
+          type: string
+          maxLength: 64
+      description: Cluster details
+      required:
+      - cluster_uid
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

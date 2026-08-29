@@ -1,0 +1,371 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Analytics Policy API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged AnalyticsPolicy across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: AnalyticsPolicy
+  description: '
+
+    An API to allow management of the organizations analytics policies.  These will be used throughout the system to take various actions.'
+paths:
+  /api/v1/org/{orgUID}/analyticspolicy/:
+    get:
+      tags:
+      - AnalyticsPolicy
+      summary: List analytics policies
+      description: "\nThis will list the analytics policies for an org with specific parameters\n\t\t\t\n* Requires the action  *org:ListAnalyticsPolicy* on the organization\n\t\t\t"
+      operationId: AnalyticsPolicyList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: from_archive
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 30
+        style: form
+        explode: true
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_or_uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: selector_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: selector_hash_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: type
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DaoOutputAnalyticsPolicy'
+        '403':
+          description: permission denied
+    put:
+      tags:
+      - AnalyticsPolicy
+      summary: Update an analytics policy
+      description: "\nThis will update a specific analytics policy for an org\n\t\t\t\n* Requires the action  *org:UpdateAnalyticsPolicy* on the organization\n\t\t\t"
+      operationId: AnalyticsPolicyUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        description: Org UID
+        required: true
+        schema:
+          type: string
+          description: Org UID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsPolicyUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOutputAnalyticsPolicy'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - AnalyticsPolicy
+      summary: Create an analytics policy
+      description: "\nThis will put a new analytics policy for an org\n\t\t\t\n* Requires the action  *org:CreateAnalyticsPolicy* on the organization\n\t\t\t"
+      operationId: AnalyticsPolicyCreate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this source is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this source is associated with
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsPolicyCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAnalyticsPolicyCreateHandlerOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/analyticspolicy/{analyticspolicyUID}:
+    get:
+      tags:
+      - AnalyticsPolicy
+      summary: Load an analytics policy
+      description: "\nThis will retrieve a specific analytics policy for an org\n\t\t\t\n* Requires the action  *org:LoadAnalyticsPolicy* on the organization\n\t\t\t"
+      operationId: AnalyticsPolicyLoad
+      parameters:
+      - name: analyticspolicyUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: archive_version
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: latest_archive_version
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOutputAnalyticsPolicy'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - AnalyticsPolicy
+      summary: Delete an analytics policy
+      description: "\nThis will delete the specified policy from an org\n\t\t\t\n* Requires the action  *org:DeleteAnalyticsPolicy* on the organization\n\t\t\t"
+      operationId: AnalyticsPolicyDelete
+      parameters:
+      - name: analyticspolicyUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    DaoPolicyObject:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: API Version
+        kind:
+          type: string
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: Policy
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    ApiAnalyticsPolicyCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    AnalyticsPolicyCreateInput:
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - policy
+    AnalyticsPolicyUpdateInput:
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - policy
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    DaoOutputAnalyticsPolicy:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: Resource name of the user who created this object
+        last_updated:
+          type: string
+          description: Last updated date
+          format: date-time
+        last_updated_by:
+          type: string
+          description: Resource name of the user who last updated this object
+        name:
+          type: string
+          description: Name of the analytics policy
+          maxLength: 64
+          minLength: 3
+        orgid:
+          type: string
+          description: Org UID
+          maxLength: 64
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+        selector_hash:
+          type: string
+          description: MD5 Hash of the policy's selectors
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: type
+          maxLength: 64
+        uid:
+          type: string
+          description: Analytics Policy UID
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: Version of the object
+          format: int32
+      required:
+      - name
+      - type
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

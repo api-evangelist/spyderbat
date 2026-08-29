@@ -1,0 +1,1883 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Cases API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Cases across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Cases
+  description: Cases management API
+paths:
+  /api/v1/cases/constants:
+    get:
+      tags:
+      - Cases
+      summary: Get case enumeration constants
+      description: 'Returns all known enumerations used by the Cases API: agent IDs, states, priorities, sub-statuses, note schemas, and analysis levels.'
+      operationId: CaseConstants
+      responses:
+        '200':
+          description: OK
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/agents/{agentID}/flags:
+    get:
+      tags:
+      - Cases
+      summary: List flagged AI analyses for an agent
+      description: 'List flagged AI analyses attributed to the specified AI agent within an optional time window.
+
+        agentID must be ''ai-level-1'' or ''ai-level-2''.
+
+        start and end are optional epoch seconds; results are ordered by flaggedAt descending.
+
+
+        * Requires action case:List'
+      operationId: CaseAgentFlags
+      parameters:
+      - name: agentID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — epoch seconds
+        schema:
+          type:
+          - number
+          - 'null'
+          description: Window end — epoch seconds
+          format: double
+      - name: start
+        in: query
+        description: Window start — epoch seconds
+        schema:
+          type:
+          - number
+          - 'null'
+          description: Window start — epoch seconds
+          format: double
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid agent ID
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases:
+    get:
+      tags:
+      - Cases
+      summary: List cases
+      description: 'List cases for an organization. Supports filtering by state, priority, and assignee.
+
+
+        * Requires action case:List'
+      operationId: CaseList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: assignedTo
+        in: query
+        description: Filter by assignee
+        schema:
+          type: string
+          description: Filter by assignee
+          maxLength: 256
+      - name: lastModified
+        in: query
+        description: 'Cursor: return cases modified after this Unix timestamp'
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: 'Cursor: return cases modified after this Unix timestamp'
+          format: int32
+      - name: pageSize
+        in: query
+        description: Page size (default 100, max 1000)
+        schema:
+          type: integer
+          description: Page size (default 100, max 1000)
+          format: int32
+          maximum: 1000
+      - name: priority
+        in: query
+        description: 'Filter by priority: Low, Normal, High'
+        schema:
+          type: string
+          description: 'Filter by priority: Low, Normal, High'
+          maxLength: 32
+      - name: sortBy
+        in: query
+        description: 'Sort by: creationDate (default) or lastModified'
+        schema:
+          type: string
+          description: 'Sort by: creationDate (default) or lastModified'
+          maxLength: 32
+      - name: state
+        in: query
+        description: 'Filter by state: Open, Closed, Snoozed, In Progress'
+        schema:
+          type: string
+          description: 'Filter by state: Open, Closed, Snoozed, In Progress'
+          maxLength: 32
+      - name: traceId
+        in: query
+        description: Return cases whose rootTraceId or refIds contains this trace ID
+        schema:
+          type: string
+          description: Return cases whose rootTraceId or refIds contains this trace ID
+          maxLength: 256
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - Cases
+      summary: Create a case
+      description: 'Create a new case for an organization.
+
+
+        * Requires action case:Create'
+      operationId: CaseCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseCreateInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/bulk-merge:
+    post:
+      tags:
+      - Cases
+      summary: Bulk merge source cases into a target
+      description: 'Merge up to 50 source cases into a single target case.
+
+        The target must be open; snoozed or closed targets are rejected.
+
+        Each source is processed independently; partial failure is permitted.
+
+
+        * Requires action case:Update'
+      operationId: CaseBulkMerge
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseBulkMergeInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: target case not found
+        '422':
+          description: target case is snoozed or closed
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/bulk-retry:
+    post:
+      tags:
+      - Cases
+      summary: Bulk re-enqueue errored cases
+      description: 'Re-enqueue up to 100 errored cases to the same (pipeline, agent) pair.
+
+        Each case is processed independently; partial failure is permitted.
+
+        Returns a per-case result list with status ''queued'', ''skipped'', or ''error''.
+
+
+        * Requires action case:Update'
+      operationId: CaseBulkRetry
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseBulkRetryInput'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid pipeline/agent combination
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/config:
+    get:
+      tags:
+      - Cases
+      summary: Get org-level Cases configuration
+      description: 'Returns the org-level Cases configuration (read-only).
+
+
+        * Requires action case:List'
+      operationId: CaseOrgConfig
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/search:
+    post:
+      tags:
+      - Cases
+      summary: Search cases
+      description: 'Search cases with server-side filtering, sorting, pagination, and facet counts.
+
+
+        * Requires action case:List'
+      operationId: CaseSearch
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseSearchInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/agent-performance:
+    get:
+      tags:
+      - Cases
+      summary: Get windowed agent-performance statistics for an organization
+      description: 'Returns agent-performance statistics over a caller-specified time window.
+
+        start and end are optional Unix epoch seconds; the window defaults to a rolling 24h when omitted.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsAgentPerformance
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      - name: start
+        in: query
+        description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/escalation/human:
+    get:
+      tags:
+      - Cases
+      summary: Get windowed human-escalation statistics for an organization
+      description: 'Returns human-escalation statistics over a caller-specified time window.
+
+        start and end are optional Unix epoch seconds; the window defaults to a rolling 24h when omitted.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsEscalationHuman
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      - name: start
+        in: query
+        description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/escalation/senior:
+    get:
+      tags:
+      - Cases
+      summary: Get windowed senior-escalation statistics for an organization
+      description: 'Returns senior-escalation statistics over a caller-specified time window.
+
+        start and end are optional Unix epoch seconds; the window defaults to a rolling 24h when omitted.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsEscalationSenior
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      - name: start
+        in: query
+        description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/now/attention:
+    get:
+      tags:
+      - Cases
+      summary: Get current-state attention case statistics for an organization
+      description: 'Returns current attention/stuck statistics derived from the cases and case_status tables only.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsNowAttention
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/now/lifecycle:
+    get:
+      tags:
+      - Cases
+      summary: Get current-state lifecycle-stage case statistics for an organization
+      description: 'Returns current lifecycle-stage statistics derived from the cases and case_status tables only.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsNowLifecycle
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/now/queues:
+    get:
+      tags:
+      - Cases
+      summary: Get current-state per-queue case statistics for an organization
+      description: 'Returns current per-queue depth statistics derived from the cases and case_status tables only.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsNowQueues
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/processing:
+    get:
+      tags:
+      - Cases
+      summary: Get windowed processing-time case statistics for an organization
+      description: 'Returns processing-time statistics over a caller-specified time window.
+
+        start and end are optional Unix epoch seconds; the window defaults to a rolling 24h when omitted.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsProcessing
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      - name: start
+        in: query
+        description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/throughput:
+    get:
+      tags:
+      - Cases
+      summary: Get windowed throughput case statistics for an organization
+      description: 'Returns throughput statistics over a caller-specified time window.
+
+        start and end are optional Unix epoch seconds; the window defaults to a rolling 24h when omitted.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsThroughput
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      - name: start
+        in: query
+        description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/stats/transitions:
+    get:
+      tags:
+      - Cases
+      summary: Get windowed state-transition case statistics for an organization
+      description: 'Returns state-transition statistics over a caller-specified time window.
+
+        start and end are optional Unix epoch seconds; the window defaults to a rolling 24h when omitted.
+
+
+        * Requires action case:List'
+      operationId: CaseOrgStatsTransitions
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window end — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      - name: start
+        in: query
+        description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+        schema:
+          type:
+          - integer
+          - 'null'
+          description: Window start — Unix epoch seconds (optional; defaults to rolling 24h)
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}:
+    get:
+      tags:
+      - Cases
+      summary: Get a case
+      description: 'Get a specific case by ID.
+
+
+        * Requires action case:Load'
+      operationId: CaseLoad
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - Cases
+      summary: Delete a case
+      description: 'Delete a case.
+
+
+        * Requires action case:Delete'
+      operationId: CaseDelete
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    patch:
+      tags:
+      - Cases
+      summary: Patch a case
+      description: 'Partial update of a case. All body fields are optional; array fields use full-replace semantics when present.
+
+
+        * Requires action case:Update'
+      operationId: CasePatch
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CasePatchInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/assessment:
+    post:
+      tags:
+      - Cases
+      summary: Record an assessment on a case
+      description: 'Record a verdict, AI rating, flag, or note on a case. At least one field must be present.
+
+
+        * Requires action case:Update'
+      operationId: CaseAssessment
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAssessmentInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/assign:
+    post:
+      tags:
+      - Cases
+      summary: Assign a case to a user
+      description: 'Assign a case to a specific user identified by the assignedTo field.
+
+
+        * Requires action case:Update'
+      operationId: CaseAssign
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAssignInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - Cases
+      summary: Release a case back to the unassigned pool
+      description: 'Release a case back to the unassigned pool.
+
+
+        * Requires action case:Update'
+      operationId: CaseUnassign
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/augmented:
+    post:
+      tags:
+      - Cases
+      summary: Augment a case with additional context
+      description: 'Inject additional context and route a case back to AI-level-2. Async — returns 202 once enqueued.
+
+
+        * Requires action case:Update'
+      operationId: CaseAugment
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAugmentInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+        '409':
+          description: case state forbids augmentation
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/claim:
+    post:
+      tags:
+      - Cases
+      summary: Claim a case from the unassigned pool
+      description: 'Claim a case from the unassigned pool. The caller becomes the assignee.
+
+
+        * Requires action case:Update'
+      operationId: CaseClaim
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/close:
+    post:
+      tags:
+      - Cases
+      summary: Close a case
+      description: 'Close a case. All body fields are optional; when verdict is provided an assessment row is written.
+
+
+        * Requires action case:Update'
+      operationId: CaseClose
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseCloseInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/helpers:
+    post:
+      tags:
+      - Cases
+      summary: Add a helper to a case
+      description: 'Add a helper user to a case.
+
+
+        * Requires action case:Update'
+      operationId: CaseAddHelper
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAddHelperInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/helpers/{userID}:
+    delete:
+      tags:
+      - Cases
+      summary: Remove a helper from a case
+      description: 'Remove a helper user from a case.
+
+
+        * Requires action case:Update'
+      operationId: CaseRemoveHelper
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 256
+          minLength: 1
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/merge:
+    post:
+      tags:
+      - Cases
+      summary: Merge a case into a target
+      description: 'Merge this case into the case identified by targetCaseId.
+
+
+        * Requires action case:Update'
+      operationId: CaseMerge
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseMergeInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/notes:
+    post:
+      tags:
+      - Cases
+      summary: Add a note to a case
+      description: 'Add a free-text note (1–10000 characters) to a case.
+
+
+        * Requires action case:AddNote'
+      operationId: CaseAddNote
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAddNoteInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/notes/{noteID}:
+    patch:
+      tags:
+      - Cases
+      summary: Edit a user-authored note
+      description: 'Edit an existing free-text note. Full edit history is preserved.
+
+        No frozen-state gate — notes are allowed in any case state.
+
+        The caller must be the original note author.
+
+
+        * Requires action case:AddNote'
+      operationId: CaseEditNote
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: noteID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 256
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseEditNoteInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied — caller is not the note author
+        '404':
+          description: case or note not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/queue-position:
+    get:
+      tags:
+      - Cases
+      summary: Get a case's queue position
+      description: 'Returns which AI queue(s) a case is in and its position from the front.
+
+
+        * Requires action case:Load'
+      operationId: CaseQueuePosition
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/regen-summary:
+    post:
+      tags:
+      - Cases
+      summary: Request AI summary regeneration
+      description: 'Enqueue an async AI summary regeneration without changing case state.
+
+        Blocked on snoozed/closed cases. Returns 202 with a correlationId.
+
+
+        * Requires action case:Update'
+      operationId: CaseRegenSummary
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseRegenSummaryInput'
+      responses:
+        '200':
+          description: OK
+        '202':
+          description: regeneration enqueued — body carries a correlationId
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+        '422':
+          description: case is in a frozen state
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/reopen:
+    post:
+      tags:
+      - Cases
+      summary: Reopen a case
+      description: 'Reopen a closed case.
+
+
+        * Requires action case:Update'
+      operationId: CaseReopen
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/send-to-senior-ai:
+    post:
+      tags:
+      - Cases
+      summary: Send a case to the senior AI
+      description: 'Re-engage the senior AI (pipeline-2). Async — returns 202 once enqueued. Returns 403 if the caller is not the assignee.
+
+
+        * Requires action case:Update'
+      operationId: CaseSendToSeniorAI
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseSendToSeniorAIInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied — caller is not the assignee
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/snooze:
+    post:
+      tags:
+      - Cases
+      summary: Snooze a case
+      description: 'Snooze a case until the supplied wake time.
+
+
+        * Requires action case:Update'
+      operationId: CaseSnooze
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseSnoozeInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - Cases
+      summary: Wake a snoozed case
+      description: 'Wake a snoozed case before its scheduled wake time.
+
+
+        * Requires action case:Update'
+      operationId: CaseWake
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/start:
+    post:
+      tags:
+      - Cases
+      summary: Start working a case
+      description: 'Mark a case as actively being worked.
+
+
+        * Requires action case:Update'
+      operationId: CaseStart
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/stop:
+    post:
+      tags:
+      - Cases
+      summary: Stop working a case
+      description: 'Stop actively working a case.
+
+
+        * Requires action case:Update'
+      operationId: CaseStop
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/user-prioritized:
+    post:
+      tags:
+      - Cases
+      summary: Set user-prioritized flag on a case
+      description: 'Mark a case as user-prioritized.
+
+
+        * Requires action case:Update'
+      operationId: CaseSetUserPrioritized
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - Cases
+      summary: Clear user-prioritized flag on a case
+      description: 'Clear the user-prioritized flag on a case.
+
+
+        * Requires action case:Update'
+      operationId: CaseUnsetUserPrioritized
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/cases/{caseID}/watch:
+    post:
+      tags:
+      - Cases
+      summary: Watch a case
+      description: 'Subscribe to updates on a case.
+
+
+        * Requires action case:Load'
+      operationId: CaseWatch
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - Cases
+      summary: Stop watching a case
+      description: 'Unsubscribe from a case''s updates.
+
+
+        * Requires action case:Load'
+      operationId: CaseUnwatch
+      parameters:
+      - name: caseID
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 36
+          minLength: 1
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    CaseAssessmentInput:
+      type: object
+      properties:
+        aiRating:
+          type: string
+          description: Optional AI rating
+          maxLength: 64
+        flag:
+          description: Optional flag payload
+        note:
+          type: string
+          description: Optional note (max 10000 chars)
+          maxLength: 10000
+        verdict:
+          type: string
+          description: Optional verdict
+          maxLength: 64
+    CaseBulkRetryInput:
+      type: object
+      properties:
+        agent:
+          type: string
+          description: 'Target agent: ''ai-level-1'' or ''ai-level-2'''
+        caseIds:
+          type: array
+          items:
+            type: string
+          description: IDs of the cases to re-enqueue (1–100)
+          maxItems: 100
+          minItems: 1
+        pipeline:
+          type: string
+          description: 'Target pipeline: ''triage'' or ''reprocessing'''
+        source:
+          type: string
+          description: Source of the re-enqueue action (default 'manual-retry')
+          maxLength: 64
+      required:
+      - agent
+      - caseIds
+      - pipeline
+    CaseAssignInput:
+      type: object
+      properties:
+        assignedTo:
+          type: string
+          description: UID of the target assignee
+          maxLength: 256
+          minLength: 1
+      required:
+      - assignedTo
+    CaseAddNoteInput:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Note text (1–10000 characters)
+          maxLength: 10000
+          minLength: 1
+      required:
+      - text
+    CaseSearchInput:
+      type: object
+      properties:
+        filters:
+          description: Search filters (state, assignedTo, priority, score ranges, MITRE tactic, date ranges, search text)
+        includeFacets:
+          type:
+          - boolean
+          - 'null'
+          description: Include disjunctive facet counts
+        page:
+          description: Pagination {offset, limit}
+        sort:
+          description: Sort specification [{field, order}]
+    CaseEditNoteInput:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Updated note text (1–10000 characters)
+          maxLength: 10000
+          minLength: 1
+      required:
+      - text
+    CasePatchInput:
+      type: object
+      properties:
+        assets:
+          type: array
+          items: {}
+          description: Assets (full replace)
+        confidence:
+          type:
+          - number
+          - 'null'
+          description: Confidence score (0–9)
+          format: double
+        keySignals:
+          type: array
+          items: {}
+          description: Key signals (full replace)
+        mitreTactics:
+          type: array
+          items:
+            type: string
+          description: MITRE ATT&CK tactic IDs
+        mitreTechniques:
+          type: array
+          items:
+            type: string
+          description: MITRE ATT&CK technique IDs
+        narrative:
+          type:
+          - string
+          - 'null'
+          description: Updated narrative
+        pivots:
+          type: array
+          items: {}
+          description: Pivots (full replace)
+        priority:
+          type:
+          - string
+          - 'null'
+          description: 'Updated priority: Low, Normal, or High'
+        priorityOverride:
+          type:
+          - boolean
+          - 'null'
+          description: User-prioritized flag
+        refIds:
+          type: array
+          items:
+            type: string
+          description: Reference IDs (full replace)
+        risk:
+          type:
+          - number
+          - 'null'
+          description: Risk score (0–9)
+          format: double
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Updated summary
+        threatCategory:
+          type:
+          - string
+          - 'null'
+          description: Threat category
+        title:
+          type:
+          - string
+          - 'null'
+          description: Updated title
+    CaseMergeInput:
+      type: object
+      properties:
+        note:
+          type: string
+          description: Optional free-text note attached to both merge events
+          maxLength: 10000
+        targetCaseId:
+          type: string
+          description: ID of the case to merge into
+          maxLength: 36
+          minLength: 1
+      required:
+      - targetCaseId
+    CaseCreateInput:
+      type: object
+      properties:
+        author:
+          type: string
+          description: Author of the case
+          minLength: 1
+        priority:
+          type: string
+          description: 'Case priority: Low, Normal, or High'
+        refIds:
+          type: array
+          items:
+            type: string
+          description: Reference IDs (e.g. alert IDs)
+        rootTraceId:
+          type: string
+          description: Root trace ID for the case
+          minLength: 1
+      required:
+      - author
+      - rootTraceId
+    CaseBulkMergeInput:
+      type: object
+      properties:
+        note:
+          type: string
+          description: Optional free-text note attached to each merge event
+          maxLength: 10000
+        sourceIds:
+          type: array
+          items:
+            type: string
+          description: IDs of the source cases to merge (1–50)
+          maxItems: 50
+          minItems: 1
+        targetCaseId:
+          type: string
+          description: ID of the case to receive all sources
+          maxLength: 36
+          minLength: 1
+      required:
+      - sourceIds
+      - targetCaseId
+    CaseSendToSeniorAIInput:
+      type: object
+      properties:
+        instructions:
+          type: string
+          description: Optional free-text instructions to the senior AI
+          maxLength: 10000
+        priorityOverride:
+          type:
+          - boolean
+          - 'null'
+          description: Optional priority override
+        references:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Optional reference objects
+    CaseSnoozeInput:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Optional reason
+          maxLength: 10000
+        until:
+          type: string
+          description: Wake time (RFC 3339)
+          format: date-time
+      required:
+      - until
+    CaseRegenSummaryInput:
+      type: object
+      properties:
+        draft_summary:
+          type: string
+          description: Optional current draft to seed the regeneration
+          maxLength: 10000
+        instructions:
+          type: string
+          description: Analyst guidance for the LLM (1–10000 characters)
+          maxLength: 10000
+          minLength: 1
+      required:
+      - instructions
+    CaseAugmentInput:
+      type: object
+      properties:
+        additional_content:
+          type: string
+          description: Additional context to feed to the AI
+          maxLength: 100000
+    CaseCloseInput:
+      type: object
+      properties:
+        aiRating:
+          type: string
+          description: Optional AI rating
+          maxLength: 64
+        note:
+          type: string
+          description: Optional closing note
+          maxLength: 10000
+        verdict:
+          type: string
+          description: Verdict; when set, an assessment row is written
+          maxLength: 64
+        verdictReason:
+          type: string
+          description: Optional verdict reason
+          maxLength: 10000
+    CaseAddHelperInput:
+      type: object
+      properties:
+        helperUser:
+          type: string
+          description: UID of the user to add as a helper
+          maxLength: 256
+          minLength: 1
+        reason:
+          type: string
+          description: Optional free-text reason
+      required:
+      - helperUser
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

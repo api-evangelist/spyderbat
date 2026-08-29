@@ -1,0 +1,243 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Org Type API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged OrgType across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: OrgType
+  description: "\nOrganizational types specify both limits and defaults for organizations, they are used by the system to determine the resource utilization for an organization and associated settings. \n"
+paths:
+  /api/v1/org/{orgUID}/type:
+    get:
+      tags:
+      - OrgType
+      summary: Load the org type for the organization
+      description: "\nLoads the org type for the organiation\n\n * Requires action *org:Load*\n"
+      operationId: OrgTypeLoad
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOrgType'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/type/limit/active_sources:
+    get:
+      tags:
+      - OrgType
+      summary: Loads limits regarding active sources
+      description: "\nLoads the limits regarding active sources allowed on the organization, the active\nsources in an org are calculated on a 5m0s basis. \n\n * Requires action *org:Load*\n"
+      operationId: OrgTypeLimitActiveSources
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionOrgTypeMaxLimit'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/type/limit/org_roles:
+    get:
+      tags:
+      - OrgType
+      summary: Loads limits regarding org roles
+      description: "\nLoads the limit information regarding the number of associated roles allowed\nper an organization\n\n * Requires action *org:Load*\n"
+      operationId: OrgTypeLimitOrgRoles
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionOrgTypeMaxLimit'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    DaoOrgTypePolicy:
+      type: object
+      properties:
+        processing_stack:
+          type: string
+          description: Name of the processing stack
+          maxLength: 64
+          minLength: 3
+        retention_period:
+          type: integer
+          description: Retention period for stored data, in days
+          format: int32
+          maximum: 3650
+          minimum: 1
+      description: Policy for the org
+      required:
+      - processing_stack
+      - retention_period
+    DaoOrgQuota:
+      type: object
+      properties:
+        cases:
+          $ref: '#/components/schemas/DaoOrgQuotaCases'
+        max_active_sources:
+          type: integer
+          description: Maximum number of active sources
+          format: int32
+          maximum: 10000
+        max_agent_health_notifications:
+          type: integer
+          description: Maximum number of agent health notifications settings
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_custom_flags:
+          type: integer
+          description: Maximum number of custom flags
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_notification_targets:
+          type: integer
+          description: Maximum number of notification targets
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_notification_templates:
+          type: integer
+          description: Maximum number of notification templates
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_org_roles:
+          type: integer
+          description: Maximum number of associated organizational roles
+          format: int32
+          maximum: 2000
+          minimum: 1
+        max_saved_queries:
+          type: integer
+          description: Maximum number of saved queries
+          format: int32
+          maximum: 10000
+          minimum: 1
+      description: Default quota for the orgtype
+      required:
+      - max_active_sources
+      - max_org_roles
+    SessionOrgTypeMaxLimit:
+      type: object
+      properties:
+        current_value:
+          type: number
+          description: What is the current value
+          format: double
+        description:
+          type: string
+          description: Description of the limit
+        limit_exceeded:
+          type: boolean
+          description: Has the limit been met or exceeded
+        limit_value:
+          type: number
+          description: What is the max limit value
+          format: double
+        remaining_capacity:
+          type: number
+          description: How many items can be added to the current value before it is exceeded
+          format: double
+        time_window_in_seconds:
+          type: integer
+          description: The time window in seconds that the limit is calculated on
+          format: int32
+    DaoOrgType:
+      type: object
+      properties:
+        default_quota:
+          $ref: '#/components/schemas/DaoOrgQuota'
+        description:
+          type: string
+          description: Type of organization
+          maxLength: 64
+          minLength: 3
+        org_uid:
+          type: string
+        policy:
+          $ref: '#/components/schemas/DaoOrgTypePolicy'
+        uid:
+          type: string
+          description: UID for OrgType
+          maxLength: 64
+      required:
+      - default_quota
+      - policy
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

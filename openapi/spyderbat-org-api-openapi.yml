@@ -1,0 +1,878 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Org API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Org across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Org
+  description: '
+
+    Organizations hold resources & data associated with an organization, users must be associated via roles with an organization to have permissions to interact with the organization. Each user my have multiple and different roles on different organizations and each organization may have multiple users with roles on the organization. Each user is has an organization assigned to the user during signup. Users may then assign other users various roles on the organization.
+
+    '
+paths:
+  /api/v1/org/:
+    get:
+      tags:
+      - Org
+      summary: List organizations
+      description: "\nLists organizations\n\n * Will list organizations which the user has the action *org:Load* or *org:LoadExpired* on\n"
+      operationId: OrgList
+      parameters:
+      - name: cases_enabled
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: has_resource_policy
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 30
+        style: form
+        explode: true
+      - name: include_expired
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 32
+      - name: owner_uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          maximum: 100
+          minimum: 10
+      - name: uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Org'
+        '400':
+          description: invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}:
+    get:
+      tags:
+      - Org
+      summary: Load an organization
+      description: "\nLoads an organization by UID. \n\n * Requires action *org:Load*\n * Requires action *org:LoadExpired* to load expired organizations\n\n"
+      operationId: OrgLoad
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Org'
+        '403':
+          description: permission denied
+    put:
+      tags:
+      - Org
+      summary: Update an organization
+      description: "\nUpdates the organization \n\n * Requires the user have the action *org:Update* on the organization\n"
+      operationId: OrgUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        description: Org UID
+        required: true
+        schema:
+          type: string
+          description: Org UID
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgUpdateInput'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/assignedrole/:
+    get:
+      tags:
+      - Org
+      summary: List assigned roles in organization
+      description: "\nAllows querying of roles assigned in the organization\n\n * Requires the user have the action *org:ListOrgRoles* on the organization\n"
+      operationId: OrgListRole
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: role_uid_equals
+        in: query
+        schema:
+          type: string
+      - name: user_email_equals
+        in: query
+        schema:
+          type: string
+      - name: user_uid_equals
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DaoOrgRoleResponse'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/assignedrole/add:
+    post:
+      tags:
+      - Org
+      summary: Assign OrgRole
+      description: "\nAssigns a role to a particular user on an organization\n\n * Requires the user have the action *user.AssignRole* on the organization\n"
+      operationId: OrgAssignRole
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgAssignRoleInput'
+      responses:
+        '200':
+          description: OK
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/assignedrole/del:
+    post:
+      tags:
+      - Org
+      summary: Unassign OrgRole
+      description: "\nUnassigns a role to a particular user on an organization\n\n * Requires the user have the action *user.UnassignRole* on the organization\n"
+      operationId: OrgUnassignRole
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgUnassignRoleInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/invite:
+    post:
+      tags:
+      - Org
+      summary: Invite users to an organization
+      description: "\nInvites users to an organization\n\n * Requires action *org:InviteUsers* on the organization to invite users\n\n"
+      operationId: OrgInviteUsers
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgInviteUsersInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_policy:
+    put:
+      tags:
+      - Org
+      summary: Update an organization's notification policy
+      description: "\nUpdates the organization's notification policy\n\nThe policy contains targets, which are named destinations, for example a list of admins, and then rules for how notifications\nare routed. The most basic notification is the default policy assigned to all organizations, which is to send notifications\nto the organization owner. \n\nEach notification has a schema which can be used to filter how notifications are routed. \n\nHere is an example notification policy:\n\n```\n{\n    \"targets\": {\n      \"admins\": {\n        \"emails\": [\n          \"admin1@foo.com\",\n          \"admin2@foo.com\"\n        ]\n      },\n      \"soc\": {\n        \"slack\": {\n          \"url\": \"http://app.slack.com/XXXX\"\n        }\n      }\n    },\n    \"routes\": [\n      {\n        \"target\": \"admins\",\n        \"expr\": {\n          \"schema\": \"agent_offline\"\n        }\n      },\n      {\n        \"target\": \"soc\",\n        \"expr\": {\n          \"schema\": \"spydertrace_updated\"\n        }\n      },\n      {\n        \"destination\": {\n          \"users\": [\n            \"X23hs8234lks\"\n          ]\n        }\n      }\n    ]\n  }\n```\n\nThis policy says that any notification with the schema \"agent_offline\" is send to the admin emails, and that any notifications with the schema \"spydertrace_update\" is send to the soc slack channel, and all other notifications are sent to a user specified by their UserUID. If a destination is an explicit UserUID then the users notification policy will applied, for example to notify them by their notification type of choice.  \n\n * The following destination types are currently supported, UserUID, Email, Slack, Webhook. See the associated destination definition in the notification policy for details. \n * First match for a routing rule wins, and further processsing of the notification stops. \n * If a UserUID is specified the users notification policy may be used to contact that user.\n * Each notification has an associated schema, which is used to provide a consistent schema for the notification.\n * Expressions are optional, if no expression is specified the route matches by default\n * If the content-type is application/hjson the policy will be parsed and stored as hjson, all comments will be lost on an existing hjson policy if it is uploaded as json\n\nThis is an example notification generated using a notification policy and dashboardsearch:\n\n```\n{\n\t\"uid\": \"lQ0Q1lKm\",\n\t\"org_uid\": \"your_org_uid\",\n\t\"valid_from\": \"2021-10-14T19:22:00.869159169Z\",\n\t\"title\": \"Spyderbat: Dashboard search notification Recent interactive (shell) Processes\",\n\t\"message\": \"Spyderbat: Dashboard search notification Recent interactive (shell) Processes\",\n\t\"data\": {\n\t  \"dashboardsearch\": {\n\t\t\"data\": {\n\t\t  \"createTime\": 1634237497.142,\n\t\t  \"createdBy\": \"user@example.com\"\n\t\t},\n\t\t\"description\": \"Recent interactive (shell) Processes\",\n\t\t\"notify\": true,\n\t\t\"notify_frequency\": 300,\n\t\t\"org_uid\": \"spyderbatuid\",\n\t\t\"search\": \"schema:model_process AND interactive:true\",\n\t\t\"uid\": \"RTBQoR3uucyjG8ZeHJmw\"\n\t  }\n\t},\n\t\"schema\": \"dashboard_saved_search\",\n\t\"records\": [\n\t  {\n\t\t\"total_hits\": 0\n\t  }\n\t]\n  }\n```\n\n * Requires the user have the action *org:UpdateNotificationPolicy* on the organization\n"
+      operationId: OrgUpdateNotificationPolicy
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The notification policy
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPolicy'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_policy/:
+    get:
+      tags:
+      - Org
+      summary: Load Notification Policy
+      description: "\nLoads the notification policy for an organization. The notification policy defines who and how the organization is notified. \n \n * If the content-type is application/hjson the policy will be returned as hjson\n * If the content-type is application/json the policy will be returned as json\n\n\n * Requires the user have the action *org:LoadNotificationPolicy* on the organization\n"
+      operationId: OrgLoadNotificationPolicy
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/hjson:
+              schema:
+                $ref: '#/components/schemas/NotificationPolicy'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPolicy'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_policy/test_target:
+    post:
+      tags:
+      - Org
+      summary: Test Notification Target
+      description: "\nSends a test notification to a target.\n\n * Requires the user have the action *org:SendTestNotification* on the organization\n"
+      operationId: OrgTestNotificationTarget
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgTestNotificationTargetInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/role/:
+    get:
+      tags:
+      - Org
+      summary: List available roles
+      description: "\nAllows querying of the roles available to an organization\n\n * Requires the user have the action *org:ListRoles* on the organization\n"
+      operationId: ListRoles
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: role_uid_equals
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RbacRole'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    DaoOrgQuota:
+      type: object
+      properties:
+        cases:
+          $ref: '#/components/schemas/DaoOrgQuotaCases'
+        max_active_sources:
+          type: integer
+          description: Maximum number of active sources
+          format: int32
+          maximum: 10000
+        max_agent_health_notifications:
+          type: integer
+          description: Maximum number of agent health notifications settings
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_custom_flags:
+          type: integer
+          description: Maximum number of custom flags
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_notification_targets:
+          type: integer
+          description: Maximum number of notification targets
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_notification_templates:
+          type: integer
+          description: Maximum number of notification templates
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_org_roles:
+          type: integer
+          description: Maximum number of associated organizational roles
+          format: int32
+          maximum: 2000
+          minimum: 1
+        max_saved_queries:
+          type: integer
+          description: Maximum number of saved queries
+          format: int32
+          maximum: 10000
+          minimum: 1
+      description: Default quota for the orgtype
+      required:
+      - max_active_sources
+      - max_org_roles
+    OrgAssignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
+    DaoOrgRoleResponse:
+      type: object
+      properties:
+        org_name:
+          type: string
+          description: The organization name the user has the assigned role on
+        org_uid:
+          type: string
+          description: The organization UID the user has the assigned role on
+        role_uid:
+          type: string
+          description: The role the user is assigned
+        user_email:
+          type: string
+          description: The email address associated with the user
+        user_uid:
+          type: string
+          description: The user uid for the user
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    OrgInviteUsersInput:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+          maxItems: 64
+          minItems: 1
+        roles:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+          minItems: 1
+    RbacRole:
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+        uid:
+          type: string
+        version:
+          type: string
+    Org:
+      type: object
+      properties:
+        active_sources:
+          type: integer
+          description: Total number of active sources within the last 5 minutes
+          format: int32
+        active_users:
+          type: integer
+          description: Total number of active users within the last 7 days (which might be active on a different org)
+          format: int32
+        name:
+          type: string
+          description: Name of the organization
+          maxLength: 64
+          minLength: 3
+        org_type_uid:
+          type: string
+          description: Organization Type
+          maxLength: 64
+        owner_email:
+          type: string
+          description: The email address of the user who owns this org
+          format: email
+        owner_uid:
+          type: string
+          description: The user UID who owns this organization
+          maxLength: 64
+        processing_stack:
+          type: string
+          description: Deployment stack the org runs on, extracted from the org type's policy (e.g. 'saas', 'enterprise-us')
+        quota:
+          $ref: '#/components/schemas/DaoOrgQuota'
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        standby:
+          type: boolean
+          description: Is this org in standby mode?
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        total_sources:
+          type: integer
+          description: Total number of sources
+          format: int32
+        total_users:
+          type: integer
+          description: Total number of users
+          format: int32
+        uid:
+          type: string
+          description: Org UID
+          maxLength: 64
+        user_workid:
+          type: integer
+          description: User selected workid
+          format: int32
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+      required:
+      - name
+      - owner_email
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    Expr:
+      type: object
+      properties:
+        and:
+          type: array
+          items:
+            $ref: '#/components/schemas/Expr'
+          description: True if all sub-expressions are true
+        array_contains_str:
+          type: string
+          description: True if array property contains the string
+        contains_str:
+          type: string
+          description: True if property contains the string
+        equals:
+          description: True if property equals the value
+        exists:
+          type: boolean
+          description: True if property exists
+        greater_than:
+          type: number
+          description: True if property is greater than the value
+        has_prefix:
+          type: string
+          description: True if property starts with the string
+        has_suffix:
+          type: string
+          description: True if property ends with the string
+        in:
+          type: array
+          items: {}
+          description: True if property matches any value
+        less_than:
+          type: number
+          description: True if property is less than the value
+        not:
+          $ref: '#/components/schemas/Expr'
+        or:
+          type: array
+          items:
+            $ref: '#/components/schemas/Expr'
+          description: True if any sub-expression is true
+        property:
+          type: string
+          description: Property to match against, in dotted notation
+        re_match:
+          type: string
+          description: True if property matches the regex
+        schema:
+          type: string
+          description: Matches records with the specified schema
+      description: A filter expression node. Exactly one condition field must be specified. Use `and`, `or`, `not` for compound expressions.
+    NotificationPolicyDestination:
+      type: object
+      properties:
+        data:
+          description: UI-supplied data
+        description:
+          type: string
+        email:
+          type: array
+          items:
+            type: string
+            format: email
+        org_uid:
+          type: string
+        slack:
+          type: object
+          properties:
+            url:
+              type: string
+              format: url
+          required:
+          - url
+        users:
+          type: array
+          items:
+            type: string
+        webhook:
+          type: object
+          properties:
+            no_tls_validation:
+              type: boolean
+            url:
+              type: string
+              format: url
+          required:
+          - url
+      description: A notification policy destination, containing one and only one of the available types
+      maxProperties: 3
+      minProperties: 1
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    OrgTestNotificationTargetInput:
+      type: object
+      properties:
+        target:
+          type: string
+          maxLength: 64
+          minLength: 1
+    OrgUnassignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    NotificationPolicy:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            type: object
+            properties:
+              data:
+                description: UI-supplied data
+              description:
+                type: string
+              destination:
+                $ref: '#/components/schemas/NotificationPolicyDestination'
+              expr:
+                $ref: '#/components/schemas/Expr'
+              target:
+                type: string
+                description: One of the targets specified in `targets`
+        targets:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NotificationPolicyDestination'
+      description: A notification policy in json or hjson
+      required:
+      - routes
+      - targets
+    OrgUpdateInput:
+      type: object
+      properties:
+        active_sources:
+          type: integer
+          description: Total number of active sources within the last 5 minutes
+          format: int32
+        active_users:
+          type: integer
+          description: Total number of active users within the last 7 days (which might be active on a different org)
+          format: int32
+        name:
+          type: string
+          description: Name of the organization
+          maxLength: 64
+          minLength: 3
+        org_type_uid:
+          type: string
+          description: Organization Type
+          maxLength: 64
+        owner_email:
+          type: string
+          description: The email address of the user who owns this org
+          format: email
+        owner_uid:
+          type: string
+          description: The user UID who owns this organization
+          maxLength: 64
+        processing_stack:
+          type: string
+          description: Deployment stack the org runs on, extracted from the org type's policy (e.g. 'saas', 'enterprise-us')
+        quota:
+          $ref: '#/components/schemas/DaoOrgQuota'
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        standby:
+          type: boolean
+          description: Is this org in standby mode?
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        total_sources:
+          type: integer
+          description: Total number of sources
+          format: int32
+        total_users:
+          type: integer
+          description: Total number of users
+          format: int32
+        user_workid:
+          type: integer
+          description: User selected workid
+          format: int32
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+      required:
+      - name
+      - owner_email
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

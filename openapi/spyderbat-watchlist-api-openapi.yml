@@ -1,0 +1,252 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Watchlist API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Watchlist across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Watchlist
+  description: '
+
+    An API to manage the watchlist for files within an organization.'
+paths:
+  /api/v1/org/{orgUID}/files/watchlist:
+    get:
+      tags:
+      - Watchlist
+      summary: Query watchlist entries
+      description: "\nThis will query the watchlist entries for an org\n\n* Requires the action  *org:QueryWatchlist* on the organization\n\t\t\t"
+      operationId: WatchlistQuery
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DaoWatchlist'
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - Watchlist
+      summary: Create a watchlist entry
+      description: "\nThis will create a new watchlist entry for an org\n            \n* Requires the action  *org:CreateWatchlist* on the organization\n            "
+      operationId: WatchlistCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchlistCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiWatchlistCreateHandlerOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/files/watchlist/{watchlistID}:
+    get:
+      tags:
+      - Watchlist
+      summary: Load a watchlist entry
+      description: "\nThis will retrieve a specific watchlist entry for an org\n            \n* Requires the action  *org:LoadWatchlist* on the organization\n            "
+      operationId: WatchlistLoad
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: watchlistID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoWatchlist'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    put:
+      tags:
+      - Watchlist
+      summary: Update a watchlist entry
+      description: "\nThis will update a specific watchlist entry for an org\n            \n* Requires the action  *org:UpdateWatchlist* on the organization\n            "
+      operationId: WatchlistUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: watchlistID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchlistUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoWatchlist'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    delete:
+      tags:
+      - Watchlist
+      summary: Delete a watchlist entry
+      description: "\nThis will delete the specified watchlist entry from an org\n            \n* Requires the action  *org:DeleteWatchlist* on the organization\n            "
+      operationId: WatchlistDelete
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: watchlistID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    ApiWatchlistCreateHandlerOutput:
+      type: object
+      properties:
+        id:
+          type: string
+    WatchlistCreateInput:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+      required:
+      - files
+      - name
+    WatchlistUpdateInput:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+      required:
+      - files
+      - name
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    DaoWatchlist:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        name:
+          type: string
+        org_uid:
+          type: string
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        updated_at:
+          type: string
+        valid_from:
+          type: string
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

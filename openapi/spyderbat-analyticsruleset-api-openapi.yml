@@ -1,0 +1,370 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Analytics Ruleset API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged AnalyticsRuleset across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: AnalyticsRuleset
+  description: '
+
+    An API to allow the management of analytics rulesets. Analytics rulesets are used within some types of analytics rulesets.'
+paths:
+  /api/v1/org/{orgUID}/analyticsruleset/:
+    get:
+      tags:
+      - AnalyticsRuleset
+      summary: List analytics rulesets
+      description: "\nThis will list the analytics rulesets for an org with specific parameters\n\t\t\t\n* Requires the action  *org:ListAnalyticsRuleset* on the organization\n\t\t\t"
+      operationId: AnalyticsRulesetList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: from_archive
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: has_tags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          maxItems: 30
+        style: form
+        explode: true
+      - name: in_policy
+        in: query
+        description: UID of a policy with rulesets
+        schema:
+          type: string
+          description: UID of a policy with rulesets
+          maxLength: 64
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: type
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      - name: uid_equals
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DaoOutputAnalyticsRuleset'
+        '403':
+          description: permission denied
+    put:
+      tags:
+      - AnalyticsRuleset
+      summary: Update an analytics ruleset
+      description: "\nThis will update a specific analytics ruleset for an org\n\t\t\t\n* Requires the action  *org:UpdateAnalyticsRuleset* on the organization\n\t\t\t"
+      operationId: AnalyticsRulesetUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this source is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this source is associated with
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsRulesetUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOutputAnalyticsRuleset'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: analytics ruleset not found
+    post:
+      tags:
+      - AnalyticsRuleset
+      summary: Create a analytics ruleset
+      description: "\nThis will create a new analytics ruleset for an org\n\t\t\n* Requires the action  *org:CreateAnalyticsRuleset* on the organization\n\t\t"
+      operationId: AnalyticsRulesetCreate
+      parameters:
+      - name: orgUID
+        in: path
+        description: The org this source is associated with
+        required: true
+        schema:
+          type: string
+          description: The org this source is associated with
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsRulesetCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAnalyticsRulesetCreateHandlerOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/analyticsruleset/{analyticsrulesetUID}:
+    get:
+      tags:
+      - AnalyticsRuleset
+      summary: Load an analytics ruleset
+      description: "\nThis will retrieve a specific analytics ruleset for an org\n\t\t\t\n* Requires the action  *org:LoadAnalyticsRuleset* on the organization\n\t\t\t"
+      operationId: AnalyticsRulesetLoad
+      parameters:
+      - name: analyticsrulesetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: archive_version
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: latest_archive_version
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaoOutputAnalyticsRuleset'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - AnalyticsRuleset
+      summary: Delete an analytics ruleset
+      description: "\nThis will delete the specified ruleset from an org\n\t\t\t\n* Requires the action  *org:DeleteAnalyticsRuleset* on the organization\n\t\t\t"
+      operationId: AnalyticsRulesetDelete
+      parameters:
+      - name: analyticsrulesetUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    DaoOutputAnalyticsRuleset:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: Created by, the principal who created this object
+        last_updated:
+          type: string
+          description: Last updated date, the date this object was last updated
+          format: date-time
+        last_updated_by:
+          type: string
+          description: Last updated by, the principal who last updated this object
+        name:
+          type: string
+          description: Name of the analytics ruleset
+          maxLength: 64
+          minLength: 3
+        orgid:
+          type: string
+          description: Org UID
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: type
+          maxLength: 64
+        uid:
+          type: string
+          description: Analytics Ruleset UID
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: Ruleset version
+          format: int32
+      required:
+      - name
+      - type
+    AnalyticsRulesetCreateInput:
+      type: object
+      properties:
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - ruleset
+    ApiAnalyticsRulesetCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    AnalyticsRulesetUpdateInput:
+      type: object
+      properties:
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - ruleset
+    DaoRulesetObject:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: API Version
+        kind:
+          type: string
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: User supplied ruleset
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

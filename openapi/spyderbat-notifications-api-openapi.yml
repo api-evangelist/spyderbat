@@ -1,0 +1,506 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Notifications API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Notifications across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Notifications
+  description: '
+
+    An API for retrieving, enabling, and disabling notification settings.'
+paths:
+  /api/v1/org/{orgUID}/initialize_notifications/ref/{refUID}:
+    post:
+      tags:
+      - Notifications
+      summary: Initialize notifications for an object. Usually a saved query or custom flag.
+      operationId: NotificationSettingsInitialize
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: refUID
+        in: path
+        description: The uid of the saved query or custom flag to initialize notifications for.
+        required: true
+        schema:
+          type: string
+          description: The uid of the saved query or custom flag to initialize notifications for.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSettingsInitializeInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionInitializeNotificationSettingsOutput'
+        '400':
+          description: bad request
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_settings/:
+    get:
+      tags:
+      - Notifications
+      summary: List notification settings.
+      operationId: NotificationSettingsList
+      parameters:
+      - name: orgUID
+        in: path
+        description: Filter by the organization UID.
+        required: true
+        schema:
+          type: string
+          description: Filter by the organization UID.
+      - name: feature_equals
+        in: query
+        description: Filter by the feature.
+        schema:
+          type: string
+          description: Filter by the feature.
+      - name: has_target_uid
+        in: query
+        description: Filter by whether the notification settings have a target UID.
+        schema:
+          type: string
+          description: Filter by whether the notification settings have a target UID.
+      - name: has_template_uid
+        in: query
+        description: Filter by whether the notification settings have a template UID.
+        schema:
+          type: string
+          description: Filter by whether the notification settings have a template UID.
+      - name: is_enabled
+        in: query
+        description: Filter by whether the notification settings are enabled.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Filter by whether the notification settings are enabled.
+      - name: name_or_uid_contains
+        in: query
+        description: Filter by the name or UID.
+        schema:
+          type: string
+          description: Filter by the name or UID.
+      - name: name_or_uid_equals
+        in: query
+        description: Filter by the name or UID.
+        schema:
+          type: string
+          description: Filter by the name or UID.
+      - name: page
+        in: query
+        description: Page number to return.
+        schema:
+          type: integer
+          description: Page number to return.
+          format: int32
+      - name: page_size
+        in: query
+        description: Number of notification settings to return per page.
+        schema:
+          type: integer
+          description: Number of notification settings to return per page.
+          format: int32
+      - name: refUID_equals
+        in: query
+        description: Filter by the reference UID.
+        schema:
+          type: string
+          description: Filter by the reference UID.
+      - name: trigger_equals
+        in: query
+        description: Filter by the trigger.
+        schema:
+          type: string
+          description: Filter by the trigger.
+      - name: uid_equals
+        in: query
+        description: Filter by the notification settings UID.
+        schema:
+          type: string
+          description: Filter by the notification settings UID.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListNotificationSettingsOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_settings/ref/{refUID}/disable:
+    put:
+      tags:
+      - Notifications
+      summary: Disable notification settings for an object. Usually a saved query or custom flag.
+      operationId: NotificationSettingsDisable
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: refUID
+        in: path
+        description: The uid of the saved query or custom flag to disable notifications for.
+        required: true
+        schema:
+          type: string
+          description: The uid of the saved query or custom flag to disable notifications for.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionDisableNotificationSettingsOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_settings/ref/{refUID}/enable:
+    put:
+      tags:
+      - Notifications
+      summary: Enable notification settings for an object. Usually a saved query or custom flag.
+      operationId: NotificationSettingsEnable
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: refUID
+        in: path
+        description: The uid of the saved query or custom flag to enable notifications for.
+        required: true
+        schema:
+          type: string
+          description: The uid of the saved query or custom flag to enable notifications for.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEnableNotificationSettingsOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_settings/ref/{refUID}/set:
+    put:
+      tags:
+      - Notifications
+      summary: Set notification settings for an object. Usually a saved query or custom flag.
+      operationId: NotificationSettingsSet
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: refUID
+        in: path
+        description: The uid of the saved query or custom flag to set notification settings for.
+        required: true
+        schema:
+          type: string
+          description: The uid of the saved query or custom flag to set notification settings for.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSettingsSetInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionSetNotificationSettingsOutput'
+        '400':
+          description: bad request
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_settings/{nsUID}:
+    get:
+      tags:
+      - Notifications
+      summary: Load a specific notification settings object.
+      operationId: NotificationSettingsLoad
+      parameters:
+      - name: nsUID
+        in: path
+        description: The uid of the notification settings to load.
+        required: true
+        schema:
+          type: string
+          description: The uid of the notification settings to load.
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionLoadNotificationSettingsOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/test_notification:
+    post:
+      tags:
+      - Notifications
+      summary: Test a notification settings object.
+      description: "\nThis will send test notifications to a specific notification target\n* Requires the action *org:LoadNotificationSettings* on the organization.\n\t\t\t"
+      operationId: NotificationSettingsTest
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSettingsTestInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionTestNotificationOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    NotificationSettingsSetInput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        trigger:
+          type: string
+          description: Used when setting the notifications for a specific trigger is required. Agent health has multiple so it must be specified.
+    NotificationSettingsInitializeInput:
+      type: object
+      properties:
+        notification_targets:
+          type: array
+          items:
+            type: string
+          description: The uids of the notification targets to send notifications to. This can be configured later.
+    SessionDisableNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    DaoNotificationSettings:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionTestNotificationOutput:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Contains information on inspecting the success or failure of the test notification.
+    DaoNotificationSettingsDBObj:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        feature:
+          type: string
+        is_enabled:
+          type: boolean
+        org_uid:
+          type: string
+        ref_uid:
+          type: string
+        resource_name:
+          type: string
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        trigger:
+          type: string
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+        valid_from:
+          type: string
+          format: date-time
+    SessionLoadNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
+    SessionEnableNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    SessionSetNotificationSettingsOutput:
+      type: object
+      properties:
+        NotificationSettings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    SessionListNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
+        search_total:
+          type: integer
+          format: int32
+        total_notification_settings:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+    SessionInitializeNotificationSettingsOutput:
+      type: object
+      properties:
+        NotificationSettings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    NotificationSettingsTestInput:
+      type: object
+      properties:
+        notification_settings_uid:
+          type: string
+          description: The notification settings UID to test.
+        record:
+          type: object
+          additionalProperties: {}
+          description: Record is the data to use when testing the notification. Fields in the record can be dereferenced by the template. For saved query notifications this will be the model or event record that matched the query.
+        target_uid:
+          type: string
+          description: The target UID to test.
+        template_uid:
+          type: string
+          description: The template UID to test.
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

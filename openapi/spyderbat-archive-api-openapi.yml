@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Archive API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged Archive across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: Archive
+  description: Access to raw agent archive data.
+paths:
+  /api/v1/org/{orgUID}/archive/:
+    get:
+      tags:
+      - Archive
+      summary: List agent archive zips
+      description: "\nLists the raw agent archive zip files for one or more sources within a bounded\ntime window. The window between start_time and end_time may not exceed 24 hours;\nif omitted it defaults to the last hour (end_time = now, start_time = now - 1h).\n\nResults are paginated: when the response includes a non-empty continuation_token,\npass it back (with the other parameters unchanged) to fetch the next page.\n\nEach result includes an opaque *name* that, with its source UID, can be passed to\nthe download endpoint to fetch the zip. The name carries no storage path or prefix.\n\n * Requires action source_data:Query on the organization"
+      operationId: ArchiveList
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID that owns the archives
+        required: true
+        schema:
+          type: string
+          description: Organization UID that owns the archives
+      - name: continuation_token
+        in: query
+        description: Opaque token from a prior response's continuation_token, to fetch the next page. The other parameters must be unchanged across pages.
+        schema:
+          type: string
+          description: Opaque token from a prior response's continuation_token, to fetch the next page. The other parameters must be unchanged across pages.
+      - name: end_time
+        in: query
+        description: Inclusive upper bound, in Unix seconds; must be after start_time and within 24h of it. Defaults to the current time.
+        schema:
+          type: integer
+          description: Inclusive upper bound, in Unix seconds; must be after start_time and within 24h of it. Defaults to the current time.
+          format: int64
+          minimum: 1
+      - name: limit
+        in: query
+        description: Maximum number of archives to return in one page. Defaults to 1000.
+        schema:
+          type: integer
+          description: Maximum number of archives to return in one page. Defaults to 1000.
+          format: int32
+          maximum: 50000
+          minimum: 1
+      - name: source_uid
+        in: query
+        description: One or more source UIDs (e.g. machine UIDs) to list archives for
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          description: One or more source UIDs (e.g. machine UIDs) to list archives for
+          maxItems: 100
+          minItems: 1
+        style: form
+        explode: true
+      - name: start_time
+        in: query
+        description: Inclusive lower bound, in Unix seconds, of the time window to list. Defaults to one hour before end_time.
+        schema:
+          type: integer
+          description: Inclusive lower bound, in Unix seconds, of the time window to list. Defaults to one hour before end_time.
+          format: int64
+          minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionArchiveListResponse'
+        '400':
+          description: bad request
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/archive/{sourceUID}/{name}:
+    get:
+      tags:
+      - Archive
+      summary: Download an agent archive zip
+      description: "\nStreams a single raw agent archive zip identified by a source UID and a *name*\nreturned from the list endpoint.\n\n * Requires action source_data:Query on the organization"
+      operationId: ArchiveDownload
+      parameters:
+      - name: name
+        in: path
+        description: Archive identifier returned by the list endpoint, of the form {sourceUID}-{partition}-{seq}-{start}-{end}.zip
+        required: true
+        schema:
+          type: string
+          description: Archive identifier returned by the list endpoint, of the form {sourceUID}-{partition}-{seq}-{start}-{end}.zip
+          maxLength: 256
+      - name: orgUID
+        in: path
+        description: Organization UID that owns the archive
+        required: true
+        schema:
+          type: string
+          description: Organization UID that owns the archive
+      - name: sourceUID
+        in: path
+        description: Source UID the archive belongs to
+        required: true
+        schema:
+          type: string
+          description: Source UID the archive belongs to
+          maxLength: 64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/zip:
+              schema:
+                type: string
+                description: The raw archive zip file
+                format: binary
+        '400':
+          description: bad request
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SessionArchiveListResponse:
+      type: object
+      properties:
+        continuation_token:
+          type: string
+          description: If present, more archives match; pass it back as continuation_token (with the same other parameters) to fetch the next page
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionArchiveObject'
+          description: Archives matching the query, in no particular order
+    SessionArchiveObject:
+      type: object
+      properties:
+        end_time:
+          type: integer
+          description: Unix seconds of the latest record contained in the archive
+          format: int64
+        name:
+          type: string
+          description: Archive identifier; pass to the download endpoint to fetch the zip. Of the form {sourceUID}-{partition}-{seq}-{start}-{end}.zip
+        size:
+          type: integer
+          description: Size of the zip, in bytes
+          format: int64
+        source_uid:
+          type: string
+          description: Source UID the archive belongs to
+        start_time:
+          type: integer
+          description: Unix seconds of the earliest record contained in the archive
+          format: int64
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

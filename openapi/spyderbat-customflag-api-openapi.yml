@@ -1,0 +1,612 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Custom Flag API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged CustomFlag across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: CustomFlag
+  description: '
+
+    An API to allow the management of custom flags. Custom flags allow users to define custom detections within Spyderbat.'
+paths:
+  /api/v1/org/{orgUID}/customflag/:
+    get:
+      tags:
+      - CustomFlag
+      summary: List custom flags
+      description: "\nThis will list all custom flags for an org\n* Requires the action  *org:ListCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: action_taken_equals
+        in: query
+        description: Filter by the action taken on the flag(s). Pulls from the history database table. One of [insert|update|delete|enable|disable]
+        schema:
+          type: string
+          description: Filter by the action taken on the flag(s). Pulls from the history database table. One of [insert|update|delete|enable|disable]
+      - name: content_contains
+        in: query
+        schema:
+          type: string
+      - name: flag_type_equals
+        in: query
+        description: Filter by the flag type
+        schema:
+          type: string
+          description: Filter by the flag type
+      - name: from_history
+        in: query
+        description: Retrieves historical custom flags data. Pulls from the history database table
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Retrieves historical custom flags data. Pulls from the history database table
+      - name: impact_contains
+        in: query
+        schema:
+          type: string
+      - name: is_enabled
+        in: query
+        description: Filter by the flag enabled status
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Filter by the flag enabled status
+      - name: is_not_enabled
+        in: query
+        description: Filter by the flag disabled status
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Filter by the flag disabled status
+      - name: latest_version
+        in: query
+        description: Filter by the latest version of the flag. Pulls from the history database table
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Filter by the latest version of the flag. Pulls from the history database table
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: query_contains
+        in: query
+        schema:
+          type: string
+      - name: query_equals
+        in: query
+        schema:
+          type: string
+      - name: query_uid_equals
+        in: query
+        description: Filter by the saved query UID
+        schema:
+          type: string
+          description: Filter by the saved query UID
+      - name: reversed
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: schema_equals
+        in: query
+        schema:
+          type: string
+      - name: severity_equals
+        in: query
+        schema:
+          type: string
+      - name: sort_by
+        in: query
+        description: Sort the results by a field. One of [name|description|create_time|query|schema|severity|impact|last_updated|is_enabled]
+        schema:
+          type: string
+          description: Sort the results by a field. One of [name|description|create_time|query|schema|severity|impact|last_updated|is_enabled]
+      - name: tags_contain
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+      - name: uid_equals
+        in: query
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: Filter by the flag version. Pulls from the history database table
+        schema:
+          type: integer
+          description: Filter by the flag version. Pulls from the history database table
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListCustomFlagOutput'
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - CustomFlag
+      summary: Create a custom flag.
+      description: "\nThis will create a new custom flag for an org\n* Requires the action  *org:CreateCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomFlagCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateCustomFlagOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/customflag/{customFlagUID}:
+    get:
+      tags:
+      - CustomFlag
+      summary: Load a custom flag
+      description: "\nThis will retrieve a specific custom flag for an org\n* Requires the action  *org:LoadCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagLoad
+      parameters:
+      - name: customFlagUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionLoadCustomFlagOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    put:
+      tags:
+      - CustomFlag
+      summary: Update a custom flag.
+      description: "\nThis will update a specific custom flag for an org\n* Requires the action  *org:UpdateCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagUpdate
+      parameters:
+      - name: customFlagUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomFlagUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionUpdateCustomFlagOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - CustomFlag
+      summary: Delete a custom flag.
+      description: "\nThis will delete a specific custom flag for an org\n* Requires the action  *org:DeleteCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagDelete
+      parameters:
+      - name: customFlagUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/customflag/{customFlagUID}/disable:
+    put:
+      tags:
+      - CustomFlag
+      summary: Disable a custom flag.
+      description: "\nThis will disable a specific custom flag for an org\n* Requires the action  *org:DisableCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagDisable
+      parameters:
+      - name: customFlagUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/customflag/{customFlagUID}/enable:
+    put:
+      tags:
+      - CustomFlag
+      summary: Enable a custom flag.
+      description: "\nThis will enable a specific custom flag for an org\n* Requires the action  *org:EnableCustomFlag* on the organization\n\t\t\t"
+      operationId: CustomFlagEnable
+      parameters:
+      - name: customFlagUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    CustomFlagUpdateInput:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Optional Markdown content for additional details.
+          maxLength: 1500
+        description:
+          type: string
+          description: A brief description explaining what the flag detects.
+          maxLength: 500
+        impact:
+          type: string
+          description: Optional impact this flag has for your organization.
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        severity:
+          type: string
+          description: Optional severity level of the flag. One of [info|low|medium|high|critical]
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags to associate with the custom flag.
+        type:
+          type: string
+          description: The type of the flag. One of [redflag|opsflag]
+    SessionLoadCustomFlagOutput:
+      type: object
+      properties:
+        custom_flag:
+          $ref: '#/components/schemas/SessionOutputCustomFlag'
+    SessionListCustomFlagOutput:
+      type: object
+      properties:
+        custom_flags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputCustomFlag'
+          description: List of custom flags
+        search_total:
+          type: integer
+          description: Total number of custom flags matching the search criteria
+          format: int32
+        total_flags:
+          type: integer
+          description: Total number of custom flags
+          format: int32
+        total_pages:
+          type: integer
+          description: Total number of pages
+          format: int32
+    DaoNotificationSettingsObj:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionUpdateCustomFlagOutput:
+      type: object
+      properties:
+        custom_flag:
+          $ref: '#/components/schemas/SessionOutputCustomFlag'
+    SessionCreateCustomFlagOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    DaoNotificationSettings:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionOutputCustomFlag:
+      type: object
+      properties:
+        action_taken:
+          type: string
+        action_time:
+          type: integer
+          format: int64
+        action_user:
+          type: string
+        content:
+          type: string
+        created_by:
+          type: string
+        description:
+          type: string
+        impact:
+          type: string
+        is_enabled:
+          type: boolean
+        last_updated:
+          type: integer
+          format: int64
+        last_updated_by:
+          type: string
+        name:
+          type: string
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        org_uid:
+          type: string
+        query:
+          type: string
+        revision:
+          type: string
+        saved_query_uid:
+          type: string
+        schema:
+          type: string
+        severity:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int32
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    CustomFlagCreateInput:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Optional Markdown content for additional details.
+          maxLength: 1500
+        description:
+          type: string
+          description: A brief description explaining what the flag detects.
+          maxLength: 500
+        impact:
+          type: string
+          description: Optional impact this flag has for your organization.
+          maxLength: 500
+        is_disabled:
+          type: boolean
+          description: Optional flag to disable the custom flag on creation. Default is enabled.
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        saved_query_uid:
+          type: string
+        severity:
+          type: string
+          description: Optional severity level of the flag. One of [info|low|medium|high|critical]
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags to associate with the custom flag.
+        type:
+          type: string
+          description: The type of the flag. One of [redflag|opsflag]
+      required:
+      - description
+      - name
+      - saved_query_uid
+      - severity
+      - type
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

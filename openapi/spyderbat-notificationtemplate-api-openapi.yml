@@ -1,0 +1,895 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Notification Template API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged NotificationTemplate across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: NotificationTemplate
+  description: '
+
+    An API to allow the management of notification templates. Notification templates allow users to define custom notifications within Spyderbat.'
+paths:
+  /api/v1/org/{orgUID}/notification_template/:
+    get:
+      tags:
+      - NotificationTemplate
+      summary: List notification templates
+      description: "\nThis will list all notification templates for an org\n* Requires the action  *org:ListNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: action_taken_equals
+        in: query
+        schema:
+          type: string
+      - name: from_history
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: latest_version
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+      - name: name_equals
+        in: query
+        schema:
+          type: string
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+      - name: name_or_uid_equals
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: reversed
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: sort_by
+        in: query
+        description: Sort the results by a field. One of [name|description|create_time|last_updated|type]
+        schema:
+          type: string
+          description: Sort the results by a field. One of [name|description|create_time|last_updated|type]
+      - name: tags_contain
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+      - name: type_equals
+        in: query
+        schema:
+          type: string
+      - name: version
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListNotificationTemplateOutput'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/email/:
+    post:
+      tags:
+      - NotificationTemplate
+      summary: Create an email notification template.
+      description: "\nThis will create a new email notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateEmailCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplateEmailCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/email/{notificationTemplateUID}:
+    put:
+      tags:
+      - NotificationTemplate
+      summary: Update a notification template.
+      description: "\nThis will update a specific email notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateEmailUpdate
+      parameters:
+      - name: notificationTemplateUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification template.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification template.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplateEmailUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionUpdateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/pagerduty/:
+    post:
+      tags:
+      - NotificationTemplate
+      summary: Create a pagerduty notification template.
+      description: "\nThis will create a new pagerduty notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplatePagerDutyCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplatePagerDutyCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/pagerduty/{notificationTemplateUID}:
+    put:
+      tags:
+      - NotificationTemplate
+      summary: Update a notification template.
+      description: "\nThis will update a specific pagerduty notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplatePagerDutyUpdate
+      parameters:
+      - name: notificationTemplateUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification template.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification template.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplatePagerDutyUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionUpdateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/slack/:
+    post:
+      tags:
+      - NotificationTemplate
+      summary: Create a slack notification template.
+      description: "\nThis will create a new slack notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateSlackCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplateSlackCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/slack/{notificationTemplateUID}:
+    put:
+      tags:
+      - NotificationTemplate
+      summary: Update a notification template.
+      description: "\nThis will update a specific slack notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateSlackUpdate
+      parameters:
+      - name: notificationTemplateUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification template.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification template.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplateSlackUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionUpdateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/webhook/:
+    post:
+      tags:
+      - NotificationTemplate
+      summary: Create a webhook notification template.
+      description: "\nThis will create a new webhook notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateWebhookCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplateWebhookCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/webhook/{notificationTemplateUID}:
+    put:
+      tags:
+      - NotificationTemplate
+      summary: Update a notification template.
+      description: "\nThis will update a specific webhook notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateWebhookUpdate
+      parameters:
+      - name: notificationTemplateUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: clear_description
+        in: query
+        description: Clear the description of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the description of the notification template.
+      - name: clear_tags
+        in: query
+        description: Clear the tags of the notification template.
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Clear the tags of the notification template.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTemplateWebhookUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionUpdateNotificationTemplateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/notification_template/{notificationTemplateUID}:
+    get:
+      tags:
+      - NotificationTemplate
+      summary: Load a notification template
+      description: "\nThis will retrieve a specific notification template for an org\n* Requires the action  *org:LoadNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateLoad
+      parameters:
+      - name: notificationTemplateUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionLoadNotificationTemplateOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - NotificationTemplate
+      summary: Delete a notification template.
+      description: "\nThis will delete a specific notification template for an org\n* Requires the action  *org:DeleteNotificationTemplate* on the organization\n\t\t\t"
+      operationId: NotificationTemplateDelete
+      parameters:
+      - name: notificationTemplateUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SessionLoadNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_template:
+          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+    SessionUpdateNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_template:
+          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+    SessionOutputNotificationTemplate:
+      type: object
+      properties:
+        action_taken:
+          type: string
+        action_time:
+          type: integer
+          format: int64
+        action_user:
+          type: string
+        created_by:
+          type: string
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        last_updated:
+          type: integer
+          format: int64
+        last_updated_by:
+          type: string
+        name:
+          type: string
+          description: Name of the notification template.
+        org_uid:
+          type: string
+        revision:
+          type: string
+        settings:
+          type: object
+          additionalProperties: {}
+        tags:
+          type: array
+          items:
+            type: string
+        template_data:
+          type: object
+          additionalProperties: {}
+        template_type:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int32
+      required:
+      - name
+    NotificationTemplateSlackUpdateInput:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Blocks to send to Slack.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        tags:
+          type: array
+          items:
+            type: string
+        text:
+          type: string
+          description: Message to send to Slack.
+      required:
+      - name
+      - text
+    NotificationTemplatePagerDutyCreateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
+    SessionListNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+        search_total:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_templates:
+          type: integer
+          format: int32
+    NotificationTemplateEmailUpdateInput:
+      type: object
+      properties:
+        body_html:
+          type: string
+          description: HTML body of the email.
+        body_text:
+          type: string
+          description: Simple text body of the email.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        subject:
+          type: string
+          description: Subject of the email.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - subject
+    NotificationTemplateWebhookUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        entire_object:
+          type: boolean
+          description: Send the entire object as the payload. Overrides the payload field.
+        name:
+          type: string
+          description: Name of the notification template.
+        payload:
+          type: object
+          additionalProperties: {}
+          description: Custom payload to send to the webhook.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+    NotificationTemplatePagerDutyUpdateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
+    NotificationTemplateSlackCreateInput:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Blocks to send to Slack.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        tags:
+          type: array
+          items:
+            type: string
+        text:
+          type: string
+          description: Message to send to Slack.
+      required:
+      - name
+      - text
+    NotificationTemplateEmailCreateInput:
+      type: object
+      properties:
+        body_html:
+          type: string
+          description: HTML body of the email.
+        body_text:
+          type: string
+          description: Simple text body of the email.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        subject:
+          type: string
+          description: Subject of the email.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - subject
+    SessionCreateNotificationTemplateOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    NotificationTemplateWebhookCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        entire_object:
+          type: boolean
+          description: Send the entire object as the payload. Overrides the payload field.
+        name:
+          type: string
+          description: Name of the notification template.
+        payload:
+          type: object
+          additionalProperties: {}
+          description: Custom payload to send to the webhook.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

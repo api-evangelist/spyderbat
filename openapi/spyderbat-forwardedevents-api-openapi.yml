@@ -1,0 +1,71 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Forwarded Events API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged ForwardedEvents across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: ForwardedEvents
+  description: '
+
+    An API to allow retrieval of observations for a SIEM.'
+paths:
+  /api/v1/org/{orgUID}/events/*iterator:
+    get:
+      tags:
+      - ForwardedEvents
+      summary: Query for forwarded events for a 3rd-party SIEM
+      description: "\nReturn forwarded events using the supplied iterator. OLDEST will return the oldest\nevents, LATEST will return return an iterator for the current end of the stream.\nIf no iterator is provided, OLDEST will be used.\n* Requires the action  *source_data:Query* on the organization\n\t\t\t"
+      operationId: ForwardEvents
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID
+        required: true
+        schema:
+          type: string
+          description: Organization UID
+      - name: limit
+        in: query
+        description: Requested event count. A request of 10000 lets the server deliver as many events as it wants; smaller values are honored as a strict upper bound.
+        schema:
+          type: integer
+          description: Requested event count. A request of 10000 lets the server deliver as many events as it wants; smaller values are honored as a strict upper bound.
+          format: int32
+          maximum: 10000
+          minimum: 1000
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

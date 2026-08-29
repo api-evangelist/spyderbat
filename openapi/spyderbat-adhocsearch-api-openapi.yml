@@ -1,0 +1,698 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Adhoc Search API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged AdhocSearch across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: AdhocSearch
+  description: 'Ad-hoc Search interface for complex queries
+
+    '
+paths:
+  /api/v1/org/{orgUID}/objects/:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Get objects by ID
+      description: "\nReturns objects by ID.\n\n * Requires action source_data:Query"
+      operationId: Objects
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectsInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionObjectQueryResponse'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/objects/poll_results:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Gets the pending results for a given query
+      description: "\nReturns the next set of objects from a query previously started with\nstart_query. If 'complete' is true in the response, then there are no more\nresults and calling poll_results with the same query ID will return \"not found\".\n\n * Requires action source_data:Query"
+      operationId: ObjectsPollResults
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectsPollResultsInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionObjectPollResultsResponse'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/objects/start_query:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Get objects by ID and graph link rules, returning a query ID for slow results
+      description: "\nReturns objects from the given IDs and links given with the graph rules.\nIf no rules are present, returns only the objects with the given IDs.\nIf results are slow to fetch, part of the results will be returned with a\nquery ID that can be used to fetch the remaining results from poll_results.\n\n * Requires action source_data:Query"
+      operationId: ObjectsStartQuery
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectsStartQueryInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionObjectStartQueryResponse'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/objects/stop_query:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Terminates a running query
+      description: "\nTells the objects service that the given query is no longer needed, and\ncan be stopped or cleaned up. Future calls to poll results with this\nquery ID will return \"not found\".\n\n * Requires action source_data:Query"
+      operationId: ObjectsStopQuery
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID of the query
+        required: true
+        schema:
+          type: string
+          description: Organization UID of the query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectsStopQueryInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/objects/walk-graph:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Get objects by ID and graph link rules
+      description: "\nReturns objects from the given IDs and links given with the graph rules.\n\n * Requires action source_data:Query"
+      operationId: ObjectsWalkGraph
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectsWalkGraphInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/search/:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Start an adhoc search
+      description: "\nStarts an ahdoc search. Returns an ID that can be used to get results.\n\n * Requires action source_data:Query"
+      operationId: Search
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      - name: limit
+        in: query
+        description: Maximum number of results to return
+        schema:
+          type: integer
+          description: Maximum number of results to return
+          format: int32
+          maximum: 100000000
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/search/convert/:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Convert an adhoc search
+      description: "\nConverts an ahdoc search.\n\n * Requires action source_data:Query"
+      operationId: Convert
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/search/parse-query/:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Returns a structured representation of a query without running it
+      description: "\nParses and validates a search query, then returns a structured representation of the parsed query.\nDoes not run the provided query.\n\n * Requires action source_data:Query"
+      operationId: Parse Search Query
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      - name: limit
+        in: query
+        description: Maximum number of results to return
+        schema:
+          type: integer
+          description: Maximum number of results to return
+          format: int32
+          maximum: 100000000
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parse_Search_QueryInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/search/schema/:
+    get:
+      tags:
+      - AdhocSearch
+      summary: Schema for an adhoc search
+      description: "\nSchema for an ahdoc search.\n\n * Requires action source_data:Query"
+      operationId: Schema
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/search/validate/:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Validate an adhoc search
+      description: "\nValidates an ahdoc search.\n\n * Requires action source_data:Query"
+      operationId: Validate
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      - name: limit
+        in: query
+        description: Maximum number of results to return
+        schema:
+          type: integer
+          description: Maximum number of results to return
+          format: int32
+          maximum: 100000000
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/search/{jobID}:
+    post:
+      tags:
+      - AdhocSearch
+      summary: Start an adhoc search
+      description: "\nReturns data from an adhoc search job.\n\n * Requires action source_data:Query"
+      operationId: Results
+      parameters:
+      - name: jobID
+        in: path
+        description: Job ID to get results for
+        required: true
+        schema:
+          type: string
+          description: Job ID to get results for
+          maxLength: 16128
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultsInput'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    ObjectsInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        ids:
+          type: array
+          items:
+            type: string
+          description: Array of IDs to resolve into records
+          maxItems: 2000
+          minItems: 1
+      required:
+      - ids
+    ConvertInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        query:
+          type: string
+    ObjectsWalkGraphInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        ids:
+          type: array
+          items:
+            type: string
+          description: Array of IDs to resolve into records
+          maxItems: 2000
+          minItems: 1
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGraphLinkRule'
+          description: The rules to use to walk the graph
+          maxItems: 2000
+      required:
+      - ids
+    ObjectsStartQueryInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        ids:
+          type: array
+          items:
+            type: string
+          description: Array of IDs to resolve into records
+          maxItems: 2000
+          minItems: 1
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGraphLinkRule'
+          description: The rules to use to walk the graph
+          maxItems: 2000
+      required:
+      - ids
+    SessionObjectPollResultsResponse:
+      type: object
+      properties:
+        complete:
+          type: boolean
+          description: Whether or not the data is complete, meaning there are no more results
+        errors:
+          type: array
+          items: {}
+          description: List of errors from object query
+        results:
+          type: array
+          items: {}
+          description: Objects matching the requested ids
+    Parse_Search_QueryInput:
+      type: object
+      properties:
+        case_sensitive:
+          type: boolean
+          description: Whether the query is case sensitive (default false)
+        cluster_uid:
+          type: string
+          description: An optional pre-filter field that restricts results to one cluster
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        end_time:
+          type: integer
+          description: End time to query
+          format: int32
+        group_by:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGrouping'
+          description: What fields to use for grouping, a non-empty array causes the output to be treated as a histogram
+        latest_version:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to pre-filter the results to only search with the latest version of each object (default true)
+        muid:
+          type: string
+          description: An optional pre-filter field that restricts results to one machine
+        order_by:
+          description: Fields to order the results by
+        output_fields:
+          type: array
+          items:
+            type: string
+          description: 'What fields to output from the query; default: ["id"]'
+        query:
+          type: string
+          description: Query to execute
+          maxLength: 65536
+        schema:
+          type: string
+          description: Schema to query
+          maxLength: 512
+        start_time:
+          type: integer
+          description: Start time to query
+          format: int32
+      required:
+      - end_time
+      - query
+      - schema
+      - start_time
+    SessionObjectStartQueryResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: List of ids that are not in the database
+        query_id:
+          type: string
+          description: Optional ID that can be passed to poll results to get the rest of the results
+          maxLength: 128
+        results:
+          type: array
+          items: {}
+          description: Objects matching the requested ids
+    ObjectsStopQueryInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        query_id:
+          type: string
+          description: Query ID returned by start query
+          maxLength: 128
+      required:
+      - query_id
+    ResultsInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        limit:
+          type: integer
+          description: Maximum number of results to return
+          format: int32
+          maximum: 10000
+        token:
+          type: string
+          description: Where to start the query in the result set from
+          maxLength: 128
+    SearchInput:
+      type: object
+      properties:
+        case_sensitive:
+          type: boolean
+          description: Whether the query is case sensitive (default false)
+        cluster_uid:
+          type: string
+          description: An optional pre-filter field that restricts results to one cluster
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        end_time:
+          type: integer
+          description: End time to query
+          format: int32
+        group_by:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGrouping'
+          description: What fields to use for grouping, a non-empty array causes the output to be treated as a histogram
+        latest_version:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to pre-filter the results to only search with the latest version of each object (default true)
+        muid:
+          type: string
+          description: An optional pre-filter field that restricts results to one machine
+        order_by:
+          description: Fields to order the results by
+        output_fields:
+          type: array
+          items:
+            type: string
+          description: 'What fields to output from the query; default: ["id"]'
+        query:
+          type: string
+          description: Query to execute
+          maxLength: 65536
+        schema:
+          type: string
+          description: Schema to query
+          maxLength: 512
+        start_time:
+          type: integer
+          description: Start time to query
+          format: int32
+      required:
+      - end_time
+      - query
+      - schema
+      - start_time
+    SessionGrouping:
+      type: object
+      properties:
+        bins:
+          type: array
+          items:
+            type: number
+            format: double
+          description: The bins to use for grouping this field, if it is numeric
+        name:
+          type: string
+          description: The field name to group by
+    ValidateInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        group_by:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGrouping'
+          description: What fields to use for grouping, a non-empty array causes the output to be treated as a histogram
+        is_for_realtime_search:
+          type: boolean
+        order_by:
+          description: Fields to order the results by
+        output_fields:
+          type: array
+          items:
+            type: string
+          description: 'What fields to output from the query; default: ["id"]'
+        query:
+          type: string
+        schema:
+          type: string
+    ObjectsPollResultsInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        query_id:
+          type: string
+          description: Query ID returned by start query
+          maxLength: 128
+      required:
+      - query_id
+    SessionGraphLinkRule:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field of the object which contains an ID or list of IDs
+        max_depth:
+          type:
+          - integer
+          - 'null'
+          description: The maximum number of times to resolve this link
+          format: int32
+        object_schema:
+          type: string
+          description: The short schema of the objects with this link
+      required:
+      - field
+      - object_schema
+    SessionObjectQueryResponse:
+      type: object
+      properties:
+        err_array:
+          type: array
+          items: {}
+          description: List of errors from object query
+        results:
+          type: array
+          items: {}
+          description: Objects matching the requested ids
+        retryable:
+          type: array
+          items:
+            type: string
+          description: List of IDs that were not found and can be retried
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

@@ -1,0 +1,228 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Fingerprint Data API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged FingerprintData across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: FingerprintData
+  description: '
+
+    Each source may send fingerprint data which is stored and processed by the system.
+
+    '
+paths:
+  /api/v1/org/{orgUID}/fingerprint/search:
+    post:
+      tags:
+      - FingerprintData
+      summary: Start a fingerprint search job
+      description: '
+
+        Start a fingerprint search job.
+
+
+        * Requires action *source_data:Query*
+
+        '
+      operationId: FingerprintDataSearch
+      parameters:
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FingerprintDataSearchInput'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/fingerprint/search/{jobID}:
+    post:
+      tags:
+      - FingerprintData
+      summary: Get the results of a fingerprint search job
+      description: '
+
+        Get the results of a fingerprint search job.
+
+        If a status is returned, it means the job is still running or has failed.
+
+        To continue polling for results, use the same jobID in the next request.
+
+
+        * Requires action *source_data:Query*
+
+        '
+      operationId: FingerprintDataSearchJob
+      parameters:
+      - name: jobID
+        in: path
+        description: Job ID to get results for
+        required: true
+        schema:
+          type: string
+          description: Job ID to get results for
+          maxLength: 16128
+      - name: orgUID
+        in: path
+        description: Organization UID to query
+        required: true
+        schema:
+          type: string
+          description: Organization UID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FingerprintDataSearchJobInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionFingerprintSearchResults'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SessionFingerprintSearchResults:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: Errors encountered during object hydration.
+        result_count:
+          type: integer
+          description: The number of results returned.
+          format: int32
+        results:
+          type: array
+          items: {}
+          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
+        status:
+          type: string
+          description: The status of the query. If non-empty, the job is still running or failed - poll again.
+    FingerprintDataSearchJobInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        policy_types:
+          type: array
+          items:
+            type: string
+          description: 'Analytics policy types to load for computing covered_by_policy on each result. Valid values: container, linux-service. Should match the policy_types used in the search request.'
+        unique:
+          type: boolean
+          description: Whether to return unique results (default false)
+      required:
+      - policy_types
+    FingerprintDataSearchInput:
+      type: object
+      properties:
+        case_sensitive:
+          type: boolean
+          description: Whether the query is case sensitive (default false)
+        cluster_uid:
+          type: string
+          description: An optional pre-filter field that restricts results to one cluster
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        end_time:
+          type: integer
+          description: End time to query
+          format: int32
+        latest_version:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to pre-filter the results to only search with the latest version of each object (default true)
+        muid:
+          type: string
+          description: An optional pre-filter field that restricts results to one machine
+        policy_types:
+          type: array
+          items:
+            type: string
+          description: 'Filters fingerprints by metadata.type. Valid values: container, linux-service. Adds (metadata.type = ''X'' OR ...) to query.'
+        query:
+          type: string
+          description: Query to execute
+          maxLength: 65536
+        start_time:
+          type: integer
+          description: Start time to query
+          format: int32
+      required:
+      - end_time
+      - query
+      - start_time
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

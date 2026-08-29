@@ -1,0 +1,454 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Notifications Agent Health API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged NotificationsAgentHealth across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: NotificationsAgentHealth
+  description: '
+
+    An API for creating, retrieving, updating, and deleting agent health notification settings.'
+paths:
+  /api/v1/org/{orgUID}/agent_health_notification_settings/:
+    get:
+      tags:
+      - NotificationsAgentHealth
+      summary: List agent health notification settings.
+      operationId: AgentHealthNotificationSettingsList
+      parameters:
+      - name: orgUID
+        in: path
+        description: Filter by the organization UID.
+        required: true
+        schema:
+          type: string
+          description: Filter by the organization UID.
+      - name: action_taken_equals
+        in: query
+        description: Filter by the action taken on the flag(s). Pulls from the history database table. One of [insert|update|delete|enable|disable]
+        schema:
+          type: string
+          description: Filter by the action taken on the flag(s). Pulls from the history database table. One of [insert|update|delete|enable|disable]
+      - name: from_history
+        in: query
+        description: Retrieves historical custom flags data. Pulls from the history database table
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Retrieves historical custom flags data. Pulls from the history database table
+      - name: latest_version
+        in: query
+        description: Filter by the latest version of the flag. Pulls from the history database table
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Filter by the latest version of the flag. Pulls from the history database table
+      - name: name_contains
+        in: query
+        description: Filter by the name.
+        schema:
+          type: string
+          description: Filter by the name.
+      - name: name_equals
+        in: query
+        description: Filter by the name.
+        schema:
+          type: string
+          description: Filter by the name.
+      - name: name_or_uid_contains
+        in: query
+        description: Filter by the name or UID.
+        schema:
+          type: string
+          description: Filter by the name or UID.
+      - name: name_or_uid_equals
+        in: query
+        description: Filter by the name or UID.
+        schema:
+          type: string
+          description: Filter by the name or UID.
+      - name: page
+        in: query
+        description: Page number to return.
+        schema:
+          type: integer
+          description: Page number to return.
+          format: int32
+      - name: page_size
+        in: query
+        description: Number of notification settings to return per page.
+        schema:
+          type: integer
+          description: Number of notification settings to return per page.
+          format: int32
+      - name: scope_query_contains
+        in: query
+        description: Filter by the scope query.
+        schema:
+          type: string
+          description: Filter by the scope query.
+      - name: scope_query_equals
+        in: query
+        description: Filter by the scope query.
+        schema:
+          type: string
+          description: Filter by the scope query.
+      - name: uid_equals
+        in: query
+        description: Filter by the notification settings UID.
+        schema:
+          type: string
+          description: Filter by the notification settings UID.
+      - name: version
+        in: query
+        description: Filter by the flag version. Pulls from the history database table
+        schema:
+          type: integer
+          description: Filter by the flag version. Pulls from the history database table
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionAgentHealthNotificationListOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - NotificationsAgentHealth
+      summary: Create an agent health notification.
+      operationId: AgentHealthNotificationSettingsCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentHealthNotificationSettingsCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionAgentHealthNotificationCreateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/agent_health_notification_settings/{ahnUID}:
+    get:
+      tags:
+      - NotificationsAgentHealth
+      summary: Get agent health notification settings.
+      operationId: AgentHealthNotificationSettingsGet
+      parameters:
+      - name: ahnUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionAgentHealthNotificationLoadOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    put:
+      tags:
+      - NotificationsAgentHealth
+      summary: Update agent health notification settings.
+      operationId: AgentHealthNotificationSettingsUpdate
+      parameters:
+      - name: ahnUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentHealthNotificationSettingsUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionAgentHealthNotificationUpdateOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    delete:
+      tags:
+      - NotificationsAgentHealth
+      summary: Delete agent health notification settings.
+      operationId: AgentHealthNotificationSettingsDelete
+      parameters:
+      - name: ahnUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SessionAgentHealthNotificationLoadOutput:
+      type: object
+      properties:
+        agent_health_notification_settings:
+          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+    AgentHealthNotificationSettingsUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
+        scope_query:
+          type: string
+          maxLength: 65535
+          minLength: 1
+      required:
+      - name
+    DaoNotificationSettingsObj:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionAgentHealthNotificationUpdateOutput:
+      type: object
+      properties:
+        agent_health_notification_settings:
+          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+    SessionAgentHealthNotificationListOutput:
+      type: object
+      properties:
+        agent_health_notifications_settings_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+        search_total:
+          type: integer
+          format: int32
+        total_agent_health_notifications:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+    AgentHealthNotificationSettingsCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
+        scope_query:
+          type: string
+          maxLength: 65535
+      required:
+      - name
+    DaoAgentHealthNotificationSettings:
+      type: object
+      properties:
+        agent_healthy:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_offline:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_online:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_unhealthy:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    SessionAgentHealthNotificationCreateOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SessionOutputAgentHealthNotification:
+      type: object
+      properties:
+        action_taken:
+          type: string
+        action_time:
+          type: integer
+          format: int64
+        action_user:
+          type: string
+        created_by:
+          type: string
+        description:
+          type: string
+        last_updated:
+          type: integer
+          format: int64
+        last_updated_by:
+          type: string
+        name:
+          type: string
+        notification_settings:
+          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
+        org_uid:
+          type: string
+        resource_name:
+          type: string
+        revision:
+          type: integer
+          format: int32
+        scope_query:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int32
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json

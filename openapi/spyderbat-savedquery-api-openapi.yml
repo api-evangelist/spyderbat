@@ -1,0 +1,548 @@
+openapi: 3.2.0
+info:
+  title: Spyderbat Saved Query API
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://api.prod.spyderbat.com/openapi
+    email: support@spyderbat.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  termsOfService: https://www.spyderbat.com/terms-of-use/
+  x-logo:
+    url: /static/sb-logo.svg
+    backgroundColor: '#161A21'
+    altText: Spyderbat Logo
+  description: 'Operations tagged SavedQuery across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.prod.spyderbat.com/
+  description: Spyderbat API Server
+security:
+- apiToken: []
+tags:
+- name: SavedQuery
+  description: '
+
+    An API to allow the management of saved queries. Saved queries are used to quickly run Athena searches.'
+paths:
+  /api/v1/org/{orgUID}/savedquery/:
+    get:
+      tags:
+      - SavedQuery
+      summary: List saved queries
+      description: "\nThis will list all saved queries for an org\n* Requires the action  *org:ListSavedQuery* on the organization\n\t\t\t"
+      operationId: SavedQueryList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: has_notifications
+        in: query
+        description: Filter the results to only include saved queries with notification settings
+        allowEmptyValue: true
+        schema:
+          type: boolean
+          description: Filter the results to only include saved queries with notification settings
+      - name: name_contains
+        in: query
+        schema:
+          type: string
+      - name: name_equals
+        in: query
+        schema:
+          type: string
+      - name: name_or_uid_contains
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: 0-based page numbers of saved query results.
+        schema:
+          type: integer
+          description: 0-based page numbers of saved query results.
+          format: int32
+      - name: page_size
+        in: query
+        description: The number of records to return for a single API call. Default 10. -1 means all.
+        schema:
+          type: integer
+          description: The number of records to return for a single API call. Default 10. -1 means all.
+          format: int32
+          maximum: 100
+          minimum: -1
+      - name: query_contains
+        in: query
+        schema:
+          type: string
+      - name: query_equals
+        in: query
+        schema:
+          type: string
+      - name: reversed
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: boolean
+      - name: schema_contains
+        in: query
+        schema:
+          type: string
+      - name: schema_equals
+        in: query
+        schema:
+          type: string
+      - name: sort_by
+        in: query
+        description: Sort the results by a field. One of [last_used|name|description|create_time|query|schema]
+        schema:
+          type: string
+          description: Sort the results by a field. One of [last_used|name|description|create_time|query|schema]
+      - name: uid_equals
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListSavedQueryOutput'
+        '403':
+          description: permission denied
+    post:
+      tags:
+      - SavedQuery
+      summary: Saved an Spyderbat Search Language query.
+      description: "\nThis will save a new search query for an org\n* Requires the action  *org:CreateSavedQuery* on the organization\n\t\t"
+      operationId: SavedQueryCreate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SavedQueryCreateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateSavedQueryOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/savedquery/additional-settings:
+    get:
+      tags:
+      - SavedQuery
+      summary: Show additional settings for a saved query
+      description: "\nThis will show the additional settings for a saved query\n\t\t\t"
+      operationId: SavedQueryShowAdditionalSettings
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: schema
+        in: query
+        description: The schema to show additional settings for.
+        required: true
+        schema:
+          type: string
+          description: The schema to show additional settings for.
+          maxLength: 128
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionSavedQueryShowAdditionalSettingsOutput'
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/savedquery/{savedQueryUID}:
+    get:
+      tags:
+      - SavedQuery
+      summary: Load a saved query
+      description: "\nThis will retrieve a specific saved query for an org\n* Requires the action  *org:LoadSavedQuery* on the organization\n\t\t\t"
+      operationId: SavedQueryLoad
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: savedQueryUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionLoadSavedQueryOutput'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    put:
+      tags:
+      - SavedQuery
+      summary: Update a saved query
+      description: "\nThis will update a specific saved query for an org\n* Requires the action  *org:UpdateSavedQuery* on the organization\n\t\t\t"
+      operationId: SavedQueryUpdate
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: savedQueryUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SavedQueryUpdateInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionUpdateSavedQueryOutput'
+        '400':
+          description: invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '403':
+          description: permission denied
+    delete:
+      tags:
+      - SavedQuery
+      summary: Delete a saved query
+      description: "\nThis will delete a specific saved query for an org\n* Requires the action  *org:DeleteSavedQuery* on the organization\n\t\t\t"
+      operationId: SavedQueryDelete
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: savedQueryUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/savedquery/{savedQueryUID}/dependents:
+    get:
+      tags:
+      - SavedQuery
+      summary: List dependents of a saved query
+      description: "\nThis will list the UIDs of all dependents of a saved query within an org\n* Requires the action  *org:LoadSavedQuery* on the organization. And\nRequires permission to list dependents of the saved query.\n\t\t\t"
+      operationId: SavedQueryDependentsList
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: savedQueryUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionQueryDependentResources'
+        '403':
+          description: permission denied
+        '404':
+          description: not found
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+  /api/v1/org/{orgUID}/savedquery/{savedQueryUID}/updatelastused:
+    put:
+      tags:
+      - SavedQuery
+      summary: Update the last used time of a saved query
+      description: "\nThis will update the last used time of a specific saved query for an org\n* Requires the action  *org:UpdateSavedQuery* on the organization\n\t\t\t"
+      operationId: SavedQueryUpdateLastUsed
+      parameters:
+      - name: orgUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: savedQueryUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: permission denied
+    servers:
+    - url: https://api.prod.spyderbat.com/
+      description: Spyderbat API Server
+components:
+  schemas:
+    SessionListSavedQueryOutput:
+      type: object
+      properties:
+        saved_queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputSavedQuery'
+          description: List of saved queries
+        search_total:
+          type: integer
+          description: Total number of saved queries matching the search criteria
+          format: int32
+        total_pages:
+          type: integer
+          description: Total number of pages of search results
+          format: int32
+        total_queries:
+          type: integer
+          description: Total number of saved queries
+          format: int32
+    SessionQueryDependentResources:
+      type: object
+      properties:
+        custom_flags:
+          type: array
+          items:
+            type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    DaoNotificationSettingsObj:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionSavedQueryShowAdditionalSettingsOutput:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+          description: Additional settings fields and their corresponding types
+    DaoNotificationSettings:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionLoadSavedQueryOutput:
+      type: object
+      properties:
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
+    SessionCreateSavedQueryOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SessionOutputSavedQuery:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        created_by:
+          type: string
+        description:
+          type: string
+        last_used:
+          type: integer
+          format: int64
+        name:
+          type: string
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        org_uid:
+          type: string
+        query:
+          type: string
+        schema:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
+    SavedQueryCreateInput:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        query:
+          type: string
+          maxLength: 65535
+          minLength: 1
+        schema:
+          type: string
+          maxLength: 64
+      required:
+      - name
+      - query
+      - schema
+    SessionUpdateSavedQueryOutput:
+      type: object
+      properties:
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
+    SavedQueryUpdateInput:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        description:
+          type: string
+          maxLength: 500
+          minLength: 1
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        query:
+          type: string
+          maxLength: 65535
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- spyderbat-openapi-original.json
+- spyderbat-openapi.json
