@@ -79,6 +79,8 @@ apis:
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
+  - Agents
+  tags_raw:
   - Agent
   properties:
   - type: OpenAPI
@@ -298,6 +300,8 @@ apis:
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
+  - Notification
+  tags_raw:
   - Notifications
   properties:
   - type: OpenAPI
@@ -504,6 +508,8 @@ apis:
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
+  - Saved Query
+  tags_raw:
   - SavedQuery
   properties:
   - type: OpenAPI
@@ -563,6 +569,8 @@ apis:
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
+  - Source Data
+  tags_raw:
   - SourceData
   properties:
   - type: OpenAPI
