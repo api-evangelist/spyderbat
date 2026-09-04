@@ -17,6 +17,20 @@ description: >-
 url: https://raw.githubusercontent.com/api-evangelist/spyderbat/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  probe_state: covered
+  source:
+  - authentication
+  - security
+  generated: '2026-09-03'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-08-29'
 modified: '2026-08-29'
@@ -660,6 +674,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/spyderbat-capability-edges.yml
+  name: Spyderbat Business Capability Map
 - type: Website
   url: https://spyderbat.com/
 - type: Documentation
