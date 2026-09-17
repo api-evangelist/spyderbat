@@ -64,10 +64,12 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-agent-action-api
   name: Spyderbat Agent Action API
-  description: Agent Action defines actions that can be executed on remote agents in response to events.
+  description: >-
+    Agent Action defines actions that can be executed on remote agents in response to events.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -80,7 +82,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-agent-api
   name: Spyderbat Agent API
   description: Agents represent a sepecific agent which collects data for one or more sources.
@@ -98,7 +101,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-agent-registration-api
   name: Spyderbat Agent Registration API
   description: Agents registrations are used to authorize and group agents by the registration.
@@ -114,7 +118,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-agentwork-api
   name: Spyderbat Agent Work API
   description: "AgentWork API is intended for use by the UI to convey work & configuration to agents,\
@@ -133,11 +138,13 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-analyticspolicy-api
   name: Spyderbat Analytics Policy API
-  description: An API to allow management of the organizations analytics policies.  These will be used
-    throughout the system to take various actions.
+  description: >-
+    An API to allow management of the organizations analytics policies.  These will be used throughout
+    the system to take various actions.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -150,11 +157,13 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-analyticsruleset-api
   name: Spyderbat Analytics Ruleset API
-  description: An API to allow the management of analytics rulesets. Analytics rulesets are used within
-    some types of analytics rulesets.
+  description: >-
+    An API to allow the management of analytics rulesets. Analytics rulesets are used within some types
+    of analytics rulesets.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -167,7 +176,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-archive-api
   name: Spyderbat Archive API
   description: Access to raw agent archive data.
@@ -183,7 +193,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-cases-api
   name: Spyderbat Cases API
   description: Cases management API
@@ -199,10 +210,12 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-cluster-api
   name: Spyderbat Cluster API
-  description: Cluster represents known clusters, such as Kubernetes clusters running an appropriate agent.
+  description: >-
+    Cluster represents known clusters, such as Kubernetes clusters running an appropriate agent.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -215,11 +228,13 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-customflag-api
   name: Spyderbat Custom Flag API
-  description: An API to allow the management of custom flags. Custom flags allow users to define custom
-    detections within Spyderbat.
+  description: >-
+    An API to allow the management of custom flags. Custom flags allow users to define custom detections
+    within Spyderbat.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -232,7 +247,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-fingerprintdata-api
   name: Spyderbat Fingerprint Data API
   description: Each source may send fingerprint data which is stored and processed by the system.
@@ -248,7 +264,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-forwardedevents-api
   name: Spyderbat Forwarded Events API
   description: An API to allow retrieval of observations for a SIEM.
@@ -264,14 +281,16 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-investigation-api
   name: Spyderbat Investigation API
-  description: Investigations can be created by users as a way to have an investigation into a potential
-    attack, allowing users to associate data from one or more sources into a single investigation. An
-    investigation may be utilized by multiple users as part of it's work flow. Investigations have a version
-    history, each change to an investigation will result in a copy of the investigation to be captured
-    and saved, prior versions can then be inspected later.
+  description: >-
+    Investigations can be created by users as a way to have an investigation into a potential attack,
+    allowing users to associate data from one or more sources into a single investigation. An investigation
+    may be utilized by multiple users as part of it's work flow. Investigations have a version history,
+    each change to an investigation will result in a copy of the investigation to be captured and saved,
+    prior versions can then be inspected later.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -284,7 +303,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-notifications-api
   name: Spyderbat Notifications API
   description: An API for retrieving, enabling, and disabling notification settings.
@@ -302,10 +322,12 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-notificationsagenthealth-api
   name: Spyderbat Notifications Agent Health API
-  description: An API for creating, retrieving, updating, and deleting agent health notification settings.
+  description: >-
+    An API for creating, retrieving, updating, and deleting agent health notification settings.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -318,11 +340,13 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-notificationtarget-api
   name: Spyderbat Notification Target API
-  description: An API to allow the management of notification targets. Notification targets allow users
-    to define where notifications are sent.
+  description: >-
+    An API to allow the management of notification targets. Notification targets allow users to define
+    where notifications are sent.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -335,31 +359,16 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
-- aid: spyderbat:spyderbat-notificationtemplate-api
-  name: Spyderbat Notification Template API
-  description: An API to allow the management of notification templates. Notification templates allow
-    users to define custom notifications within Spyderbat.
-  humanURL: https://docs.spyderbat.com/
-  baseURL: https://api.prod.spyderbat.com/api/v1
-  tags:
-  - NotificationTemplate
-  properties:
-  - type: OpenAPI
-    url: openapi/spyderbat-notificationtemplate-api-openapi.yml
-  - type: Documentation
-    url: https://docs.spyderbat.com/
-  - type: APIReference
-    url: https://api.spyderbat.com/openapi
-  - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-org-api
   name: Spyderbat Org API
-  description: Organizations hold resources & data associated with an organization, users must be associated
-    via roles with an organization to have permissions to interact with the organization. Each user my
-    have multiple and different roles on different organizations and each organization may have multiple
-    users with roles on the organization. Each user is has an organization assigned to the user during
-    signup. Users may then assign other users various roles on the organization.
+  description: >-
+    Organizations hold resources & data associated with an organization, users must be associated via
+    roles with an organization to have permissions to interact with the organization. Each user my have
+    multiple and different roles on different organizations and each organization may have multiple users
+    with roles on the organization. Each user is has an organization assigned to the user during signup.
+    Users may then assign other users various roles on the organization.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -372,11 +381,13 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-orgtype-api
   name: Spyderbat Org Type API
-  description: Organizational types specify both limits and defaults for organizations, they are used
-    by the system to determine the resource utilization for an organization and associated settings.
+  description: >-
+    Organizational types specify both limits and defaults for organizations, they are used by the system
+    to determine the resource utilization for an organization and associated settings.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -389,7 +400,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-rbac-api
   name: Spyderbat RBAC API
   description: "# Introduction \n\nThis RBAC model is based off of Amazon's model with some simplifications\
@@ -479,30 +491,12 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
-- aid: spyderbat:spyderbat-savedquery-api
-  name: Spyderbat Saved Query API
-  description: An API to allow the management of saved queries. Saved queries are used to quickly run
-    Athena searches.
-  humanURL: https://docs.spyderbat.com/
-  baseURL: https://api.prod.spyderbat.com/api/v1
-  tags:
-  - Saved Query
-  tags_raw:
-  - SavedQuery
-  properties:
-  - type: OpenAPI
-    url: openapi/spyderbat-savedquery-api-openapi.yml
-  - type: Documentation
-    url: https://docs.spyderbat.com/
-  - type: APIReference
-    url: https://api.spyderbat.com/openapi
-  - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-searchset-api
   name: Spyderbat Search Set API
-  description: An API to allow the management of search sets. Search sets can be used to augment queries
-    in search.
+  description: >-
+    An API to allow the management of search sets. Search sets can be used to augment queries in search.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -515,7 +509,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-source-api
   name: Spyderbat Source API
   description: "Sources are used to represent a container for source of security data, such as a machine,\n\
@@ -533,14 +528,16 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-sourcedata-api
   name: Spyderbat Source Data API
-  description: 'Each source may send data which is stored and processed by the system. So for example
-    a machine will send data
+  description: >-
+    Each source may send data which is stored and processed by the system. So for example a machine will
+    send data
 
     in a raw form which is then analyzed, both the raw machine data and the analyzed data is available
-    for querying.'
+    for querying.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -555,7 +552,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-spyctl-api
   name: Spyderbat Spyctl API
   description: A way to execute specific Spyctl logic via the API.
@@ -571,13 +569,15 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-sts-api
   name: Spyderbat STS API
-  description: Security Token Service endpoints. Trusted services assume a role on a single org and receive
-    a short-lived, org-locked JWT for downstream consumers. The caller's authority to assume is gated
-    by the sts:AssumeRole action on srn:sts::<org>:<role_uid>; the resulting token carries the assumed
-    role on the assumed org only.
+  description: >-
+    Security Token Service endpoints. Trusted services assume a role on a single org and receive a short-lived,
+    org-locked JWT for downstream consumers. The caller's authority to assume is gated by the sts:AssumeRole
+    action on srn:sts::<org>:<role_uid>; the resulting token carries the assumed role on the assumed org
+    only.
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
@@ -590,7 +590,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-suppress-api
   name: Spyderbat Suppress API
   description: An API that provides direct access to Spyderbat's tuning features.
@@ -606,7 +607,8 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 - aid: spyderbat:spyderbat-watchlist-api
   name: Spyderbat Watchlist API
   description: An API to manage the watchlist for files within an organization.
@@ -622,7 +624,45 @@ apis:
   - type: APIReference
     url: https://api.spyderbat.com/openapi
   - type: GettingStarted
-    url: https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-notification-template-api
+  name: Spyderbat Notification Template API
+  description: >-
+    An API to allow the management of notification templates. Notification templates allow users to define
+    custom notifications within Spyderbat.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Notification Template
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-notification-template-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
+- aid: spyderbat:spyderbat-saved-query-api
+  name: Spyderbat Saved Query API
+  description: >-
+    An API to allow the management of saved queries. Saved queries are used to quickly run Athena searches.
+  humanURL: https://docs.spyderbat.com/
+  baseURL: https://api.prod.spyderbat.com/api/v1
+  tags:
+  - Saved Query
+  properties:
+  - type: OpenAPI
+    url: openapi/spyderbat-saved-query-api-openapi.yml
+  - type: Documentation
+    url: https://docs.spyderbat.com/
+  - type: APIReference
+    url: https://api.spyderbat.com/openapi
+  - type: GettingStarted
+    url: >-
+      https://docs.spyderbat.com/tutorials/integrations/how-to-set-up-your-spyderbat-api-key-and-use-the-spyderbat-api
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
