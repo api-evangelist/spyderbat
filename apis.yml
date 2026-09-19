@@ -184,6 +184,8 @@ apis:
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
+  - Archives
+  tags_raw:
   - Archive
   properties:
   - type: OpenAPI
@@ -294,6 +296,8 @@ apis:
   humanURL: https://docs.spyderbat.com/
   baseURL: https://api.prod.spyderbat.com/api/v1
   tags:
+  - Investigations
+  tags_raw:
   - Investigation
   properties:
   - type: OpenAPI
