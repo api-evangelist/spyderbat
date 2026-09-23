@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Notification Template API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Notification Template API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,29 +10,28 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged NotificationTemplate across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
 security:
 - apiToken: []
 tags:
-- name: NotificationTemplate
-  description: '
-
-    An API to allow the management of notification templates. Notification templates allow users to define custom notifications within Spyderbat.'
+- name: Notification Template
+  description: An API to allow the management of notification templates. Notification templates allow users to define custom notifications within Spyderbat.
 paths:
   /api/v1/org/{orgUID}/notification_template/:
     get:
       tags:
-      - NotificationTemplate
+      - Notification Template
       summary: List notification templates
-      description: "\nThis will list all notification templates for an org\n* Requires the action  *org:ListNotificationTemplate* on the organization\n\t\t\t"
+      description: 'This will list all notification templates for an org
+
+        * Requires the action *org:ListNotificationTemplate* on the organization'
       operationId: NotificationTemplateList
       parameters:
       - name: orgUID
@@ -116,15 +116,14 @@ paths:
                 $ref: '#/components/schemas/SessionListNotificationTemplateOutput'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/email/:
     post:
       tags:
-      - NotificationTemplate
-      summary: Create an email notification template.
-      description: "\nThis will create a new email notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Create an email notification template
+      description: 'This will create a new email notification template for an org
+
+        * Requires the action *org:CreateNotificationTemplate* on the organization'
       operationId: NotificationTemplateEmailCreate
       parameters:
       - name: orgUID
@@ -152,15 +151,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/email/{notificationTemplateUID}:
     put:
       tags:
-      - NotificationTemplate
-      summary: Update a notification template.
-      description: "\nThis will update a specific email notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Update a notification template
+      description: 'This will update a specific email notification template for an org
+
+        * Requires the action *org:UpdateNotificationTemplate* on the organization'
       operationId: NotificationTemplateEmailUpdate
       parameters:
       - name: notificationTemplateUID
@@ -209,15 +207,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/pagerduty/:
     post:
       tags:
-      - NotificationTemplate
-      summary: Create a pagerduty notification template.
-      description: "\nThis will create a new pagerduty notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Create a pagerduty notification template
+      description: 'This will create a new pagerduty notification template for an org
+
+        * Requires the action *org:CreateNotificationTemplate* on the organization'
       operationId: NotificationTemplatePagerDutyCreate
       parameters:
       - name: orgUID
@@ -245,15 +242,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/pagerduty/{notificationTemplateUID}:
     put:
       tags:
-      - NotificationTemplate
-      summary: Update a notification template.
-      description: "\nThis will update a specific pagerduty notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Update a notification template
+      description: 'This will update a specific pagerduty notification template for an org
+
+        * Requires the action *org:UpdateNotificationTemplate* on the organization'
       operationId: NotificationTemplatePagerDutyUpdate
       parameters:
       - name: notificationTemplateUID
@@ -302,15 +298,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/slack/:
     post:
       tags:
-      - NotificationTemplate
-      summary: Create a slack notification template.
-      description: "\nThis will create a new slack notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Create a slack notification template
+      description: 'This will create a new slack notification template for an org
+
+        * Requires the action *org:CreateNotificationTemplate* on the organization'
       operationId: NotificationTemplateSlackCreate
       parameters:
       - name: orgUID
@@ -338,15 +333,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/slack/{notificationTemplateUID}:
     put:
       tags:
-      - NotificationTemplate
-      summary: Update a notification template.
-      description: "\nThis will update a specific slack notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Update a notification template
+      description: 'This will update a specific slack notification template for an org
+
+        * Requires the action *org:UpdateNotificationTemplate* on the organization'
       operationId: NotificationTemplateSlackUpdate
       parameters:
       - name: notificationTemplateUID
@@ -395,15 +389,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/webhook/:
     post:
       tags:
-      - NotificationTemplate
-      summary: Create a webhook notification template.
-      description: "\nThis will create a new webhook notification template for an org\n* Requires the action  *org:CreateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Create a webhook notification template
+      description: 'This will create a new webhook notification template for an org
+
+        * Requires the action *org:CreateNotificationTemplate* on the organization'
       operationId: NotificationTemplateWebhookCreate
       parameters:
       - name: orgUID
@@ -431,15 +424,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/webhook/{notificationTemplateUID}:
     put:
       tags:
-      - NotificationTemplate
-      summary: Update a notification template.
-      description: "\nThis will update a specific webhook notification template for an org\n* Requires the action  *org:UpdateNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Update a notification template
+      description: 'This will update a specific webhook notification template for an org
+
+        * Requires the action *org:UpdateNotificationTemplate* on the organization'
       operationId: NotificationTemplateWebhookUpdate
       parameters:
       - name: notificationTemplateUID
@@ -488,15 +480,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notification_template/{notificationTemplateUID}:
     get:
       tags:
-      - NotificationTemplate
+      - Notification Template
       summary: Load a notification template
-      description: "\nThis will retrieve a specific notification template for an org\n* Requires the action  *org:LoadNotificationTemplate* on the organization\n\t\t\t"
+      description: 'This will retrieve a specific notification template for an org
+
+        * Requires the action *org:LoadNotificationTemplate* on the organization'
       operationId: NotificationTemplateLoad
       parameters:
       - name: notificationTemplateUID
@@ -522,9 +513,11 @@ paths:
           description: not found
     delete:
       tags:
-      - NotificationTemplate
-      summary: Delete a notification template.
-      description: "\nThis will delete a specific notification template for an org\n* Requires the action  *org:DeleteNotificationTemplate* on the organization\n\t\t\t"
+      - Notification Template
+      summary: Delete a notification template
+      description: 'This will delete a specific notification template for an org
+
+        * Requires the action *org:DeleteNotificationTemplate* on the organization'
       operationId: NotificationTemplateDelete
       parameters:
       - name: notificationTemplateUID
@@ -544,71 +537,57 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    SessionLoadNotificationTemplateOutput:
+    NotificationTemplateWebhookUpdateInput:
       type: object
       properties:
-        notification_template:
-          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        entire_object:
+          type: boolean
+          description: Send the entire object as the payload. Overrides the payload field.
+        name:
+          type: string
+          description: Name of the notification template.
+        payload:
+          type: object
+          additionalProperties: {}
+          description: Custom payload to send to the webhook.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
     SessionUpdateNotificationTemplateOutput:
       type: object
       properties:
         notification_template:
           $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-    SessionOutputNotificationTemplate:
+    SessionLoadNotificationTemplateOutput:
       type: object
       properties:
-        action_taken:
-          type: string
-        action_time:
-          type: integer
-          format: int64
-        action_user:
-          type: string
-        created_by:
-          type: string
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        last_updated:
-          type: integer
-          format: int64
-        last_updated_by:
-          type: string
-        name:
-          type: string
-          description: Name of the notification template.
-        org_uid:
-          type: string
-        revision:
-          type: string
-        settings:
-          type: object
-          additionalProperties: {}
-        tags:
+        notification_template:
+          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+    SessionListNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_templates:
           type: array
           items:
-            type: string
-        template_data:
-          type: object
-          additionalProperties: {}
-        template_type:
-          type: string
-        uid:
-          type: string
-        valid_from:
-          type: integer
-          format: int64
-        version:
+            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+        search_total:
           type: integer
           format: int32
-      required:
-      - name
+        total_pages:
+          type: integer
+          format: int32
+        total_templates:
+          type: integer
+          format: int32
     NotificationTemplateSlackUpdateInput:
       type: object
       properties:
@@ -635,94 +614,7 @@ components:
       required:
       - name
       - text
-    NotificationTemplatePagerDutyCreateInput:
-      type: object
-      properties:
-        class:
-          type: string
-          description: The class/type of the event.
-        component:
-          type: string
-          description: Component of the source machine that is responsible for the event.
-        custom_details:
-          type: object
-          additionalProperties: {}
-          description: Custom details to include in the event.
-        dedup_key:
-          type: string
-          description: A unique identifier for the event, used to deduplicate events.
-          maxLength: 255
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        group:
-          type: string
-          description: Logical grouping of components of a service, useful for filtering alerts.
-        name:
-          type: string
-          description: Name of the notification template.
-        severity:
-          type: string
-          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
-        source:
-          type: string
-          description: The Source machine of the event.
-        summary:
-          type: string
-          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - severity
-      - source
-      - summary
-    SessionListNotificationTemplateOutput:
-      type: object
-      properties:
-        notification_templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-        search_total:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_templates:
-          type: integer
-          format: int32
-    NotificationTemplateEmailUpdateInput:
-      type: object
-      properties:
-        body_html:
-          type: string
-          description: HTML body of the email.
-        body_text:
-          type: string
-          description: Simple text body of the email.
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification template.
-        subject:
-          type: string
-          description: Subject of the email.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - subject
-    NotificationTemplateWebhookUpdateInput:
+    NotificationTemplateWebhookCreateInput:
       type: object
       properties:
         description:
@@ -745,51 +637,6 @@ components:
             type: string
       required:
       - name
-    NotificationTemplatePagerDutyUpdateInput:
-      type: object
-      properties:
-        class:
-          type: string
-          description: The class/type of the event.
-        component:
-          type: string
-          description: Component of the source machine that is responsible for the event.
-        custom_details:
-          type: object
-          additionalProperties: {}
-          description: Custom details to include in the event.
-        dedup_key:
-          type: string
-          description: A unique identifier for the event, used to deduplicate events.
-          maxLength: 255
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        group:
-          type: string
-          description: Logical grouping of components of a service, useful for filtering alerts.
-        name:
-          type: string
-          description: Name of the notification template.
-        severity:
-          type: string
-          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
-        source:
-          type: string
-          description: The Source machine of the event.
-        summary:
-          type: string
-          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - severity
-      - source
-      - summary
     NotificationTemplateSlackCreateInput:
       type: object
       properties:
@@ -842,11 +689,177 @@ components:
       required:
       - name
       - subject
+    SessionOutputNotificationTemplate:
+      type: object
+      properties:
+        action_taken:
+          type: string
+        action_time:
+          type: integer
+          format: int64
+        action_user:
+          type: string
+        created_by:
+          type: string
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        last_updated:
+          type: integer
+          format: int64
+        last_updated_by:
+          type: string
+        name:
+          type: string
+          description: Name of the notification template.
+        org_uid:
+          type: string
+        revision:
+          type: string
+        settings:
+          type: object
+          additionalProperties: {}
+        tags:
+          type: array
+          items:
+            type: string
+        template_data:
+          type: object
+          additionalProperties: {}
+        template_type:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int32
+      required:
+      - name
+    NotificationTemplatePagerDutyCreateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
+    NotificationTemplateEmailUpdateInput:
+      type: object
+      properties:
+        body_html:
+          type: string
+          description: HTML body of the email.
+        body_text:
+          type: string
+          description: Simple text body of the email.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        subject:
+          type: string
+          description: Subject of the email.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - subject
     SessionCreateNotificationTemplateOutput:
       type: object
       properties:
         uid:
           type: string
+    NotificationTemplatePagerDutyUpdateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
     ValidationError:
       type: object
       properties:
@@ -862,34 +875,8 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    NotificationTemplateWebhookCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        entire_object:
-          type: boolean
-          description: Send the entire object as the payload. Overrides the payload field.
-        name:
-          type: string
-          description: Name of the notification template.
-        payload:
-          type: object
-          additionalProperties: {}
-          description: Custom payload to send to the webhook.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

@@ -1,0 +1,96 @@
+slug: spyderbat
+provider: Spyderbat
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 8
+edges:
+- tag: Cases
+  spec_file: spyderbat-cases-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.85
+  evidence: '"CaseCreate  Create a case", "CaseOrgStatsEscalationHuman  Get windowed human-escalation
+    statistics", "CaseSendToSeniorAIInput", "CaseAssessmentInput", "CaseCloseInput"'
+  reason: Full security-case lifecycle (create, assign, note, merge, escalate, assess, close) on a cloud
+    detection-and-response platform — this is SOC alert triage and incident response, not generic ticketing.
+- tag: Investigation
+  spec_file: spyderbat-investigation-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.85
+  evidence: '"InvestigationCreate  Create an investigation", "DaoInvestigation", "InvestigationListVersions  List
+    Investigation Versions"'
+  reason: Lifecycle and versioning of security investigations on a cloud detection-and-response platform
+    — analyst investigation workflow within threat detection and response.
+- tag: Agent Action
+  spec_file: spyderbat-agent-action-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.8
+  evidence: POST /api/v1/org/{orgUID}/response/agent/killpod/{podUID}  Kill a pod on an agent ... /response/agent/killprocess/{processUID}  Kill
+    a process on an agent ... scancontainer  Scan a container
+  reason: Operations issue active response actions (kill process, kill pod, scan container) under a '/response/'
+    path on a cloud detection and response platform — that is security threat detection and response,
+    not general IT ops.
+- tag: CustomFlag
+  spec_file: spyderbat-customflag-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: '"CustomFlagCreate  Create a custom flag.", "CustomFlagEnable  Enable a custom flag.", schema
+    "DaoNotificationSettings"'
+  reason: Custom flags are user-defined detection conditions on a runtime-security platform, with enable/disable
+    and notification settings — detection rule stewardship under threat detection and response. Some ambiguity
+    as the surface is generic CRUD.
+- tag: ForwardedEvents
+  spec_file: spyderbat-forwardedevents-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: '"ForwardEvents  Query for forwarded events for a 3rd-party SIEM"'
+  reason: Single endpoint explicitly exporting security events to a third-party SIEM, which is squarely
+    SOC/SIEM tooling. Confidence held down because it is fundamentally an event-egress integration.
+- tag: Org
+  spec_file: spyderbat-org-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: '"OrgAssignRole  Assign OrgRole", "OrgInviteUsers  Invite users to an organization", schemas
+    "RbacRole", "RbacStatement"'
+  reason: Beyond org CRUD, the operations administer role assignment, RBAC roles and user invitations
+    — access administration. Ambiguity remains between IAM and tenant administration, hence moderate confidence.
+- tag: RBAC
+  spec_file: spyderbat-rbac-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /api/v1/rbac/capabilities/  CanUserPerform  'Query allows actions on objects'; schemas
+    RBACAction, CanUserPerformInput
+  reason: Role-based authorization check of what a user may do on objects — access control evaluation,
+    i.e. identity and access management, not a domain business capability.
+- tag: STS
+  spec_file: spyderbat-sts-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /api/v1/sts/assumerole  StsAssumeRole  'Assume a role on an org and receive a scoped
+    JWT'
+  reason: Role assumption and issuance of a scoped access token is classic identity/access token management.
+    Could also be read as pure auth plumbing, hence moderate confidence.

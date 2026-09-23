@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Cases API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Cases API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Cases across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -34,9 +34,6 @@ paths:
       responses:
         '200':
           description: OK
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agents/{agentID}/flags:
     get:
       tags:
@@ -87,9 +84,6 @@ paths:
           description: invalid agent ID
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases:
     get:
       tags:
@@ -188,9 +182,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/bulk-merge:
     post:
       tags:
@@ -225,9 +216,6 @@ paths:
           description: target case not found
         '422':
           description: target case is snoozed or closed
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/bulk-retry:
     post:
       tags:
@@ -260,9 +248,6 @@ paths:
           description: invalid pipeline/agent combination
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/config:
     get:
       tags:
@@ -284,9 +269,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/search:
     post:
       tags:
@@ -313,9 +295,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/agent-performance:
     get:
       tags:
@@ -357,9 +336,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/escalation/human:
     get:
       tags:
@@ -401,9 +377,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/escalation/senior:
     get:
       tags:
@@ -445,9 +418,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/now/attention:
     get:
       tags:
@@ -469,9 +439,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/now/lifecycle:
     get:
       tags:
@@ -493,9 +460,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/now/queues:
     get:
       tags:
@@ -517,9 +481,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/processing:
     get:
       tags:
@@ -561,9 +522,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/throughput:
     get:
       tags:
@@ -605,9 +563,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/stats/transitions:
     get:
       tags:
@@ -649,9 +604,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}:
     get:
       tags:
@@ -745,9 +697,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/assessment:
     post:
       tags:
@@ -783,9 +732,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/assign:
     post:
       tags:
@@ -850,9 +796,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/augmented:
     post:
       tags:
@@ -890,9 +833,6 @@ paths:
           description: not found
         '409':
           description: case state forbids augmentation
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/claim:
     post:
       tags:
@@ -923,9 +863,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/close:
     post:
       tags:
@@ -961,9 +898,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/helpers:
     post:
       tags:
@@ -999,9 +933,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/helpers/{userID}:
     delete:
       tags:
@@ -1039,9 +970,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/merge:
     post:
       tags:
@@ -1077,9 +1005,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/notes:
     post:
       tags:
@@ -1115,9 +1040,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/notes/{noteID}:
     patch:
       tags:
@@ -1164,9 +1086,6 @@ paths:
           description: permission denied — caller is not the note author
         '404':
           description: case or note not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/queue-position:
     get:
       tags:
@@ -1197,9 +1116,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/regen-summary:
     post:
       tags:
@@ -1241,9 +1157,6 @@ paths:
           description: not found
         '422':
           description: case is in a frozen state
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/reopen:
     post:
       tags:
@@ -1274,9 +1187,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/send-to-senior-ai:
     post:
       tags:
@@ -1312,9 +1222,6 @@ paths:
           description: permission denied — caller is not the assignee
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/snooze:
     post:
       tags:
@@ -1379,9 +1286,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/start:
     post:
       tags:
@@ -1412,9 +1316,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/stop:
     post:
       tags:
@@ -1445,9 +1346,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/user-prioritized:
     post:
       tags:
@@ -1507,9 +1405,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/cases/{caseID}/watch:
     post:
       tags:
@@ -1569,28 +1464,174 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    CaseAssessmentInput:
+    CaseSnoozeInput:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Optional reason
+          maxLength: 10000
+        until:
+          type: string
+          description: Wake time (RFC 3339)
+          format: date-time
+      required:
+      - until
+    CaseMergeInput:
+      type: object
+      properties:
+        note:
+          type: string
+          description: Optional free-text note attached to both merge events
+          maxLength: 10000
+        targetCaseId:
+          type: string
+          description: ID of the case to merge into
+          maxLength: 36
+          minLength: 1
+      required:
+      - targetCaseId
+    CaseAssignInput:
+      type: object
+      properties:
+        assignedTo:
+          type: string
+          description: UID of the target assignee
+          maxLength: 256
+          minLength: 1
+      required:
+      - assignedTo
+    CaseCloseInput:
       type: object
       properties:
         aiRating:
           type: string
           description: Optional AI rating
           maxLength: 64
-        flag:
-          description: Optional flag payload
         note:
           type: string
-          description: Optional note (max 10000 chars)
+          description: Optional closing note
           maxLength: 10000
         verdict:
           type: string
-          description: Optional verdict
+          description: Verdict; when set, an assessment row is written
           maxLength: 64
+        verdictReason:
+          type: string
+          description: Optional verdict reason
+          maxLength: 10000
+    CaseSearchInput:
+      type: object
+      properties:
+        filters:
+          description: Search filters (state, assignedTo, priority, score ranges, MITRE tactic, date ranges, search text)
+        includeFacets:
+          type:
+          - boolean
+          - 'null'
+          description: Include disjunctive facet counts
+        page:
+          description: Pagination {offset, limit}
+        sort:
+          description: Sort specification [{field, order}]
+    CaseBulkMergeInput:
+      type: object
+      properties:
+        note:
+          type: string
+          description: Optional free-text note attached to each merge event
+          maxLength: 10000
+        sourceIds:
+          type: array
+          items:
+            type: string
+          description: IDs of the source cases to merge (1–50)
+          maxItems: 50
+          minItems: 1
+        targetCaseId:
+          type: string
+          description: ID of the case to receive all sources
+          maxLength: 36
+          minLength: 1
+      required:
+      - sourceIds
+      - targetCaseId
+    CaseCreateInput:
+      type: object
+      properties:
+        author:
+          type: string
+          description: Author of the case
+          minLength: 1
+        priority:
+          type: string
+          description: 'Case priority: Low, Normal, or High'
+        refIds:
+          type: array
+          items:
+            type: string
+          description: Reference IDs (e.g. alert IDs)
+        rootTraceId:
+          type: string
+          description: Root trace ID for the case
+          minLength: 1
+      required:
+      - author
+      - rootTraceId
+    CaseSendToSeniorAIInput:
+      type: object
+      properties:
+        instructions:
+          type: string
+          description: Optional free-text instructions to the senior AI
+          maxLength: 10000
+        priorityOverride:
+          type:
+          - boolean
+          - 'null'
+          description: Optional priority override
+        references:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Optional reference objects
+    CaseRegenSummaryInput:
+      type: object
+      properties:
+        draft_summary:
+          type: string
+          description: Optional current draft to seed the regeneration
+          maxLength: 10000
+        instructions:
+          type: string
+          description: Analyst guidance for the LLM (1–10000 characters)
+          maxLength: 10000
+          minLength: 1
+      required:
+      - instructions
+    CaseAddHelperInput:
+      type: object
+      properties:
+        helperUser:
+          type: string
+          description: UID of the user to add as a helper
+          maxLength: 256
+          minLength: 1
+        reason:
+          type: string
+          description: Optional free-text reason
+      required:
+      - helperUser
+    CaseAugmentInput:
+      type: object
+      properties:
+        additional_content:
+          type: string
+          description: Additional context to feed to the AI
+          maxLength: 100000
     CaseBulkRetryInput:
       type: object
       properties:
@@ -1615,50 +1656,6 @@ components:
       - agent
       - caseIds
       - pipeline
-    CaseAssignInput:
-      type: object
-      properties:
-        assignedTo:
-          type: string
-          description: UID of the target assignee
-          maxLength: 256
-          minLength: 1
-      required:
-      - assignedTo
-    CaseAddNoteInput:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Note text (1–10000 characters)
-          maxLength: 10000
-          minLength: 1
-      required:
-      - text
-    CaseSearchInput:
-      type: object
-      properties:
-        filters:
-          description: Search filters (state, assignedTo, priority, score ranges, MITRE tactic, date ranges, search text)
-        includeFacets:
-          type:
-          - boolean
-          - 'null'
-          description: Include disjunctive facet counts
-        page:
-          description: Pagination {offset, limit}
-        sort:
-          description: Sort specification [{field, order}]
-    CaseEditNoteInput:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Updated note text (1–10000 characters)
-          maxLength: 10000
-          minLength: 1
-      required:
-      - text
     CasePatchInput:
       type: object
       properties:
@@ -1731,153 +1728,45 @@ components:
           - string
           - 'null'
           description: Updated title
-    CaseMergeInput:
+    CaseAddNoteInput:
       type: object
       properties:
-        note:
+        text:
           type: string
-          description: Optional free-text note attached to both merge events
-          maxLength: 10000
-        targetCaseId:
-          type: string
-          description: ID of the case to merge into
-          maxLength: 36
-          minLength: 1
-      required:
-      - targetCaseId
-    CaseCreateInput:
-      type: object
-      properties:
-        author:
-          type: string
-          description: Author of the case
-          minLength: 1
-        priority:
-          type: string
-          description: 'Case priority: Low, Normal, or High'
-        refIds:
-          type: array
-          items:
-            type: string
-          description: Reference IDs (e.g. alert IDs)
-        rootTraceId:
-          type: string
-          description: Root trace ID for the case
-          minLength: 1
-      required:
-      - author
-      - rootTraceId
-    CaseBulkMergeInput:
-      type: object
-      properties:
-        note:
-          type: string
-          description: Optional free-text note attached to each merge event
-          maxLength: 10000
-        sourceIds:
-          type: array
-          items:
-            type: string
-          description: IDs of the source cases to merge (1–50)
-          maxItems: 50
-          minItems: 1
-        targetCaseId:
-          type: string
-          description: ID of the case to receive all sources
-          maxLength: 36
-          minLength: 1
-      required:
-      - sourceIds
-      - targetCaseId
-    CaseSendToSeniorAIInput:
-      type: object
-      properties:
-        instructions:
-          type: string
-          description: Optional free-text instructions to the senior AI
-          maxLength: 10000
-        priorityOverride:
-          type:
-          - boolean
-          - 'null'
-          description: Optional priority override
-        references:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          description: Optional reference objects
-    CaseSnoozeInput:
-      type: object
-      properties:
-        reason:
-          type: string
-          description: Optional reason
-          maxLength: 10000
-        until:
-          type: string
-          description: Wake time (RFC 3339)
-          format: date-time
-      required:
-      - until
-    CaseRegenSummaryInput:
-      type: object
-      properties:
-        draft_summary:
-          type: string
-          description: Optional current draft to seed the regeneration
-          maxLength: 10000
-        instructions:
-          type: string
-          description: Analyst guidance for the LLM (1–10000 characters)
+          description: Note text (1–10000 characters)
           maxLength: 10000
           minLength: 1
       required:
-      - instructions
-    CaseAugmentInput:
-      type: object
-      properties:
-        additional_content:
-          type: string
-          description: Additional context to feed to the AI
-          maxLength: 100000
-    CaseCloseInput:
+      - text
+    CaseAssessmentInput:
       type: object
       properties:
         aiRating:
           type: string
           description: Optional AI rating
           maxLength: 64
+        flag:
+          description: Optional flag payload
         note:
           type: string
-          description: Optional closing note
+          description: Optional note (max 10000 chars)
           maxLength: 10000
         verdict:
           type: string
-          description: Verdict; when set, an assessment row is written
+          description: Optional verdict
           maxLength: 64
-        verdictReason:
-          type: string
-          description: Optional verdict reason
-          maxLength: 10000
-    CaseAddHelperInput:
+    CaseEditNoteInput:
       type: object
       properties:
-        helperUser:
+        text:
           type: string
-          description: UID of the user to add as a helper
-          maxLength: 256
+          description: Updated note text (1–10000 characters)
+          maxLength: 10000
           minLength: 1
-        reason:
-          type: string
-          description: Optional free-text reason
       required:
-      - helperUser
+      - text
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

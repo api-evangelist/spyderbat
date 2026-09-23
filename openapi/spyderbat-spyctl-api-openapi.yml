@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Spyctl API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Spyctl API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Spyctl across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,16 +22,14 @@ security:
 - apiToken: []
 tags:
 - name: Spyctl
-  description: '
-
-    A way to execute specific Spyctl logic via the API.'
+  description: A way to execute specific Spyctl logic via the API.
 paths:
   /api/v1/org/{orgUID}/spyctl/diff/:
     post:
       tags:
       - Spyctl
       summary: Diff spyderbat documents
-      description: "\nThis will diff one or more spyderbat documents with a primary document and return the diff output.\n\t\t\t"
+      description: This will diff one or more spyderbat documents with a primary document and return the diff output.
       operationId: SpyctlDiff
       parameters:
       - name: orgUID
@@ -59,15 +57,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/guardianpolicy/build/:
     post:
       tags:
       - Spyctl
       summary: Build a new Guardian Policy document
-      description: "\nThis will build and return a new Guardian Policy document which can then be applied via the AnalyticsPolicy API.\n* Requires the user have the action *spyctl:GuardianPolicyBuild\n\t\t\t"
+      description: 'This will build and return a new Guardian Policy document which can then be applied via the AnalyticsPolicy API.
+
+        * Requires the user have the action *spyctl:GuardianPolicyBuild'
       operationId: GuardianPolicyBuild
       parameters:
       - name: orgUID
@@ -95,15 +92,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/merge/:
     post:
       tags:
       - Spyctl
       summary: Merge spyderbat documents
-      description: "\nThis will merge one or more spyderbat documents into a primary document and return the merged document.\n\t\t\t"
+      description: This will merge one or more spyderbat documents into a primary document and return the merged document.
       operationId: SpyctlMerge
       parameters:
       - name: orgUID
@@ -131,15 +125,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/report:
     post:
       tags:
       - Spyctl
       summary: Generate a spyderbat report
-      description: "\nThis will schedule a report to be generated based on provided input report type and arguments.\n\t\t\t"
+      description: This will schedule a report to be generated based on provided input report type and arguments.
       operationId: SpyctlReportGenerate
       parameters:
       - name: orgUID
@@ -167,15 +158,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/report/:
     get:
       tags:
       - Spyctl
       summary: Get list of spyderbat reports for an org
-      description: "\nThis will return the list of reports generated for an organization.\n\t\t\t"
+      description: This will return the list of reports generated for an organization.
       operationId: SpyctlReportList
       parameters:
       - name: orgUID
@@ -202,7 +190,7 @@ paths:
       tags:
       - Spyctl
       summary: Get list of spyderbat reports for an org, paginated
-      description: "\nThis will return the list of reports generated for an organization, paginated with 1000 reports per page.\n\t\t\t"
+      description: This will return the list of reports generated for an organization, paginated with 1000 reports per page.
       operationId: SpyctlReportListPager
       parameters:
       - name: orgUID
@@ -230,15 +218,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/report/download/{id.format}:
     get:
       tags:
       - Spyctl
       summary: Download a spyderbat report
-      description: "\nThis will download a published report.\n\t\t\t"
+      description: This will download a published report.
       operationId: SpyctlReportDownload
       parameters:
       - name: id.format
@@ -264,15 +249,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/report/inventory:
     get:
       tags:
       - Spyctl
       summary: Report inventory of spyderbat reports
-      description: "\nThis will return a report of the inventory of available spyderbat reports to generate and their metadata.\n\t\t\t"
+      description: This will return a report of the inventory of available spyderbat reports to generate and their metadata.
       operationId: SpyctlReportInventory
       parameters:
       - name: orgUID
@@ -295,15 +277,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/report/status/{id}:
     get:
       tags:
       - Spyctl
       summary: Check status of spyderbat report
-      description: "\nThis will check for the generation status of a report and return all the report metadata.\n\t\t\t"
+      description: This will check for the generation status of a report and return all the report metadata.
       operationId: SpyctlReportStatus
       parameters:
       - name: id
@@ -333,15 +312,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/report/{id}:
     delete:
       tags:
       - Spyctl
       summary: Delete a spyderbat report
-      description: "\nThis will delete a report.\n\t\t\t"
+      description: This will delete a report.
       operationId: SpyctlReportDelete
       parameters:
       - name: id
@@ -371,15 +347,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/suppressionpolicy/build/:
     post:
       tags:
       - Spyctl
       summary: Build a new Suppression Policy document
-      description: "\nThis will build and return a new Suppression Policy document which can then be applied via the AnalyticsPolicy API.\n* Requires the user have the action *spyctl:SuppressionPolicyBuild\n\t\t\t"
+      description: 'This will build and return a new Suppression Policy document which can then be applied via the AnalyticsPolicy API.
+
+        * Requires the user have the action *spyctl:SuppressionPolicyBuild'
       operationId: SuppressionPolicyBuild
       parameters:
       - name: orgUID
@@ -407,15 +382,12 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/spyctl/validate/:
     post:
       tags:
       - Spyctl
       summary: Validate a spyderbat document
-      description: "\nThis will verify that a spyderbat document matches a validation schema. If the document is not valid, this will return a message detailing the error.\n\t\t\t"
+      description: This will verify that a spyderbat document matches a validation schema. If the document is not valid, this will return a message detailing the error.
       operationId: SpyctlValidate
       parameters:
       - name: orgUID
@@ -443,68 +415,70 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    SessionSpyctlDiffOutput:
+    SessionSpyctlReportSpec:
+      type: object
+      properties:
+        args:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpyctlReportSpecArgument'
+          description: List of arguments for the report
+        description:
+          type: string
+          description: Long form description of the report
+        id:
+          type: string
+          description: Name of the report
+        short:
+          type: string
+          description: Short form description of the report
+        supported_formats:
+          type: array
+          items:
+            type: string
+          description: List of output formats available for the report
+    SessionSpyctlSuppressionPolicyBuildOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        diff_data:
-          type: string
-        irrelevant:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-          description: Includes any objects that were irrelevant to the diff. The include_irrelevant option must be set to true to return this data.
-    SpyctlValidateInput:
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+    GuardianPolicyBuildInput:
       type: object
       properties:
-        object:
-          $ref: '#/components/schemas/DaoAnalyticResourceObject'
-      required:
-      - object
-    SpyctlMergeInput:
-      type: object
-      properties:
-        merge_objects:
+        input_objects:
           type: array
           items:
             $ref: '#/components/schemas/DaoAnalyticResourceObject'
-          description: The object(s) to merge into the primary object.
-        object:
-          $ref: '#/components/schemas/DaoAnalyticResourceObject'
+          description: Fingerprints, FingerprintGroup, or Baseline to create a Guardian Policy from.
+        mode:
+          type: string
+          description: The enforcement mode of the policy.
+        name:
+          type: string
+          description: Custom name for the suppression policy
+          maxLength: 64
       required:
-      - merge_objects
-      - object
-    SessionSpyctlReportListOutput:
+      - input_objects
+      - mode
+    SessionSpyctlReportDeleteOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionSpyctlReportOutput'
-          description: List of reports
-    SessionSpyctlReportInventoryOutput:
+    SessionSpyctlGuardianPolicyBuildOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        inventory:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionSpyctlReportSpec'
-          description: The inventory of reports available to generate for the org
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
     SessionSpyctlMergeOutput:
       type: object
       properties:
@@ -513,12 +487,32 @@ components:
           description: Context UID for this query, it's used to track the query as it flows through the system
         merged_object:
           $ref: '#/components/schemas/DaoAnalyticResourceObject'
-    SessionSpyctlReportDeleteOutput:
+    DaoAnalyticResourceObject:
       type: object
       properties:
-        context_uid:
+        apiVersion:
           type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
+          description: API Version
+        data:
+          type: object
+          additionalProperties: {}
+          description: Data
+        kind:
+          type: string
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: The object to validate.
+      required:
+      - apiVersion
+      - kind
+      - metadata
     SessionSpyctlReportListPagerOutput:
       type: object
       properties:
@@ -533,36 +527,6 @@ components:
           items:
             $ref: '#/components/schemas/SessionSpyctlReportOutput'
           description: List of reports
-    SessionSpyctlGuardianPolicyBuildOutput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        policy:
-          $ref: '#/components/schemas/DaoPolicyObject'
-    SpyctlDiffInput:
-      type: object
-      properties:
-        content_type:
-          type: string
-          description: 'The content type of the diff output. Possible values are: text, json.'
-        diff_objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoAnalyticResourceObject'
-          description: The object(s) to diff the primary object with.
-        full_diff:
-          type: boolean
-          description: When content_type is omitted or set to text this returns the full diff text instead of a summary.
-        include_irrelevant:
-          type: boolean
-          description: When set to true, the output of this API will return lists of objects, by kind, that had no impact on the diff. This option may increase compute time.
-        object:
-          $ref: '#/components/schemas/DaoAnalyticResourceObject'
-      required:
-      - diff_objects
-      - object
     SuppressionPolicyBuildInput:
       type: object
       properties:
@@ -591,75 +555,62 @@ components:
           maxLength: 64
       required:
       - type
-    SessionSpyctlReportSpec:
+    SessionSpyctlReportSpecArgument:
       type: object
       properties:
-        args:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionSpyctlReportSpecArgument'
-          description: List of arguments for the report
+        default:
+          type: string
+          description: Suggested default value for the argument
         description:
           type: string
-          description: Long form description of the report
-        id:
+          description: Long form description of the argument
+        name:
           type: string
-          description: Name of the report
+          description: Name of the argument
+        required:
+          type: boolean
+          description: Is the argument required
         short:
           type: string
-          description: Short form description of the report
-        supported_formats:
+          description: Short form description of the argument
+        type:
+          type: string
+          description: Type of the argument
+    SpyctlMergeInput:
+      type: object
+      properties:
+        merge_objects:
           type: array
           items:
-            type: string
-          description: List of output formats available for the report
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    SessionSpyctlValidateOutput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        invalid_message:
-          type: string
-          description: If the input object is invalid, InvalidMessage will be populated with descriptions of the detected syntax errors
-    DaoPolicyObject:
-      type: object
-      properties:
-        apiVersion:
-          type: string
-          description: API Version
-        kind:
-          type: string
-          description: Kind
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: Metadata
-        spec:
-          type: object
-          additionalProperties: {}
-          description: Spec
-      description: Policy
+            $ref: '#/components/schemas/DaoAnalyticResourceObject'
+          description: The object(s) to merge into the primary object.
+        object:
+          $ref: '#/components/schemas/DaoAnalyticResourceObject'
       required:
-      - apiVersion
-      - kind
-      - metadata
-      - spec
+      - merge_objects
+      - object
+    SpyctlDiffInput:
+      type: object
+      properties:
+        content_type:
+          type: string
+          description: 'The content type of the diff output. Possible values are: text, json.'
+        diff_objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoAnalyticResourceObject'
+          description: The object(s) to diff the primary object with.
+        full_diff:
+          type: boolean
+          description: When content_type is omitted or set to text this returns the full diff text instead of a summary.
+        include_irrelevant:
+          type: boolean
+          description: When set to true, the output of this API will return lists of objects, by kind, that had no impact on the diff. This option may increase compute time.
+        object:
+          $ref: '#/components/schemas/DaoAnalyticResourceObject'
+      required:
+      - diff_objects
+      - object
     SpyctlReportGenerateInput:
       type: object
       properties:
@@ -691,61 +642,50 @@ components:
           type: number
           description: Get only reports that were scheduled before this timestamp. If omitted, defaults to current time.
           format: float
-    DaoAnalyticResourceObject:
+    ValidationError:
       type: object
       properties:
-        apiVersion:
+        err_msg:
           type: string
-          description: API Version
-        data:
-          type: object
-          additionalProperties: {}
-          description: Data
-        kind:
+          description: Message regarding the validation failure
+        field:
           type: string
-          description: Kind
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: Metadata
-        spec:
-          type: object
-          additionalProperties: {}
-          description: Spec
-      description: The object to validate.
-      required:
-      - apiVersion
-      - kind
-      - metadata
-    SessionSpyctlReportSpecArgument:
-      type: object
-      properties:
-        default:
+          description: Field name which failed validation
+        property:
           type: string
-          description: Suggested default value for the argument
-        description:
+          description: JSON property name of the field which failed validation
+        tags:
           type: string
-          description: Long form description of the argument
-        name:
-          type: string
-          description: Name of the argument
-        required:
-          type: boolean
-          description: Is the argument required
-        short:
-          type: string
-          description: Short form description of the argument
-        type:
-          type: string
-          description: Type of the argument
-    SessionSpyctlSuppressionPolicyBuildOutput:
+          description: Validation tag which failed
+    SessionSpyctlReportInventoryOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        policy:
-          $ref: '#/components/schemas/DaoPolicyObject'
+        inventory:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpyctlReportSpec'
+          description: The inventory of reports available to generate for the org
+    SessionSpyctlReportListOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpyctlReportOutput'
+          description: List of reports
+    SpyctlValidateInput:
+      type: object
+      properties:
+        object:
+          $ref: '#/components/schemas/DaoAnalyticResourceObject'
+      required:
+      - object
     SessionSpyctlReportOutput:
       type: object
       properties:
@@ -776,29 +716,55 @@ components:
         status:
           type: string
           description: Status of the report generation
-    GuardianPolicyBuildInput:
+    DaoPolicyObject:
       type: object
       properties:
-        input_objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoAnalyticResourceObject'
-          description: Fingerprints, FingerprintGroup, or Baseline to create a Guardian Policy from.
-        mode:
+        apiVersion:
           type: string
-          description: The enforcement mode of the policy.
-        name:
+          description: API Version
+        kind:
           type: string
-          description: Custom name for the suppression policy
-          maxLength: 64
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: Policy
       required:
-      - input_objects
-      - mode
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    SessionSpyctlDiffOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        diff_data:
+          type: string
+        irrelevant:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: Includes any objects that were irrelevant to the diff. The include_irrelevant option must be set to true to return this data.
+    SessionSpyctlValidateOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        invalid_message:
+          type: string
+          description: If the input object is invalid, InvalidMessage will be populated with descriptions of the detected syntax errors
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

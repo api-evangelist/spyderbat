@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Analytics Ruleset API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Analytics Ruleset API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged AnalyticsRuleset across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,16 +22,17 @@ security:
 - apiToken: []
 tags:
 - name: AnalyticsRuleset
-  description: '
-
-    An API to allow the management of analytics rulesets. Analytics rulesets are used within some types of analytics rulesets.'
+  description: An API to allow the management of analytics rulesets. Analytics rulesets are used within some types of analytics rulesets.
 paths:
   /api/v1/org/{orgUID}/analyticsruleset/:
     get:
       tags:
       - AnalyticsRuleset
       summary: List analytics rulesets
-      description: "\nThis will list the analytics rulesets for an org with specific parameters\n\t\t\t\n* Requires the action  *org:ListAnalyticsRuleset* on the organization\n\t\t\t"
+      description: 'This will list the analytics rulesets for an org with specific parameters
+
+
+        * Requires the action *org:ListAnalyticsRuleset* on the organization'
       operationId: AnalyticsRulesetList
       parameters:
       - name: orgUID
@@ -100,7 +101,10 @@ paths:
       tags:
       - AnalyticsRuleset
       summary: Update an analytics ruleset
-      description: "\nThis will update a specific analytics ruleset for an org\n\t\t\t\n* Requires the action  *org:UpdateAnalyticsRuleset* on the organization\n\t\t\t"
+      description: 'This will update a specific analytics ruleset for an org
+
+
+        * Requires the action *org:UpdateAnalyticsRuleset* on the organization'
       operationId: AnalyticsRulesetUpdate
       parameters:
       - name: orgUID
@@ -136,7 +140,10 @@ paths:
       tags:
       - AnalyticsRuleset
       summary: Create a analytics ruleset
-      description: "\nThis will create a new analytics ruleset for an org\n\t\t\n* Requires the action  *org:CreateAnalyticsRuleset* on the organization\n\t\t"
+      description: 'This will create a new analytics ruleset for an org
+
+
+        * Requires the action *org:CreateAnalyticsRuleset* on the organization'
       operationId: AnalyticsRulesetCreate
       parameters:
       - name: orgUID
@@ -166,15 +173,15 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/analyticsruleset/{analyticsrulesetUID}:
     get:
       tags:
       - AnalyticsRuleset
       summary: Load an analytics ruleset
-      description: "\nThis will retrieve a specific analytics ruleset for an org\n\t\t\t\n* Requires the action  *org:LoadAnalyticsRuleset* on the organization\n\t\t\t"
+      description: 'This will retrieve a specific analytics ruleset for an org
+
+
+        * Requires the action *org:LoadAnalyticsRuleset* on the organization'
       operationId: AnalyticsRulesetLoad
       parameters:
       - name: analyticsrulesetUID
@@ -212,7 +219,10 @@ paths:
       tags:
       - AnalyticsRuleset
       summary: Delete an analytics ruleset
-      description: "\nThis will delete the specified ruleset from an org\n\t\t\t\n* Requires the action  *org:DeleteAnalyticsRuleset* on the organization\n\t\t\t"
+      description: 'This will delete the specified ruleset from an org
+
+
+        * Requires the action *org:DeleteAnalyticsRuleset* on the organization'
       operationId: AnalyticsRulesetDelete
       parameters:
       - name: analyticsrulesetUID
@@ -230,9 +240,6 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
     DaoOutputAnalyticsRuleset:
@@ -291,39 +298,6 @@ components:
       required:
       - name
       - type
-    AnalyticsRulesetCreateInput:
-      type: object
-      properties:
-        ruleset:
-          $ref: '#/components/schemas/DaoRulesetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - ruleset
-    ApiAnalyticsRulesetCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
     AnalyticsRulesetUpdateInput:
       type: object
       properties:
@@ -360,11 +334,41 @@ components:
       - kind
       - metadata
       - spec
+    AnalyticsRulesetCreateInput:
+      type: object
+      properties:
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - ruleset
+    ApiAnalyticsRulesetCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Fingerprint Data API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Fingerprint Data API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged FingerprintData across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,25 +22,17 @@ security:
 - apiToken: []
 tags:
 - name: FingerprintData
-  description: '
-
-    Each source may send fingerprint data which is stored and processed by the system.
-
-    '
+  description: Each source may send fingerprint data which is stored and processed by the system.
 paths:
   /api/v1/org/{orgUID}/fingerprint/search:
     post:
       tags:
       - FingerprintData
       summary: Start a fingerprint search job
-      description: '
-
-        Start a fingerprint search job.
+      description: 'Start a fingerprint search job.
 
 
-        * Requires action *source_data:Query*
-
-        '
+        * Requires action *source_data:Query*'
       operationId: FingerprintDataSearch
       parameters:
       - name: orgUID
@@ -66,26 +58,19 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/fingerprint/search/{jobID}:
     post:
       tags:
       - FingerprintData
       summary: Get the results of a fingerprint search job
-      description: '
-
-        Get the results of a fingerprint search job.
+      description: 'Get the results of a fingerprint search job.
 
         If a status is returned, it means the job is still running or has failed.
 
         To continue polling for results, use the same jobID in the next request.
 
 
-        * Requires action *source_data:Query*
-
-        '
+        * Requires action *source_data:Query*'
       operationId: FingerprintDataSearchJob
       parameters:
       - name: jobID
@@ -123,29 +108,8 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    SessionFingerprintSearchResults:
-      type: object
-      properties:
-        errors:
-          type: array
-          items: {}
-          description: Errors encountered during object hydration.
-        result_count:
-          type: integer
-          description: The number of results returned.
-          format: int32
-        results:
-          type: array
-          items: {}
-          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
-        status:
-          type: string
-          description: The status of the query. If non-empty, the job is still running or failed - poll again.
     FingerprintDataSearchJobInput:
       type: object
       properties:
@@ -203,6 +167,24 @@ components:
       - end_time
       - query
       - start_time
+    SessionFingerprintSearchResults:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: Errors encountered during object hydration.
+        result_count:
+          type: integer
+          description: The number of results returned.
+          format: int32
+        results:
+          type: array
+          items: {}
+          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
+        status:
+          type: string
+          description: The status of the query. If non-empty, the job is still running or failed - poll again.
     ValidationError:
       type: object
       properties:
@@ -223,6 +205,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

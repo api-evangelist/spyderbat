@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Org Type API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Org Type API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged OrgType across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,14 +22,17 @@ security:
 - apiToken: []
 tags:
 - name: OrgType
-  description: "\nOrganizational types specify both limits and defaults for organizations, they are used by the system to determine the resource utilization for an organization and associated settings. \n"
+  description: Organizational types specify both limits and defaults for organizations, they are used by the system to determine the resource utilization for an organization and associated settings.
 paths:
   /api/v1/org/{orgUID}/type:
     get:
       tags:
       - OrgType
       summary: Load the org type for the organization
-      description: "\nLoads the org type for the organiation\n\n * Requires action *org:Load*\n"
+      description: 'Loads the org type for the organiation
+
+
+        * Requires action *org:Load*'
       operationId: OrgTypeLoad
       parameters:
       - name: orgUID
@@ -46,15 +49,17 @@ paths:
                 $ref: '#/components/schemas/DaoOrgType'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/type/limit/active_sources:
     get:
       tags:
       - OrgType
       summary: Loads limits regarding active sources
-      description: "\nLoads the limits regarding active sources allowed on the organization, the active\nsources in an org are calculated on a 5m0s basis. \n\n * Requires action *org:Load*\n"
+      description: 'Loads the limits regarding active sources allowed on the organization, the active
+
+        sources in an org are calculated on a 5m0s basis.
+
+
+        * Requires action *org:Load*'
       operationId: OrgTypeLimitActiveSources
       parameters:
       - name: orgUID
@@ -71,15 +76,17 @@ paths:
                 $ref: '#/components/schemas/SessionOrgTypeMaxLimit'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/type/limit/org_roles:
     get:
       tags:
       - OrgType
       summary: Loads limits regarding org roles
-      description: "\nLoads the limit information regarding the number of associated roles allowed\nper an organization\n\n * Requires action *org:Load*\n"
+      description: 'Loads the limit information regarding the number of associated roles allowed
+
+        per an organization
+
+
+        * Requires action *org:Load*'
       operationId: OrgTypeLimitOrgRoles
       parameters:
       - name: orgUID
@@ -96,11 +103,47 @@ paths:
                 $ref: '#/components/schemas/SessionOrgTypeMaxLimit'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
+    DaoOrgType:
+      type: object
+      properties:
+        default_quota:
+          $ref: '#/components/schemas/DaoOrgQuota'
+        description:
+          type: string
+          description: Type of organization
+          maxLength: 64
+          minLength: 3
+        org_uid:
+          type: string
+        policy:
+          $ref: '#/components/schemas/DaoOrgTypePolicy'
+        uid:
+          type: string
+          description: UID for OrgType
+          maxLength: 64
+      required:
+      - default_quota
+      - policy
     DaoOrgTypePolicy:
       type: object
       properties:
@@ -119,6 +162,31 @@ components:
       required:
       - processing_stack
       - retention_period
+    SessionOrgTypeMaxLimit:
+      type: object
+      properties:
+        current_value:
+          type: number
+          description: What is the current value
+          format: double
+        description:
+          type: string
+          description: Description of the limit
+        limit_exceeded:
+          type: boolean
+          description: Has the limit been met or exceeded
+        limit_value:
+          type: number
+          description: What is the max limit value
+          format: double
+        remaining_capacity:
+          type: number
+          description: How many items can be added to the current value before it is exceeded
+          format: double
+        time_window_in_seconds:
+          type: integer
+          description: The time window in seconds that the limit is calculated on
+          format: int32
     DaoOrgQuota:
       type: object
       properties:
@@ -169,75 +237,8 @@ components:
       required:
       - max_active_sources
       - max_org_roles
-    SessionOrgTypeMaxLimit:
-      type: object
-      properties:
-        current_value:
-          type: number
-          description: What is the current value
-          format: double
-        description:
-          type: string
-          description: Description of the limit
-        limit_exceeded:
-          type: boolean
-          description: Has the limit been met or exceeded
-        limit_value:
-          type: number
-          description: What is the max limit value
-          format: double
-        remaining_capacity:
-          type: number
-          description: How many items can be added to the current value before it is exceeded
-          format: double
-        time_window_in_seconds:
-          type: integer
-          description: The time window in seconds that the limit is calculated on
-          format: int32
-    DaoOrgType:
-      type: object
-      properties:
-        default_quota:
-          $ref: '#/components/schemas/DaoOrgQuota'
-        description:
-          type: string
-          description: Type of organization
-          maxLength: 64
-          minLength: 3
-        org_uid:
-          type: string
-        policy:
-          $ref: '#/components/schemas/DaoOrgTypePolicy'
-        uid:
-          type: string
-          description: UID for OrgType
-          maxLength: 64
-      required:
-      - default_quota
-      - policy
-    DaoOrgQuotaCases:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Enable case creation (L1 analysis) for this org
-        l2_enabled:
-          type: boolean
-          description: Enable L2 (senior AI) analysis for this org; requires enabled
-        score_threshold:
-          type: integer
-          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
-          format: int32
-          maximum: 10000
-        ui:
-          type: boolean
-          description: Expose the cases UI in the console for this org; requires enabled
-      description: Per-org feature gates for the cases service; replaces the existing block when present
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

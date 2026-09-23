@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Agent Work API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Agent Work API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged AgentWork across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,14 +22,20 @@ security:
 - apiToken: []
 tags:
 - name: AgentWork
-  description: "\nAgentWork API is intended for use by the UI to convey work & configuration to agents, this data can be specific to an agent or gloal to an organization. \n\nAn example use case is configuration data for a specific bat. The agents then overlay the global work data atop, the organizationan work (if defined), atop the specific agent work. \n\n\t"
+  description: 'AgentWork API is intended for use by the UI to convey work & configuration to agents, this data can be specific to an agent or gloal to an organization.
+
+
+    An example use case is configuration data for a specific bat. The agents then overlay the global work data atop, the organizationan work (if defined), atop the specific agent work.'
 paths:
   /api/v1/org/{orgUID}/agent/{agentUID}/work:
     get:
       tags:
       - AgentWork
       summary: Get agent work data for a specific agent
-      description: "\nGet the work data for a specified agent.\n\n * Requires *agent_data:GetAgentData*\n"
+      description: 'Get the work data for a specified agent.
+
+
+        * Requires *agent_data:GetAgentData*'
       operationId: AgentGetAgentWork
       parameters:
       - name: agentUID
@@ -61,7 +67,10 @@ paths:
       tags:
       - AgentWork
       summary: Set agent work data for a specific agent
-      description: "\nSet the work data for a specified agent.\n\n * Requires *agent_data:Set* \n"
+      description: 'Set the work data for a specified agent.
+
+
+        * Requires *agent_data:Set*'
       operationId: AgentSetAgentWork
       parameters:
       - name: agentUID
@@ -94,7 +103,10 @@ paths:
       tags:
       - AgentWork
       summary: Delete agent work data for a specific agent
-      description: "\nDelet the work data for a specified agent.\n\n * Requires *agent_data:Delete* \n"
+      description: 'Delet the work data for a specified agent.
+
+
+        * Requires *agent_data:Delete*'
       operationId: AgentDeleteAgentWork
       parameters:
       - name: agentUID
@@ -118,15 +130,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent_work:
     get:
       tags:
       - AgentWork
       summary: Get agent work data for the organization
-      description: "\nGet the work data for all agents associated with the organization.\n\n * Requires *agent_data:GetOrgData*\n"
+      description: 'Get the work data for all agents associated with the organization.
+
+
+        * Requires *agent_data:GetOrgData*'
       operationId: AgentGetOrgWork
       parameters:
       - name: orgUID
@@ -151,7 +163,10 @@ paths:
       tags:
       - AgentWork
       summary: Set agent work data for a specific agent
-      description: "\nSet the work data for a specified agent.\n\n * Requires *agent_data:SetData*\n"
+      description: 'Set the work data for a specified agent.
+
+
+        * Requires *agent_data:SetData*'
       operationId: AgentSetOrgWork
       parameters:
       - name: orgUID
@@ -177,7 +192,10 @@ paths:
       tags:
       - AgentWork
       summary: Delete agent work for an org
-      description: "\nDelete the work data for all agents for an organization.\n\n * Requires *agent_data:Delete* \n"
+      description: 'Delete the work data for all agents for an organization.
+
+
+        * Requires *agent_data:Delete*'
       operationId: AgentDeleteOrgWork
       parameters:
       - name: orgUID
@@ -194,9 +212,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
     AgentSetAgentWorkInput:
@@ -261,6 +276,16 @@ components:
           description: Array of bats to execute
           maxItems: 32
       description: Agent work, which is sent to the agents
+    AgentSetOrgWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
     ValidationError:
       type: object
       properties:
@@ -276,21 +301,8 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    AgentSetOrgWorkInput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

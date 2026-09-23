@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Agent API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Agent API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Agent across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,26 +22,17 @@ security:
 - apiToken: []
 tags:
 - name: Agent
-  description: '
-
-    Agents represent a sepecific agent which collects data for one or more sources.
-
-    '
+  description: Agents represent a sepecific agent which collects data for one or more sources.
 paths:
   /api/v1/org/{orgUID}/agent/:
     get:
       tags:
       - Agent
       summary: List agents
-      description: '
-
-        Lists the agents associated with an organization
+      description: 'Lists the agents associated with an organization
 
 
-        * Requires the action  *agent:List* on the organization
-
-
-        '
+        * Requires the action *agent:List* on the organization'
       operationId: AgentList
       parameters:
       - name: orgUID
@@ -96,23 +87,15 @@ paths:
                   $ref: '#/components/schemas/Agent'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent/{agentUID}:
     get:
       tags:
       - Agent
       summary: Load an agent
-      description: '
-
-        Load a specified agent
+      description: 'Load a specified agent
 
 
-        * Requires the action  *agent:Load* on the organization
-
-
-        '
+        * Requires the action *agent:Load* on the organization'
       operationId: AgentLoad
       parameters:
       - name: agentUID
@@ -136,23 +119,15 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent/{agentUID}/archive:
     put:
       tags:
       - Agent
       summary: Archive (hide) an agent
-      description: '
-
-        Archive a specified agent. This marks that an agent and any associated sources should be hidden in the UI.
+      description: 'Archive a specified agent. This marks that an agent and any associated sources should be hidden in the UI.
 
 
-        * Requires the action  *agent:Archive* on the organization
-
-
-        '
+        * Requires the action *agent:Archive* on the organization'
       operationId: AgentArchive
       parameters:
       - name: agentUID
@@ -172,23 +147,15 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent/{agentUID}/unarchive:
     put:
       tags:
       - Agent
       summary: Unarchive (show) an agent
-      description: '
-
-        Unarchive a specified agent. This marks that an agent and any associated sources should be shown in the UI.
+      description: 'Unarchive a specified agent. This marks that an agent and any associated sources should be shown in the UI.
 
 
-        * Requires the action  *agent:Unarchive* on the organization
-
-
-        '
+        * Requires the action *agent:Unarchive* on the organization'
       operationId: AgentUnarchive
       parameters:
       - name: agentUID
@@ -208,9 +175,6 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
     RbacStatement:
@@ -243,95 +207,6 @@ components:
       required:
       - effect
       - sid
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
-    Agent:
-      type: object
-      properties:
-        agent_registration_uid:
-          type: string
-          description: Agent registration associated with the agent
-        agent_type:
-          type: integer
-          description: Agent type
-          format: int32
-        agent_version:
-          type: string
-          description: Version of the agent installed
-        agent_work_id:
-          type: integer
-          description: Agent work Id
-          format: int32
-        archived:
-          type: boolean
-          description: Is the agent archived?
-        description:
-          type: string
-          description: Description of the purpose of the agent
-        kernel_version:
-          type: string
-          description: Kernel version of the installed system
-        live_test_ran:
-          type: integer
-          description: Did the live test run?
-          format: int32
-        live_test_result:
-          type: integer
-          description: Result of the live test
-          format: int32
-        muid:
-          type: string
-          description: Muid created on by the agent on the system
-        org_uid:
-          type: string
-          description: Agent OrgUID
-        os_pretty_name:
-          type: string
-          description: Pretty name of the operating system the agent is installed on
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        runtime_description:
-          type: string
-          description: Description of the runtime of the agent
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        standby:
-          type: boolean
-          description: Is the agent in standby mode?
-        uid:
-          type: string
-          description: Agent UID
-        user_work_id:
-          type: integer
-          format: int32
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -411,11 +286,97 @@ components:
         uname:
           type: string
       description: Runtime details
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    Agent:
+      type: object
+      properties:
+        agent_registration_uid:
+          type: string
+          description: Agent registration associated with the agent
+        agent_type:
+          type: integer
+          description: Agent type
+          format: int32
+        agent_version:
+          type: string
+          description: Version of the agent installed
+        agent_work_id:
+          type: integer
+          description: Agent work Id
+          format: int32
+        archived:
+          type: boolean
+          description: Is the agent archived?
+        description:
+          type: string
+          description: Description of the purpose of the agent
+        kernel_version:
+          type: string
+          description: Kernel version of the installed system
+        live_test_ran:
+          type: integer
+          description: Did the live test run?
+          format: int32
+        live_test_result:
+          type: integer
+          description: Result of the live test
+          format: int32
+        muid:
+          type: string
+          description: Muid created on by the agent on the system
+        org_uid:
+          type: string
+          description: Agent OrgUID
+        os_pretty_name:
+          type: string
+          description: Pretty name of the operating system the agent is installed on
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        runtime_description:
+          type: string
+          description: Description of the runtime of the agent
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        standby:
+          type: boolean
+          description: Is the agent in standby mode?
+        uid:
+          type: string
+          description: Agent UID
+        user_work_id:
+          type: integer
+          format: int32
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

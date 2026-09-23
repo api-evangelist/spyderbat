@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Suppress API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Suppress API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Suppress across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,16 +22,16 @@ security:
 - apiToken: []
 tags:
 - name: Suppress
-  description: '
-
-    An API that provides direct access to Spyderbat''s tuning features.'
+  description: An API that provides direct access to Spyderbat's tuning features.
 paths:
   /api/v1/org/{orgUID}/suppress/trace:
     post:
       tags:
       - Suppress
-      summary: Suppress a trace signature.
-      description: "\nThis will suppress a trace signature for an org\n* Requires the actions  *org:SuppressTrace, org:CreateAnalyticsPolicy, org:UpdateAnalyticsPolicy* on the organization\n\t\t"
+      summary: Suppress a trace signature
+      description: 'This will suppress a trace signature for an org
+
+        * Requires the actions *org:SuppressTrace, org:CreateAnalyticsPolicy, org:UpdateAnalyticsPolicy* on the organization'
       operationId: SuppressTrace
       parameters:
       - name: orgUID
@@ -61,11 +61,37 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
+    DaoTraceSuppressionPolicy:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/DaoTraceSuppressionMetadata'
+        spec:
+          $ref: '#/components/schemas/DaoTraceSuppressionSpec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    DaoLinuxServiceSelectorV2:
+      type: object
+      properties:
+        cgroup:
+          type: string
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
     DaoNamespaceSelectorV2:
       type: object
       properties:
@@ -77,6 +103,91 @@ components:
           type: object
           additionalProperties:
             type: string
+    DaoMachineSelectorV2:
+      type: object
+      properties:
+        hostname:
+          type: array
+          items:
+            type: string
+        machineUID:
+          type: array
+          items:
+            type: string
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
+    DaoAllowedFlagRule:
+      type: object
+      properties:
+        class:
+          type: string
+        display_name:
+          type: string
+        display_severity:
+          type: string
+    DaoUserSelectorV2:
+      type: object
+      properties:
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
+        user:
+          type: array
+          items:
+            type: string
+    DaoTraceSuppressionMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        uid:
+          type: string
+      required:
+      - name
+      - type
+    DaoTraceSuppressionSpec:
+      type: object
+      properties:
+        allowedFlags:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoAllowedFlagRule'
+        clusterSelector:
+          $ref: '#/components/schemas/DaoClusterSelectorV2'
+        containerSelector:
+          $ref: '#/components/schemas/DaoContainerSelectorV2'
+        enabled:
+          type: boolean
+        machineSelector:
+          $ref: '#/components/schemas/DaoMachineSelectorV2'
+        mode:
+          type: string
+        namespaceSelector:
+          $ref: '#/components/schemas/DaoNamespaceSelectorV2'
+        serviceSelector:
+          $ref: '#/components/schemas/DaoLinuxServiceSelectorV2'
+        traceSelector:
+          $ref: '#/components/schemas/DaoTraceSelectorV2'
+        userSelector:
+          $ref: '#/components/schemas/DaoUserSelectorV2'
+      required:
+      - allowedFlags
+      - enabled
+      - mode
+      - traceSelector
     DaoTraceSelectorV2:
       type: object
       properties:
@@ -96,62 +207,44 @@ components:
           type: array
           items:
             type: string
-    DaoOutputAnalyticsPolicy:
+    DaoContainerSelectorV2:
       type: object
       properties:
-        created_by:
-          type: string
-          description: Resource name of the user who created this object
-        last_updated:
-          type: string
-          description: Last updated date
-          format: date-time
-        last_updated_by:
-          type: string
-          description: Resource name of the user who last updated this object
-        name:
-          type: string
-          description: Name of the analytics policy
-          maxLength: 64
-          minLength: 3
-        orgid:
-          type: string
-          description: Org UID
-          maxLength: 64
-        policy:
-          $ref: '#/components/schemas/DaoPolicyObject'
-        selector_hash:
-          type: string
-          description: MD5 Hash of the policy's selectors
-        tags:
+        containerID:
           type: array
           items:
             type: string
-          description: User supplied tags
-          maxItems: 20
-        type:
-          type: string
-          description: type
-          maxLength: 64
-        uid:
-          type: string
-          description: Analytics Policy UID
-          maxLength: 64
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-        version:
-          type: integer
-          description: Version of the object
-          format: int32
-      required:
-      - name
-      - type
+        containerName:
+          type: array
+          items:
+            type: string
+        image:
+          type: array
+          items:
+            type: string
+        imageID:
+          type: array
+          items:
+            type: string
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
+    DaoClusterSelectorV2:
+      type: object
+      properties:
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
     DaoPolicyObject:
       type: object
       properties:
@@ -211,6 +304,17 @@ components:
           description: The UID of the trace signature to suppress. Does not suppress the trace itself, but all traces that match the signature going forward.
       required:
       - trace_uid
+    DaoExpression:
+      type: object
+      properties:
+        key:
+          type: string
+        operator:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
     SessionSuppressTraceOutput:
       type: object
       properties:
@@ -228,88 +332,62 @@ components:
           type: array
           items:
             type: string
-    DaoTraceSuppressionPolicy:
+    DaoOutputAnalyticsPolicy:
       type: object
       properties:
-        apiVersion:
+        created_by:
           type: string
-        kind:
+          description: Resource name of the user who created this object
+        last_updated:
           type: string
-        metadata:
-          $ref: '#/components/schemas/DaoTraceSuppressionMetadata'
-        spec:
-          $ref: '#/components/schemas/DaoTraceSuppressionSpec'
-      required:
-      - apiVersion
-      - kind
-      - metadata
-      - spec
-    DaoAllowedFlagRule:
-      type: object
-      properties:
-        class:
+          description: Last updated date
+          format: date-time
+        last_updated_by:
           type: string
-        display_name:
-          type: string
-        display_severity:
-          type: string
-    DaoUserSelectorV2:
-      type: object
-      properties:
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-        user:
-          type: array
-          items:
-            type: string
-    DaoTraceSuppressionMetadata:
-      type: object
-      properties:
+          description: Resource name of the user who last updated this object
         name:
           type: string
+          description: Name of the analytics policy
+          maxLength: 64
+          minLength: 3
+        orgid:
+          type: string
+          description: Org UID
+          maxLength: 64
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+        selector_hash:
+          type: string
+          description: MD5 Hash of the policy's selectors
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
         type:
           type: string
+          description: type
+          maxLength: 64
         uid:
           type: string
+          description: Analytics Policy UID
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: Version of the object
+          format: int32
       required:
       - name
       - type
-    DaoMachineSelectorV2:
-      type: object
-      properties:
-        hostname:
-          type: array
-          items:
-            type: string
-        machineUID:
-          type: array
-          items:
-            type: string
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    DaoExpression:
-      type: object
-      properties:
-        key:
-          type: string
-        operator:
-          type: string
-        values:
-          type: array
-          items:
-            type: string
     ValidationError:
       type: object
       properties:
@@ -325,92 +403,8 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    DaoLinuxServiceSelectorV2:
-      type: object
-      properties:
-        cgroup:
-          type: string
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    DaoContainerSelectorV2:
-      type: object
-      properties:
-        containerID:
-          type: array
-          items:
-            type: string
-        containerName:
-          type: array
-          items:
-            type: string
-        image:
-          type: array
-          items:
-            type: string
-        imageID:
-          type: array
-          items:
-            type: string
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    DaoClusterSelectorV2:
-      type: object
-      properties:
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    DaoTraceSuppressionSpec:
-      type: object
-      properties:
-        allowedFlags:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoAllowedFlagRule'
-        clusterSelector:
-          $ref: '#/components/schemas/DaoClusterSelectorV2'
-        containerSelector:
-          $ref: '#/components/schemas/DaoContainerSelectorV2'
-        enabled:
-          type: boolean
-        machineSelector:
-          $ref: '#/components/schemas/DaoMachineSelectorV2'
-        mode:
-          type: string
-        namespaceSelector:
-          $ref: '#/components/schemas/DaoNamespaceSelectorV2'
-        serviceSelector:
-          $ref: '#/components/schemas/DaoLinuxServiceSelectorV2'
-        traceSelector:
-          $ref: '#/components/schemas/DaoTraceSelectorV2'
-        userSelector:
-          $ref: '#/components/schemas/DaoUserSelectorV2'
-      required:
-      - allowedFlags
-      - enabled
-      - mode
-      - traceSelector
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Notifications Agent Health API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Notifications Agent Health API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged NotificationsAgentHealth across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,15 +22,13 @@ security:
 - apiToken: []
 tags:
 - name: NotificationsAgentHealth
-  description: '
-
-    An API for creating, retrieving, updating, and deleting agent health notification settings.'
+  description: An API for creating, retrieving, updating, and deleting agent health notification settings.
 paths:
   /api/v1/org/{orgUID}/agent_health_notification_settings/:
     get:
       tags:
       - NotificationsAgentHealth
-      summary: List agent health notification settings.
+      summary: List agent health notification settings
       operationId: AgentHealthNotificationSettingsList
       parameters:
       - name: orgUID
@@ -141,7 +139,7 @@ paths:
     post:
       tags:
       - NotificationsAgentHealth
-      summary: Create an agent health notification.
+      summary: Create an agent health notification
       operationId: AgentHealthNotificationSettingsCreate
       parameters:
       - name: orgUID
@@ -169,14 +167,11 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent_health_notification_settings/{ahnUID}:
     get:
       tags:
       - NotificationsAgentHealth
-      summary: Get agent health notification settings.
+      summary: Get agent health notification settings
       operationId: AgentHealthNotificationSettingsGet
       parameters:
       - name: ahnUID
@@ -209,7 +204,7 @@ paths:
     put:
       tags:
       - NotificationsAgentHealth
-      summary: Update agent health notification settings.
+      summary: Update agent health notification settings
       operationId: AgentHealthNotificationSettingsUpdate
       parameters:
       - name: ahnUID
@@ -247,7 +242,7 @@ paths:
     delete:
       tags:
       - NotificationsAgentHealth
-      summary: Delete agent health notification settings.
+      summary: Delete agent health notification settings
       operationId: AgentHealthNotificationSettingsDelete
       parameters:
       - name: ahnUID
@@ -273,34 +268,34 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    SessionAgentHealthNotificationLoadOutput:
+    SessionAgentHealthNotificationCreateOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SessionAgentHealthNotificationUpdateOutput:
       type: object
       properties:
         agent_health_notification_settings:
           $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-    AgentHealthNotificationSettingsUpdateInput:
+    SessionAgentHealthNotificationListOutput:
       type: object
       properties:
-        description:
-          type: string
-          maxLength: 500
-        name:
-          type: string
-          maxLength: 128
-          minLength: 1
-        notification_settings:
-          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
-        scope_query:
-          type: string
-          maxLength: 65535
-          minLength: 1
-      required:
-      - name
+        agent_health_notifications_settings_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+        search_total:
+          type: integer
+          format: int32
+        total_agent_health_notifications:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
     DaoNotificationSettingsObj:
       type: object
       properties:
@@ -335,27 +330,6 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
-    SessionAgentHealthNotificationUpdateOutput:
-      type: object
-      properties:
-        agent_health_notification_settings:
-          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-    SessionAgentHealthNotificationListOutput:
-      type: object
-      properties:
-        agent_health_notifications_settings_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-        search_total:
-          type: integer
-          format: int32
-        total_agent_health_notifications:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
     AgentHealthNotificationSettingsCreateInput:
       type: object
       properties:
@@ -373,6 +347,24 @@ components:
           maxLength: 65535
       required:
       - name
+    AgentHealthNotificationSettingsUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
+        scope_query:
+          type: string
+          maxLength: 65535
+          minLength: 1
+      required:
+      - name
     DaoAgentHealthNotificationSettings:
       type: object
       properties:
@@ -384,26 +376,6 @@ components:
           $ref: '#/components/schemas/DaoNotificationSettingsObj'
         agent_unhealthy:
           $ref: '#/components/schemas/DaoNotificationSettingsObj'
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    SessionAgentHealthNotificationCreateOutput:
-      type: object
-      properties:
-        uid:
-          type: string
     SessionOutputAgentHealthNotification:
       type: object
       properties:
@@ -444,11 +416,28 @@ components:
         version:
           type: integer
           format: int32
+    SessionAgentHealthNotificationLoadOutput:
+      type: object
+      properties:
+        agent_health_notification_settings:
+          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

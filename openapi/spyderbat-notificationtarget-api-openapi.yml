@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Notification Target API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Notification Target API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged NotificationTarget across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,16 +22,16 @@ security:
 - apiToken: []
 tags:
 - name: NotificationTarget
-  description: '
-
-    An API to allow the management of notification targets. Notification targets allow users to define where notifications are sent.'
+  description: An API to allow the management of notification targets. Notification targets allow users to define where notifications are sent.
 paths:
   /api/v1/org/{orgUID}/notificationtarget/:
     get:
       tags:
       - NotificationTarget
       summary: List notification targets
-      description: "\nThis will list all notification targets for an org\n* Requires the action  *org:ListNotificationTarget* on the organization\n\t\t\t"
+      description: 'This will list all notification targets for an org
+
+        * Requires the action *org:ListNotificationTarget* on the organization'
       operationId: NotificationTargetList
       parameters:
       - name: orgUID
@@ -141,15 +141,14 @@ paths:
                 $ref: '#/components/schemas/SessionNotificationTargetListOutput'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/email/:
     post:
       tags:
       - NotificationTarget
-      summary: Create an email notification target.
-      description: "\nThis will create a new email notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      summary: Create an email notification target
+      description: 'This will create a new email notification target for an org
+
+        * Requires the action *org:CreateNotificationTarget* on the organization'
       operationId: NotificationTargetEmailCreate
       parameters:
       - name: orgUID
@@ -177,15 +176,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/email/{notificationTargetUID}:
     put:
       tags:
       - NotificationTarget
-      summary: Update a notification target.
-      description: "\nThis will update a specific email notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      summary: Update a notification target
+      description: 'This will update a specific email notification target for an org
+
+        * Requires the action *org:UpdateNotificationTarget* on the organization'
       operationId: NotificationTargetEmailUpdate
       parameters:
       - name: notificationTargetUID
@@ -234,15 +232,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/pagerduty/:
     post:
       tags:
       - NotificationTarget
-      summary: Create a pagerduty notification target.
-      description: "\nThis will create a new pagerduty notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      summary: Create a pagerduty notification target
+      description: 'This will create a new pagerduty notification target for an org
+
+        * Requires the action *org:CreateNotificationTarget* on the organization'
       operationId: NotificationTargetPagerDutyCreate
       parameters:
       - name: orgUID
@@ -270,15 +267,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/pagerduty/{notificationTargetUID}:
     put:
       tags:
       - NotificationTarget
-      summary: Update a notification target.
-      description: "\nThis will update a specific pagerduty notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      summary: Update a notification target
+      description: 'This will update a specific pagerduty notification target for an org
+
+        * Requires the action *org:UpdateNotificationTarget* on the organization'
       operationId: NotificationTargetPagerDutyUpdate
       parameters:
       - name: notificationTargetUID
@@ -327,15 +323,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/slack/:
     post:
       tags:
       - NotificationTarget
-      summary: Create a slack notification target.
-      description: "\nThis will create a new slack notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      summary: Create a slack notification target
+      description: 'This will create a new slack notification target for an org
+
+        * Requires the action *org:CreateNotificationTarget* on the organization'
       operationId: NotificationTargetSlackCreate
       parameters:
       - name: orgUID
@@ -363,15 +358,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/slack/{notificationTargetUID}:
     put:
       tags:
       - NotificationTarget
-      summary: Update a notification target.
-      description: "\nThis will update a specific slack notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      summary: Update a notification target
+      description: 'This will update a specific slack notification target for an org
+
+        * Requires the action *org:UpdateNotificationTarget* on the organization'
       operationId: NotificationTargetSlackUpdate
       parameters:
       - name: notificationTargetUID
@@ -420,15 +414,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/webhook/:
     post:
       tags:
       - NotificationTarget
-      summary: Create a webhook notification target.
-      description: "\nThis will create a new webhook notification target for an org\n* Requires the action  *org:CreateNotificationTarget* on the organization\n\t\t\t"
+      summary: Create a webhook notification target
+      description: 'This will create a new webhook notification target for an org
+
+        * Requires the action *org:CreateNotificationTarget* on the organization'
       operationId: NotificationTargetWebhookCreate
       parameters:
       - name: orgUID
@@ -456,15 +449,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/webhook/{notificationTargetUID}:
     put:
       tags:
       - NotificationTarget
-      summary: Update a notification target.
-      description: "\nThis will update a specific webhook notification target for an org\n* Requires the action  *org:UpdateNotificationTarget* on the organization\n\t\t\t"
+      summary: Update a notification target
+      description: 'This will update a specific webhook notification target for an org
+
+        * Requires the action *org:UpdateNotificationTarget* on the organization'
       operationId: NotificationTargetWebhookUpdate
       parameters:
       - name: notificationTargetUID
@@ -513,15 +505,14 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/notificationtarget/{notificationTargetUID}:
     get:
       tags:
       - NotificationTarget
       summary: Load a notification target
-      description: "\nThis will retrieve a specific notification target for an org\n* Requires the action  *org:LoadNotificationTarget* on the organization\n\t\t\t"
+      description: 'This will retrieve a specific notification target for an org
+
+        * Requires the action *org:LoadNotificationTarget* on the organization'
       operationId: NotificationTargetLoad
       parameters:
       - name: notificationTargetUID
@@ -555,8 +546,10 @@ paths:
     delete:
       tags:
       - NotificationTarget
-      summary: Delete a notification target.
-      description: "\nThis will delete a specific notification target for an org\n* Requires the action  *org:DeleteNotificationTarget* on the organization\n\t\t\t"
+      summary: Delete a notification target
+      description: 'This will delete a specific notification target for an org
+
+        * Requires the action *org:DeleteNotificationTarget* on the organization'
       operationId: NotificationTargetDelete
       parameters:
       - name: notificationTargetUID
@@ -576,97 +569,8 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    NotificationTargetSlackCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the notification target.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification target.
-        tags:
-          type: array
-          items:
-            type: string
-        url:
-          type: string
-          description: URL to send the notification to.
-      required:
-      - name
-      - url
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    NotificationTargetPagerDutyUpdateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the notification target.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification target.
-        routing_key:
-          type: string
-          description: Routing key for the PagerDuty service.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - routing_key
-    SessionCreateNotificationTargetOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    SessionNotificationTargetLoadOutput:
-      type: object
-      properties:
-        notification_target:
-          $ref: '#/components/schemas/SessionOutputNotificationTarget'
-    SessionNotificationTargetListOutput:
-      type: object
-      properties:
-        notification_targets:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputNotificationTarget'
-        search_total:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_targets:
-          type: integer
-          format: int32
-    SessionNotificationTargetUpdateOutput:
-      type: object
-      properties:
-        notification_target:
-          $ref: '#/components/schemas/SessionOutputNotificationTarget'
     SessionOutputNotificationTarget:
       type: object
       properties:
@@ -714,6 +618,26 @@ components:
           format: int32
       required:
       - name
+    NotificationTargetSlackCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the notification to.
+      required:
+      - name
+      - url
     NotificationTargetWebhookUpdateInput:
       type: object
       properties:
@@ -737,6 +661,36 @@ components:
         user_name:
           type: string
           description: Optional username for basic auth.
+      required:
+      - name
+      - url
+    SessionNotificationTargetUpdateOutput:
+      type: object
+      properties:
+        notification_target:
+          $ref: '#/components/schemas/SessionOutputNotificationTarget'
+    SessionCreateNotificationTargetOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    NotificationTargetSlackUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the notification to.
       required:
       - name
       - url
@@ -788,7 +742,23 @@ components:
       required:
       - emails
       - name
-    NotificationTargetSlackUpdateInput:
+    SessionNotificationTargetListOutput:
+      type: object
+      properties:
+        notification_targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputNotificationTarget'
+        search_total:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_targets:
+          type: integer
+          format: int32
+    NotificationTargetPagerDutyCreateInput:
       type: object
       properties:
         description:
@@ -798,16 +768,16 @@ components:
         name:
           type: string
           description: Name of the notification target.
+        routing_key:
+          type: string
+          description: Routing key for the PagerDuty service.
         tags:
           type: array
           items:
             type: string
-        url:
-          type: string
-          description: URL to send the notification to.
       required:
       - name
-      - url
+      - routing_key
     NotificationTargetWebhookCreateInput:
       type: object
       properties:
@@ -834,7 +804,7 @@ components:
       required:
       - name
       - url
-    NotificationTargetPagerDutyCreateInput:
+    NotificationTargetPagerDutyUpdateInput:
       type: object
       properties:
         description:
@@ -854,11 +824,28 @@ components:
       required:
       - name
       - routing_key
+    SessionNotificationTargetLoadOutput:
+      type: object
+      properties:
+        notification_target:
+          $ref: '#/components/schemas/SessionOutputNotificationTarget'
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

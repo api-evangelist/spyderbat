@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Archive API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Archive API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Archive across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -29,7 +29,24 @@ paths:
       tags:
       - Archive
       summary: List agent archive zips
-      description: "\nLists the raw agent archive zip files for one or more sources within a bounded\ntime window. The window between start_time and end_time may not exceed 24 hours;\nif omitted it defaults to the last hour (end_time = now, start_time = now - 1h).\n\nResults are paginated: when the response includes a non-empty continuation_token,\npass it back (with the other parameters unchanged) to fetch the next page.\n\nEach result includes an opaque *name* that, with its source UID, can be passed to\nthe download endpoint to fetch the zip. The name carries no storage path or prefix.\n\n * Requires action source_data:Query on the organization"
+      description: 'Lists the raw agent archive zip files for one or more sources within a bounded
+
+        time window. The window between start_time and end_time may not exceed 24 hours;
+
+        if omitted it defaults to the last hour (end_time = now, start_time = now - 1h).
+
+
+        Results are paginated: when the response includes a non-empty continuation_token,
+
+        pass it back (with the other parameters unchanged) to fetch the next page.
+
+
+        Each result includes an opaque *name* that, with its source UID, can be passed to
+
+        the download endpoint to fetch the zip. The name carries no storage path or prefix.
+
+
+        * Requires action source_data:Query on the organization'
       operationId: ArchiveList
       parameters:
       - name: orgUID
@@ -94,15 +111,17 @@ paths:
           description: bad request
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/archive/{sourceUID}/{name}:
     get:
       tags:
       - Archive
       summary: Download an agent archive zip
-      description: "\nStreams a single raw agent archive zip identified by a source UID and a *name*\nreturned from the list endpoint.\n\n * Requires action source_data:Query on the organization"
+      description: 'Streams a single raw agent archive zip identified by a source UID and a *name*
+
+        returned from the list endpoint.
+
+
+        * Requires action source_data:Query on the organization'
       operationId: ArchiveDownload
       parameters:
       - name: name
@@ -143,22 +162,8 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    SessionArchiveListResponse:
-      type: object
-      properties:
-        continuation_token:
-          type: string
-          description: If present, more archives match; pass it back as continuation_token (with the same other parameters) to fetch the next page
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionArchiveObject'
-          description: Archives matching the query, in no particular order
     SessionArchiveObject:
       type: object
       properties:
@@ -180,11 +185,19 @@ components:
           type: integer
           description: Unix seconds of the earliest record contained in the archive
           format: int64
+    SessionArchiveListResponse:
+      type: object
+      properties:
+        continuation_token:
+          type: string
+          description: If present, more archives match; pass it back as continuation_token (with the same other parameters) to fetch the next page
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionArchiveObject'
+          description: Archives matching the query, in no particular order
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

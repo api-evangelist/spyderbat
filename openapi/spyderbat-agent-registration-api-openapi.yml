@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Agent Registration API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Agent Registration API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Agent Registration across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -22,22 +22,17 @@ security:
 - apiToken: []
 tags:
 - name: Agent Registration
-  description: "\nAgents registrations are used to authorize and group agents by the registration. \n"
+  description: Agents registrations are used to authorize and group agents by the registration.
 paths:
   /api/v1/org/{orgUID}/agent_registration/:
     get:
       tags:
       - Agent Registration
       summary: List agent registrations
-      description: '
-
-        Lists the agent registrations associated with an organization
+      description: 'Lists the agent registrations associated with an organization
 
 
-        * Requires the action  *agent_registration:List* on the organization
-
-
-        '
+        * Requires the action *agent_registration:List* on the organization'
       operationId: AgentRegistrationList
       parameters:
       - name: orgUID
@@ -71,14 +66,10 @@ paths:
       tags:
       - Agent Registration
       summary: Create an agent registration
-      description: '
-
-        Creates a new agent registration
+      description: 'Creates a new agent registration
 
 
-        * Requires the action  *agent_registration:Create* on the organization
-
-        '
+        * Requires the action *agent_registration:Create* on the organization'
       operationId: AgentRegistrationCreate
       parameters:
       - name: orgUID
@@ -109,23 +100,15 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent_registration/{uid}:
     get:
       tags:
       - Agent Registration
       summary: Load an agent registration
-      description: '
-
-        Load a specified agent registration
+      description: 'Load a specified agent registration
 
 
-        * Requires the action  *agent_registration:Load* on the agent registration
-
-
-        '
+        * Requires the action *agent_registration:Load* on the agent registration'
       operationId: AgentRegistrationLoad
       parameters:
       - name: orgUID
@@ -153,14 +136,10 @@ paths:
       tags:
       - Agent Registration
       summary: Update an agent registration
-      description: '
-
-        Updates an existing registration
+      description: 'Updates an existing registration
 
 
-        * Requires the action  *agent_registration:Update* on the organization and the registration
-
-        '
+        * Requires the action *agent_registration:Update* on the organization and the registration'
       operationId: AgentRegistrationUpdate
       parameters:
       - name: orgUID
@@ -195,23 +174,15 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent_registration/{uid}/download_link:
     get:
       tags:
       - Agent Registration
       summary: Get a download link for this registration
-      description: '
-
-        Create a download link for the registration
+      description: 'Create a download link for the registration
 
 
-        * Requires the action  *agent_registration:Load* on the agent registration
-
-
-        '
+        * Requires the action *agent_registration:Load* on the agent registration'
       operationId: AgentRegistrationDownloadLink
       parameters:
       - name: orgUID
@@ -237,23 +208,15 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/agent_registration/{uid}/log:
     get:
       tags:
       - Agent Registration
       summary: Get log of recent agent registration activity
-      description: '
-
-        Get lots relating to recent agent registration activity
+      description: 'Get lots relating to recent agent registration activity
 
 
-        * Requires the action  *agent_registration:ListLog* on the agent registration
-
-
-        '
+        * Requires the action *agent_registration:ListLog* on the agent registration'
       operationId: AgentRegistrationGetLog
       parameters:
       - name: orgUID
@@ -292,78 +255,37 @@ paths:
           description: permission denied
         '404':
           description: not found
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
-    AgentRegistrationCreateInput:
-      type: object
-      properties:
-        config:
-          $ref: '#/components/schemas/DaoAgentConfig'
-        created_by:
-          type: string
-          description: The user UID of the user who created the agent registration
-        description:
-          type: string
-          description: Description of the agent registration
-          maxLength: 512
-        name:
-          type: string
-          description: Name of the agent registration
-          maxLength: 64
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-    AgentRegistration:
-      type: object
-      properties:
-        config:
-          $ref: '#/components/schemas/DaoAgentConfig'
-        created_by:
-          type: string
-          description: The user UID of the user who created the agent registration
-        description:
-          type: string
-          description: Description of the agent registration
-          maxLength: 512
-        name:
-          type: string
-          description: Name of the agent registration
-          maxLength: 64
-        org_uid:
-          type: string
-          description: The OrgUID the registration is associated with
-          maxLength: 32
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        uid:
-          type: string
-          description: Agent Registration UID
-          maxLength: 64
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
     ApiAgentCreateHandlerOutput:
       type: object
       properties:
         uid:
           type: string
+    ApiAgentRegistrationDownloadLinkHandlerOutput:
+      type: object
+      properties:
+        agent_registration_uid:
+          type: string
+        orc_host:
+          type: string
+        orc_url:
+          type: string
+        url:
+          type: string
+    DaoAgentClass:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 64
+        rbac_roles:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+      required:
+      - name
     DaoAgentConfig:
       type: object
       properties:
@@ -395,101 +317,6 @@ components:
       description: Initial configuration to use when creating an agent
       required:
       - classes
-    DaoAgentLog:
-      type: object
-      properties:
-        agent_registration_uid:
-          type: string
-        agent_uid:
-          type: string
-        bytes_sent:
-          type: integer
-          format: int32
-        err_uid:
-          type: string
-        error:
-          type: string
-        ip_address:
-          type: string
-        msg:
-          type: string
-        org_uid:
-          type: string
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        source_uid:
-          type: string
-        time:
-          type: number
-          format: double
-        type:
-          type: string
-    ApiAgentRegistrationDownloadLinkHandlerOutput:
-      type: object
-      properties:
-        agent_registration_uid:
-          type: string
-        orc_host:
-          type: string
-        orc_url:
-          type: string
-        url:
-          type: string
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    DaoAgentClass:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 64
-        rbac_roles:
-          type: array
-          items:
-            type: string
-          maxItems: 10
-      required:
-      - name
-    AgentRegistrationUpdateInput:
-      type: object
-      properties:
-        config:
-          $ref: '#/components/schemas/DaoAgentConfig'
-        created_by:
-          type: string
-          description: The user UID of the user who created the agent registration
-        description:
-          type: string
-          description: Description of the agent registration
-          maxLength: 512
-        name:
-          type: string
-          description: Name of the agent registration
-          maxLength: 64
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -569,11 +396,141 @@ components:
         uname:
           type: string
       description: Runtime details
+    DaoAgentLog:
+      type: object
+      properties:
+        agent_registration_uid:
+          type: string
+        agent_uid:
+          type: string
+        bytes_sent:
+          type: integer
+          format: int32
+        err_uid:
+          type: string
+        error:
+          type: string
+        ip_address:
+          type: string
+        msg:
+          type: string
+        org_uid:
+          type: string
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        source_uid:
+          type: string
+        time:
+          type: number
+          format: double
+        type:
+          type: string
+    AgentRegistrationCreateInput:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/DaoAgentConfig'
+        created_by:
+          type: string
+          description: The user UID of the user who created the agent registration
+        description:
+          type: string
+          description: Description of the agent registration
+          maxLength: 512
+        name:
+          type: string
+          description: Name of the agent registration
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    AgentRegistrationUpdateInput:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/DaoAgentConfig'
+        created_by:
+          type: string
+          description: The user UID of the user who created the agent registration
+        description:
+          type: string
+          description: Description of the agent registration
+          maxLength: 512
+        name:
+          type: string
+          description: Name of the agent registration
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    AgentRegistration:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/DaoAgentConfig'
+        created_by:
+          type: string
+          description: The user UID of the user who created the agent registration
+        description:
+          type: string
+          description: Description of the agent registration
+          maxLength: 512
+        name:
+          type: string
+          description: Name of the agent registration
+          maxLength: 64
+        org_uid:
+          type: string
+          description: The OrgUID the registration is associated with
+          maxLength: 32
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        uid:
+          type: string
+          description: Agent Registration UID
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json

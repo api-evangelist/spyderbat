@@ -1,7 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Spyderbat Investigation API
-  version: 1.0.0
+  title: Spyderbat API UI & Public Investigation API
+  description: Restful APIs for use by UI & customers.
+  termsOfService: https://www.spyderbat.com/terms-of-use/
   contact:
     name: API Support
     url: https://api.prod.spyderbat.com/openapi
@@ -9,12 +10,11 @@ info:
   license:
     name: MIT
     url: https://mit-license.org/
-  termsOfService: https://www.spyderbat.com/terms-of-use/
+  version: 1.0.0
   x-logo:
     url: /static/sb-logo.svg
     backgroundColor: '#161A21'
     altText: Spyderbat Logo
-  description: 'Operations tagged Investigation across 2 of this provider''s published API definitions: spyderbat-openapi-original.json, spyderbat-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.prod.spyderbat.com/
   description: Spyderbat API Server
@@ -29,7 +29,10 @@ paths:
       tags:
       - Investigation
       summary: List investigations
-      description: "\nLists investigations\n\n * Will list investigations which the user has the action *investigation:Load* or *investigation:LoadExpired* on\n"
+      description: 'Lists investigations
+
+
+        * Will list investigations which the user has the action *investigation:Load* or *investigation:LoadExpired* on'
       operationId: InvestigationList
       parameters:
       - name: orgUID
@@ -58,7 +61,10 @@ paths:
       tags:
       - Investigation
       summary: Create an investigation
-      description: "\nCreate an investigationan\n\n * Requires the user have the action *investigation:Create*\n"
+      description: 'Create an investigationan
+
+
+        * Requires the user have the action *investigation:Create*'
       operationId: InvestigationCreate
       parameters:
       - name: orgUID
@@ -90,15 +96,17 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/investigation/{investigationUID}:
     get:
       tags:
       - Investigation
       summary: Load an investigation
-      description: "\nLoads an investigation by UID. \n\n * Requires action  *investigation:Load* to load an active investigation\n * Requires action *investigation:LoadExpired* to load expired investigations\n\n"
+      description: 'Loads an investigation by UID.
+
+
+        * Requires action *investigation:Load* to load an active investigation
+
+        * Requires action *investigation:LoadExpired* to load expired investigations'
       operationId: InvestigationLoad
       parameters:
       - name: investigationUID
@@ -124,7 +132,10 @@ paths:
       tags:
       - Investigation
       summary: Update an investigation
-      description: "\nUpdates the investigationan\n\n * Requires the user have the action *investigation:Update*\n"
+      description: 'Updates the investigationan
+
+
+        * Requires the user have the action *investigation:Update*'
       operationId: InvestigationUpdate
       parameters:
       - name: investigationUID
@@ -163,7 +174,10 @@ paths:
       tags:
       - Investigation
       summary: Delete an investigation
-      description: "\nDeletes an investigation, by setting valid_to=now so that the investigation is virtually deleted.\n\n * Requires the user have the action *investigation:Delete*\n"
+      description: 'Deletes an investigation, by setting valid_to=now so that the investigation is virtually deleted.
+
+
+        * Requires the user have the action *investigation:Delete*'
       operationId: InvestigationDelete
       parameters:
       - name: investigationUID
@@ -187,15 +201,15 @@ paths:
           description: OK
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/investigation/{investigationUID}/version/:
     get:
       tags:
       - Investigation
       summary: List Investigation Versions
-      description: "\nLists prior version of this investigation\n\n * Requires the user have the action *investigation:ListVersions*\n"
+      description: 'Lists prior version of this investigation
+
+
+        * Requires the user have the action *investigation:ListVersions*'
       operationId: InvestigationListVersions
       parameters:
       - name: investigationUID
@@ -219,15 +233,15 @@ paths:
                   $ref: '#/components/schemas/DaoInvestigation'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
   /api/v1/org/{orgUID}/investigation/{investigationUID}/version/{version}:
     get:
       tags:
       - Investigation
       summary: Load Investigation Version
-      description: "\nLoads a specific version of an investigation\n\n * Requires the user have the action *investigation:LoadVersion*\n"
+      description: 'Loads a specific version of an investigation
+
+
+        * Requires the user have the action *investigation:LoadVersion*'
       operationId: InvestigationLoadVersion
       parameters:
       - name: investigationUID
@@ -255,11 +269,102 @@ paths:
                 $ref: '#/components/schemas/DaoInvestigation'
         '403':
           description: permission denied
-    servers:
-    - url: https://api.prod.spyderbat.com/
-      description: Spyderbat API Server
 components:
   schemas:
+    DaoInvestigation:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: UID of user who created the investigation
+        data:
+          type: object
+          additionalProperties: {}
+          description: JSON Object associated with the investigation
+        modified_by:
+          type: string
+          description: UID of the user who last modified the investigation
+        modified_on:
+          type: string
+          description: Date the investigation was last modified
+          format: date-time
+        name:
+          type: string
+          description: Name of the investigation
+        org_uid:
+          type: string
+          description: Investigation OrgUID
+          maxLength: 64
+          minLength: 9
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        uid:
+          type: string
+          description: Investigation UID
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: Version of the investigation
+          format: int32
+    InvestigationUpdateInput:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: UID of user who created the investigation
+        data:
+          type: object
+          additionalProperties: {}
+          description: JSON Object associated with the investigation
+        modified_by:
+          type: string
+          description: UID of the user who last modified the investigation
+        modified_on:
+          type: string
+          description: Date the investigation was last modified
+          format: date-time
+        name:
+          type: string
+          description: Name of the investigation
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: Version of the investigation
+          format: int32
     InvestigationCreateInput:
       type: object
       properties:
@@ -333,57 +438,14 @@ components:
       required:
       - effect
       - sid
-    DaoInvestigation:
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    ApiInvestigationCreateOutput:
       type: object
       properties:
-        created_by:
-          type: string
-          description: UID of user who created the investigation
-        data:
-          type: object
-          additionalProperties: {}
-          description: JSON Object associated with the investigation
-        modified_by:
-          type: string
-          description: UID of the user who last modified the investigation
-        modified_on:
-          type: string
-          description: Date the investigation was last modified
-          format: date-time
-        name:
-          type: string
-          description: Name of the investigation
-        org_uid:
-          type: string
-          description: Investigation OrgUID
-          maxLength: 64
-          minLength: 9
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
         uid:
           type: string
-          description: Investigation UID
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-        version:
-          type: integer
-          description: Version of the investigation
-          format: int32
     ResourcePolicy:
       type: object
       properties:
@@ -400,57 +462,6 @@ components:
           type: string
           maxLength: 24
       description: Resource policy for RBAC
-    InvestigationUpdateInput:
-      type: object
-      properties:
-        created_by:
-          type: string
-          description: UID of user who created the investigation
-        data:
-          type: object
-          additionalProperties: {}
-          description: JSON Object associated with the investigation
-        modified_by:
-          type: string
-          description: UID of the user who last modified the investigation
-        modified_on:
-          type: string
-          description: Date the investigation was last modified
-          format: date-time
-        name:
-          type: string
-          description: Name of the investigation
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-        version:
-          type: integer
-          description: Version of the investigation
-          format: int32
-    ApiInvestigationCreateOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
     ValidationError:
       type: object
       properties:
@@ -471,6 +482,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- spyderbat-openapi-original.json
-- spyderbat-openapi.json
