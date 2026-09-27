@@ -110,22 +110,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    FingerprintDataSearchJobInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        policy_types:
-          type: array
-          items:
-            type: string
-          description: 'Analytics policy types to load for computing covered_by_policy on each result. Valid values: container, linux-service. Should match the policy_types used in the search request.'
-        unique:
-          type: boolean
-          description: Whether to return unique results (default false)
-      required:
-      - policy_types
     FingerprintDataSearchInput:
       type: object
       properties:
@@ -200,6 +184,22 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    FingerprintDataSearchJobInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        policy_types:
+          type: array
+          items:
+            type: string
+          description: 'Analytics policy types to load for computing covered_by_policy on each result. Valid values: container, linux-service. Should match the policy_types used in the search request.'
+        unique:
+          type: boolean
+          description: Whether to return unique results (default false)
+      required:
+      - policy_types
   securitySchemes:
     apiToken:
       type: http

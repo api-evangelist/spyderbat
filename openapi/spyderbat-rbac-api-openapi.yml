@@ -81,7 +81,22 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
 components:
   schemas:
-    ApiRBACActions:
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    CanUserPerformInput:
       type: object
       properties:
         actions:
@@ -106,7 +121,7 @@ components:
           type: string
           description: ResourceName which meets the requirements of RBAC resource naming
           maxLength: 128
-    CanUserPerformInput:
+    ApiRBACActions:
       type: object
       properties:
         actions:
@@ -114,21 +129,6 @@ components:
           items:
             $ref: '#/components/schemas/RBACAction'
           maxItems: 25
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http

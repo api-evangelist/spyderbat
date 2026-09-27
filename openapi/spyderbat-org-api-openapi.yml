@@ -573,6 +573,70 @@ paths:
           description: permission denied
 components:
   schemas:
+    DaoOrgRoleResponse:
+      type: object
+      properties:
+        org_name:
+          type: string
+          description: The organization name the user has the assigned role on
+        org_uid:
+          type: string
+          description: The organization UID the user has the assigned role on
+        role_uid:
+          type: string
+          description: The role the user is assigned
+        user_email:
+          type: string
+          description: The email address associated with the user
+        user_uid:
+          type: string
+          description: The user uid for the user
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    OrgInviteUsersInput:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+          maxItems: 64
+          minItems: 1
+        roles:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+          minItems: 1
+    OrgUnassignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
     NotificationPolicy:
       type: object
       properties:
@@ -674,39 +738,61 @@ components:
       required:
       - name
       - owner_email
-    DaoOrgQuotaCases:
+    ResourcePolicy:
       type: object
       properties:
-        enabled:
-          type: boolean
-          description: Enable case creation (L1 analysis) for this org
-        l2_enabled:
-          type: boolean
-          description: Enable L2 (senior AI) analysis for this org; requires enabled
-        score_threshold:
-          type: integer
-          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
-          format: int32
-          maximum: 10000
-        ui:
-          type: boolean
-          description: Expose the cases UI in the console for this org; requires enabled
-      description: Per-org feature gates for the cases service; replaces the existing block when present
-    OrgInviteUsersInput:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    NotificationPolicyDestination:
       type: object
       properties:
-        emails:
+        data:
+          description: UI-supplied data
+        description:
+          type: string
+        email:
           type: array
           items:
             type: string
-          maxItems: 64
-          minItems: 1
-        roles:
+            format: email
+        org_uid:
+          type: string
+        slack:
+          type: object
+          properties:
+            url:
+              type: string
+              format: url
+          required:
+          - url
+        users:
           type: array
           items:
             type: string
-          maxItems: 10
-          minItems: 1
+        webhook:
+          type: object
+          properties:
+            no_tls_validation:
+              type: boolean
+            url:
+              type: string
+              format: url
+          required:
+          - url
+      description: A notification policy destination, containing one and only one of the available types
+      maxProperties: 3
+      minProperties: 1
     DaoOrgQuota:
       type: object
       properties:
@@ -757,13 +843,6 @@ components:
       required:
       - max_active_sources
       - max_org_roles
-    OrgTestNotificationTargetInput:
-      type: object
-      properties:
-        target:
-          type: string
-          maxLength: 64
-          minLength: 1
     RbacStatement:
       type: object
       properties:
@@ -794,89 +873,6 @@ components:
       required:
       - effect
       - sid
-    DaoOrgRoleResponse:
-      type: object
-      properties:
-        org_name:
-          type: string
-          description: The organization name the user has the assigned role on
-        org_uid:
-          type: string
-          description: The organization UID the user has the assigned role on
-        role_uid:
-          type: string
-          description: The role the user is assigned
-        user_email:
-          type: string
-          description: The email address associated with the user
-        user_uid:
-          type: string
-          description: The user uid for the user
-    Expr:
-      type: object
-      properties:
-        and:
-          type: array
-          items:
-            $ref: '#/components/schemas/Expr'
-          description: True if all sub-expressions are true
-        array_contains_str:
-          type: string
-          description: True if array property contains the string
-        contains_str:
-          type: string
-          description: True if property contains the string
-        equals:
-          description: True if property equals the value
-        exists:
-          type: boolean
-          description: True if property exists
-        greater_than:
-          type: number
-          description: True if property is greater than the value
-        has_prefix:
-          type: string
-          description: True if property starts with the string
-        has_suffix:
-          type: string
-          description: True if property ends with the string
-        in:
-          type: array
-          items: {}
-          description: True if property matches any value
-        less_than:
-          type: number
-          description: True if property is less than the value
-        not:
-          $ref: '#/components/schemas/Expr'
-        or:
-          type: array
-          items:
-            $ref: '#/components/schemas/Expr'
-          description: True if any sub-expression is true
-        property:
-          type: string
-          description: Property to match against, in dotted notation
-        re_match:
-          type: string
-          description: True if property matches the regex
-        schema:
-          type: string
-          description: Matches records with the specified schema
-      description: A filter expression node. Exactly one condition field must be specified. Use `and`, `or`, `not` for compound expressions.
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
-    OrgUnassignRoleInput:
-      type: object
-      properties:
-        role_uid:
-          type: string
-          description: RoleUID
-          maxLength: 64
-        user_uid:
-          type: string
-          description: UserUID
     RbacRole:
       type: object
       properties:
@@ -892,6 +888,13 @@ components:
           type: string
         version:
           type: string
+    OrgTestNotificationTargetInput:
+      type: object
+      properties:
+        target:
+          type: string
+          maxLength: 64
+          minLength: 1
     OrgUpdateInput:
       type: object
       properties:
@@ -962,45 +965,58 @@ components:
       required:
       - name
       - owner_email
-    NotificationPolicyDestination:
+    Expr:
       type: object
       properties:
-        data:
-          description: UI-supplied data
-        description:
-          type: string
-        email:
+        and:
           type: array
           items:
-            type: string
-            format: email
-        org_uid:
+            $ref: '#/components/schemas/Expr'
+          description: True if all sub-expressions are true
+        array_contains_str:
           type: string
-        slack:
-          type: object
-          properties:
-            url:
-              type: string
-              format: url
-          required:
-          - url
-        users:
+          description: True if array property contains the string
+        contains_str:
+          type: string
+          description: True if property contains the string
+        equals:
+          description: True if property equals the value
+        exists:
+          type: boolean
+          description: True if property exists
+        greater_than:
+          type: number
+          description: True if property is greater than the value
+        has_prefix:
+          type: string
+          description: True if property starts with the string
+        has_suffix:
+          type: string
+          description: True if property ends with the string
+        in:
+          type: array
+          items: {}
+          description: True if property matches any value
+        less_than:
+          type: number
+          description: True if property is less than the value
+        not:
+          $ref: '#/components/schemas/Expr'
+        or:
           type: array
           items:
-            type: string
-        webhook:
-          type: object
-          properties:
-            no_tls_validation:
-              type: boolean
-            url:
-              type: string
-              format: url
-          required:
-          - url
-      description: A notification policy destination, containing one and only one of the available types
-      maxProperties: 3
-      minProperties: 1
+            $ref: '#/components/schemas/Expr'
+          description: True if any sub-expression is true
+        property:
+          type: string
+          description: Property to match against, in dotted notation
+        re_match:
+          type: string
+          description: True if property matches the regex
+        schema:
+          type: string
+          description: Matches records with the specified schema
+      description: A filter expression node. Exactly one condition field must be specified. Use `and`, `or`, `not` for compound expressions.
     OrgAssignRoleInput:
       type: object
       properties:
@@ -1011,22 +1027,6 @@ components:
         user_uid:
           type: string
           description: UserUID
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
     ValidationError:
       type: object
       properties:

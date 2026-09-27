@@ -417,6 +417,88 @@ paths:
           description: permission denied
 components:
   schemas:
+    SpyctlMergeInput:
+      type: object
+      properties:
+        merge_objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoAnalyticResourceObject'
+          description: The object(s) to merge into the primary object.
+        object:
+          $ref: '#/components/schemas/DaoAnalyticResourceObject'
+      required:
+      - merge_objects
+      - object
+    SessionSpyctlReportSpecArgument:
+      type: object
+      properties:
+        default:
+          type: string
+          description: Suggested default value for the argument
+        description:
+          type: string
+          description: Long form description of the argument
+        name:
+          type: string
+          description: Name of the argument
+        required:
+          type: boolean
+          description: Is the argument required
+        short:
+          type: string
+          description: Short form description of the argument
+        type:
+          type: string
+          description: Type of the argument
+    SpyctlValidateInput:
+      type: object
+      properties:
+        object:
+          $ref: '#/components/schemas/DaoAnalyticResourceObject'
+      required:
+      - object
+    SpyctlDiffInput:
+      type: object
+      properties:
+        content_type:
+          type: string
+          description: 'The content type of the diff output. Possible values are: text, json.'
+        diff_objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoAnalyticResourceObject'
+          description: The object(s) to diff the primary object with.
+        full_diff:
+          type: boolean
+          description: When content_type is omitted or set to text this returns the full diff text instead of a summary.
+        include_irrelevant:
+          type: boolean
+          description: When set to true, the output of this API will return lists of objects, by kind, that had no impact on the diff. This option may increase compute time.
+        object:
+          $ref: '#/components/schemas/DaoAnalyticResourceObject'
+      required:
+      - diff_objects
+      - object
+    SessionSpyctlGuardianPolicyBuildOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+    SessionSpyctlReportInventoryOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        inventory:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpyctlReportSpec'
+          description: The inventory of reports available to generate for the org
     SessionSpyctlReportSpec:
       type: object
       properties:
@@ -439,14 +521,120 @@ components:
           items:
             type: string
           description: List of output formats available for the report
-    SessionSpyctlSuppressionPolicyBuildOutput:
+    SessionSpyctlDiffOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        policy:
-          $ref: '#/components/schemas/DaoPolicyObject'
+        diff_data:
+          type: string
+        irrelevant:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: Includes any objects that were irrelevant to the diff. The include_irrelevant option must be set to true to return this data.
+    SessionSpyctlReportOutput:
+      type: object
+      properties:
+        change_log:
+          type: array
+          items:
+            type: array
+            items: {}
+          description: Change log of the report generation process
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        error:
+          type: string
+          description: Error message if the report generation failed
+        formats:
+          type: array
+          items:
+            type: string
+          description: List of formats available for the report
+        id:
+          type: string
+          description: Identifier for the generated report, to use in subsequent status update requests
+        input:
+          type: object
+          additionalProperties: {}
+          description: Input arguments for the report
+        status:
+          type: string
+          description: Status of the report generation
+    SessionSpyctlReportDeleteOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+    DaoPolicyObject:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: API Version
+        kind:
+          type: string
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: Policy
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    SessionSpyctlValidateOutput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system
+        invalid_message:
+          type: string
+          description: If the input object is invalid, InvalidMessage will be populated with descriptions of the detected syntax errors
+    SpyctlReportListPagerInput:
+      type: object
+      properties:
+        continuation_token:
+          type: string
+          description: token to continue the list of reports
+        scheduled_time_from:
+          type: number
+          description: Get only reports that were scheduled after this timestamp. If omitted, defaulted to 1 week ago.
+          format: float
+        scheduled_time_to:
+          type: number
+          description: Get only reports that were scheduled before this timestamp. If omitted, defaults to current time.
+          format: float
+    SpyctlReportGenerateInput:
+      type: object
+      properties:
+        report_args:
+          type: object
+          additionalProperties: {}
+          description: name value pair arguments for the report to generate
+        report_id:
+          type: string
+          description: identifier for the type of report to generate
+        report_tags:
+          type: object
+          additionalProperties: {}
+          description: name value pairs to tag the report to generate
+      required:
+      - report_args
+      - report_id
     GuardianPolicyBuildInput:
       type: object
       properties:
@@ -465,20 +653,59 @@ components:
       required:
       - input_objects
       - mode
-    SessionSpyctlReportDeleteOutput:
+    SessionSpyctlReportListOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-    SessionSpyctlGuardianPolicyBuildOutput:
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpyctlReportOutput'
+          description: List of reports
+    SuppressionPolicyBuildInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Custom name for the suppression policy
+          maxLength: 64
+        object_uid:
+          type: string
+          description: The uid of the object to suppress
+          maxLength: 64
+        scope_to_users:
+          type: boolean
+          description: If set to true, the policy will automatically be scoped to the users associated with the object referenced by ObjUID; unless overwritten by the selectors.
+          default: false
+        selectors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: 'The way to define a custom scope for the policy. Possible keys are: trigger-class, trigger-ancestors, users, interactive-users, non-interactive-users. Values may be wildcarded with ''*''.'
+          maxProperties: 5
+        type:
+          type: string
+          maxLength: 64
+      required:
+      - type
+    SessionSpyctlReportListPagerOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        policy:
-          $ref: '#/components/schemas/DaoPolicyObject'
+        continuation_token:
+          type: string
+          description: Continuation token for the next page of reports
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpyctlReportOutput'
+          description: List of reports
     SessionSpyctlMergeOutput:
       type: object
       properties:
@@ -513,135 +740,14 @@ components:
       - apiVersion
       - kind
       - metadata
-    SessionSpyctlReportListPagerOutput:
+    SessionSpyctlSuppressionPolicyBuildOutput:
       type: object
       properties:
         context_uid:
           type: string
           description: Context UID for this query, it's used to track the query as it flows through the system
-        continuation_token:
-          type: string
-          description: Continuation token for the next page of reports
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionSpyctlReportOutput'
-          description: List of reports
-    SuppressionPolicyBuildInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Custom name for the suppression policy
-          maxLength: 64
-        object_uid:
-          type: string
-          description: The uid of the object to suppress
-          maxLength: 64
-        scope_to_users:
-          type: boolean
-          description: If set to true, the policy will automatically be scoped to the users associated with the object referenced by ObjUID; unless overwritten by the selectors.
-          default: false
-        selectors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-          description: 'The way to define a custom scope for the policy. Possible keys are: trigger-class, trigger-ancestors, users, interactive-users, non-interactive-users. Values may be wildcarded with ''*''.'
-          maxProperties: 5
-        type:
-          type: string
-          maxLength: 64
-      required:
-      - type
-    SessionSpyctlReportSpecArgument:
-      type: object
-      properties:
-        default:
-          type: string
-          description: Suggested default value for the argument
-        description:
-          type: string
-          description: Long form description of the argument
-        name:
-          type: string
-          description: Name of the argument
-        required:
-          type: boolean
-          description: Is the argument required
-        short:
-          type: string
-          description: Short form description of the argument
-        type:
-          type: string
-          description: Type of the argument
-    SpyctlMergeInput:
-      type: object
-      properties:
-        merge_objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoAnalyticResourceObject'
-          description: The object(s) to merge into the primary object.
-        object:
-          $ref: '#/components/schemas/DaoAnalyticResourceObject'
-      required:
-      - merge_objects
-      - object
-    SpyctlDiffInput:
-      type: object
-      properties:
-        content_type:
-          type: string
-          description: 'The content type of the diff output. Possible values are: text, json.'
-        diff_objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoAnalyticResourceObject'
-          description: The object(s) to diff the primary object with.
-        full_diff:
-          type: boolean
-          description: When content_type is omitted or set to text this returns the full diff text instead of a summary.
-        include_irrelevant:
-          type: boolean
-          description: When set to true, the output of this API will return lists of objects, by kind, that had no impact on the diff. This option may increase compute time.
-        object:
-          $ref: '#/components/schemas/DaoAnalyticResourceObject'
-      required:
-      - diff_objects
-      - object
-    SpyctlReportGenerateInput:
-      type: object
-      properties:
-        report_args:
-          type: object
-          additionalProperties: {}
-          description: name value pair arguments for the report to generate
-        report_id:
-          type: string
-          description: identifier for the type of report to generate
-        report_tags:
-          type: object
-          additionalProperties: {}
-          description: name value pairs to tag the report to generate
-      required:
-      - report_args
-      - report_id
-    SpyctlReportListPagerInput:
-      type: object
-      properties:
-        continuation_token:
-          type: string
-          description: token to continue the list of reports
-        scheduled_time_from:
-          type: number
-          description: Get only reports that were scheduled after this timestamp. If omitted, defaulted to 1 week ago.
-          format: float
-        scheduled_time_to:
-          type: number
-          description: Get only reports that were scheduled before this timestamp. If omitted, defaults to current time.
-          format: float
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
     ValidationError:
       type: object
       properties:
@@ -657,112 +763,6 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    SessionSpyctlReportInventoryOutput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        inventory:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionSpyctlReportSpec'
-          description: The inventory of reports available to generate for the org
-    SessionSpyctlReportListOutput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionSpyctlReportOutput'
-          description: List of reports
-    SpyctlValidateInput:
-      type: object
-      properties:
-        object:
-          $ref: '#/components/schemas/DaoAnalyticResourceObject'
-      required:
-      - object
-    SessionSpyctlReportOutput:
-      type: object
-      properties:
-        change_log:
-          type: array
-          items:
-            type: array
-            items: {}
-          description: Change log of the report generation process
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        error:
-          type: string
-          description: Error message if the report generation failed
-        formats:
-          type: array
-          items:
-            type: string
-          description: List of formats available for the report
-        id:
-          type: string
-          description: Identifier for the generated report, to use in subsequent status update requests
-        input:
-          type: object
-          additionalProperties: {}
-          description: Input arguments for the report
-        status:
-          type: string
-          description: Status of the report generation
-    DaoPolicyObject:
-      type: object
-      properties:
-        apiVersion:
-          type: string
-          description: API Version
-        kind:
-          type: string
-          description: Kind
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: Metadata
-        spec:
-          type: object
-          additionalProperties: {}
-          description: Spec
-      description: Policy
-      required:
-      - apiVersion
-      - kind
-      - metadata
-      - spec
-    SessionSpyctlDiffOutput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        diff_data:
-          type: string
-        irrelevant:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-          description: Includes any objects that were irrelevant to the diff. The include_irrelevant option must be set to true to return this data.
-    SessionSpyctlValidateOutput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system
-        invalid_message:
-          type: string
-          description: If the input object is invalid, InvalidMessage will be populated with descriptions of the detected syntax errors
   securitySchemes:
     apiToken:
       type: http

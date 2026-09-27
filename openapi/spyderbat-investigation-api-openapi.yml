@@ -271,6 +271,11 @@ paths:
           description: permission denied
 components:
   schemas:
+    ApiInvestigationCreateOutput:
+      type: object
+      properties:
+        uid:
+          type: string
     DaoInvestigation:
       type: object
       properties:
@@ -322,49 +327,22 @@ components:
           type: integer
           description: Version of the investigation
           format: int32
-    InvestigationUpdateInput:
+    ResourcePolicy:
       type: object
       properties:
-        created_by:
-          type: string
-          description: UID of user who created the investigation
-        data:
-          type: object
-          additionalProperties: {}
-          description: JSON Object associated with the investigation
-        modified_by:
-          type: string
-          description: UID of the user who last modified the investigation
-        modified_on:
-          type: string
-          description: Date the investigation was last modified
-          format: date-time
         name:
           type: string
-          description: Name of the investigation
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        tags:
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
           type: array
           items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
         version:
-          type: integer
-          description: Version of the investigation
-          format: int32
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
     InvestigationCreateInput:
       type: object
       properties:
@@ -438,30 +416,52 @@ components:
       required:
       - effect
       - sid
+    InvestigationUpdateInput:
+      type: object
+      properties:
+        created_by:
+          type: string
+          description: UID of user who created the investigation
+        data:
+          type: object
+          additionalProperties: {}
+          description: JSON Object associated with the investigation
+        modified_by:
+          type: string
+          description: UID of the user who last modified the investigation
+        modified_on:
+          type: string
+          description: Date the investigation was last modified
+          format: date-time
+        name:
+          type: string
+          description: Name of the investigation
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+        version:
+          type: integer
+          description: Version of the investigation
+          format: int32
     RbacConditionMap:
       type: object
       description: Additional conditions which may be applied
-    ApiInvestigationCreateOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
     ValidationError:
       type: object
       properties:

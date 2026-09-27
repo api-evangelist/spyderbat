@@ -567,102 +567,6 @@ components:
       properties:
         notification_template:
           $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-    SessionLoadNotificationTemplateOutput:
-      type: object
-      properties:
-        notification_template:
-          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-    SessionListNotificationTemplateOutput:
-      type: object
-      properties:
-        notification_templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-        search_total:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_templates:
-          type: integer
-          format: int32
-    NotificationTemplateSlackUpdateInput:
-      type: object
-      properties:
-        blocks:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          description: Blocks to send to Slack.
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification template.
-        tags:
-          type: array
-          items:
-            type: string
-        text:
-          type: string
-          description: Message to send to Slack.
-      required:
-      - name
-      - text
-    NotificationTemplateWebhookCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        entire_object:
-          type: boolean
-          description: Send the entire object as the payload. Overrides the payload field.
-        name:
-          type: string
-          description: Name of the notification template.
-        payload:
-          type: object
-          additionalProperties: {}
-          description: Custom payload to send to the webhook.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-    NotificationTemplateSlackCreateInput:
-      type: object
-      properties:
-        blocks:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          description: Blocks to send to Slack.
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification template.
-        tags:
-          type: array
-          items:
-            type: string
-        text:
-          type: string
-          description: Message to send to Slack.
-      required:
-      - name
-      - text
     NotificationTemplateEmailCreateInput:
       type: object
       properties:
@@ -689,6 +593,11 @@ components:
       required:
       - name
       - subject
+    SessionLoadNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_template:
+          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
     SessionOutputNotificationTemplate:
       type: object
       properties:
@@ -739,51 +648,58 @@ components:
           format: int32
       required:
       - name
-    NotificationTemplatePagerDutyCreateInput:
+    NotificationTemplateSlackUpdateInput:
       type: object
       properties:
-        class:
-          type: string
-          description: The class/type of the event.
-        component:
-          type: string
-          description: Component of the source machine that is responsible for the event.
-        custom_details:
-          type: object
-          additionalProperties: {}
-          description: Custom details to include in the event.
-        dedup_key:
-          type: string
-          description: A unique identifier for the event, used to deduplicate events.
-          maxLength: 255
+        blocks:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Blocks to send to Slack.
         description:
           type: string
           description: A brief description explaining what the template is for.
           maxLength: 500
-        group:
-          type: string
-          description: Logical grouping of components of a service, useful for filtering alerts.
         name:
           type: string
           description: Name of the notification template.
-        severity:
-          type: string
-          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
-        source:
-          type: string
-          description: The Source machine of the event.
-        summary:
-          type: string
-          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
         tags:
           type: array
           items:
             type: string
+        text:
+          type: string
+          description: Message to send to Slack.
       required:
       - name
-      - severity
-      - source
-      - summary
+      - text
+    NotificationTemplateSlackCreateInput:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Blocks to send to Slack.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        tags:
+          type: array
+          items:
+            type: string
+        text:
+          type: string
+          description: Message to send to Slack.
+      required:
+      - name
+      - text
     NotificationTemplateEmailUpdateInput:
       type: object
       properties:
@@ -815,6 +731,29 @@ components:
       properties:
         uid:
           type: string
+    NotificationTemplateWebhookCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        entire_object:
+          type: boolean
+          description: Send the entire object as the payload. Overrides the payload field.
+        name:
+          type: string
+          description: Name of the notification template.
+        payload:
+          type: object
+          additionalProperties: {}
+          description: Custom payload to send to the webhook.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
     NotificationTemplatePagerDutyUpdateInput:
       type: object
       properties:
@@ -860,6 +799,22 @@ components:
       - severity
       - source
       - summary
+    SessionListNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+        search_total:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_templates:
+          type: integer
+          format: int32
     ValidationError:
       type: object
       properties:
@@ -875,6 +830,51 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    NotificationTemplatePagerDutyCreateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
   securitySchemes:
     apiToken:
       type: http

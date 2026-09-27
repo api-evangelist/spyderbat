@@ -177,6 +177,22 @@ paths:
           description: not found
 components:
   schemas:
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
     RbacStatement:
       type: object
       properties:
@@ -207,6 +223,9 @@ components:
       required:
       - effect
       - sid
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -286,9 +305,6 @@ components:
         uname:
           type: string
       description: Runtime details
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
     Agent:
       type: object
       properties:
@@ -359,22 +375,6 @@ components:
           type: string
           description: Valid to date, the date this object is valid to
           format: date-time
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
   securitySchemes:
     apiToken:
       type: http

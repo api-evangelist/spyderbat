@@ -315,6 +315,61 @@ paths:
           description: not found
 components:
   schemas:
+    SessionListNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
+        search_total:
+          type: integer
+          format: int32
+        total_notification_settings:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+    SessionSetNotificationSettingsOutput:
+      type: object
+      properties:
+        NotificationSettings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    NotificationSettingsSetInput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        trigger:
+          type: string
+          description: Used when setting the notifications for a specific trigger is required. Agent health has multiple so it must be specified.
+    NotificationSettingsTestInput:
+      type: object
+      properties:
+        notification_settings_uid:
+          type: string
+          description: The notification settings UID to test.
+        record:
+          type: object
+          additionalProperties: {}
+          description: Record is the data to use when testing the notification. Fields in the record can be dereferenced by the template. For saved query notifications this will be the model or event record that matched the query.
+        target_uid:
+          type: string
+          description: The target UID to test.
+        template_uid:
+          type: string
+          description: The template UID to test.
+    SessionLoadNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
+    SessionDisableNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
     DaoNotificationSettings:
       type: object
       properties:
@@ -349,61 +404,30 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
-    NotificationSettingsTestInput:
+    NotificationSettingsInitializeInput:
       type: object
       properties:
-        notification_settings_uid:
+        notification_targets:
+          type: array
+          items:
+            type: string
+          description: The uids of the notification targets to send notifications to. This can be configured later.
+    SessionInitializeNotificationSettingsOutput:
+      type: object
+      properties:
+        NotificationSettings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    SessionTestNotificationOutput:
+      type: object
+      properties:
+        message:
           type: string
-          description: The notification settings UID to test.
-        record:
-          type: object
-          additionalProperties: {}
-          description: Record is the data to use when testing the notification. Fields in the record can be dereferenced by the template. For saved query notifications this will be the model or event record that matched the query.
-        target_uid:
-          type: string
-          description: The target UID to test.
-        template_uid:
-          type: string
-          description: The template UID to test.
+          description: Contains information on inspecting the success or failure of the test notification.
     SessionEnableNotificationSettingsOutput:
       type: object
       properties:
         notification_settings:
           $ref: '#/components/schemas/DaoNotificationSettings'
-    SessionLoadNotificationSettingsOutput:
-      type: object
-      properties:
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
-    NotificationSettingsSetInput:
-      type: object
-      properties:
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-        trigger:
-          type: string
-          description: Used when setting the notifications for a specific trigger is required. Agent health has multiple so it must be specified.
-    SessionDisableNotificationSettingsOutput:
-      type: object
-      properties:
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-    SessionListNotificationSettingsOutput:
-      type: object
-      properties:
-        notification_settings:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
-        search_total:
-          type: integer
-          format: int32
-        total_notification_settings:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
     DaoNotificationSettingsDBObj:
       type: object
       properties:
@@ -451,30 +475,6 @@ components:
         valid_from:
           type: string
           format: date-time
-    SessionTestNotificationOutput:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Contains information on inspecting the success or failure of the test notification.
-    SessionInitializeNotificationSettingsOutput:
-      type: object
-      properties:
-        NotificationSettings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-    NotificationSettingsInitializeInput:
-      type: object
-      properties:
-        notification_targets:
-          type: array
-          items:
-            type: string
-          description: The uids of the notification targets to send notifications to. This can be configured later.
-    SessionSetNotificationSettingsOutput:
-      type: object
-      properties:
-        NotificationSettings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
   securitySchemes:
     apiToken:
       type: http

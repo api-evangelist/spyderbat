@@ -475,6 +475,11 @@ paths:
           description: permission denied
 components:
   schemas:
+    ApiSourceCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
     ApiCountResponse:
       type: object
       properties:
@@ -540,6 +545,22 @@ components:
           type: string
           description: Valid to date, the date this object is valid to
           format: date-time
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
     SrcCreateInput:
       type: object
       properties:
@@ -599,6 +620,26 @@ components:
       required:
       - effect
       - sid
+    ApiSOARListHandlerOutput:
+      type: object
+      properties:
+        investigate_source_url:
+          type: string
+        source:
+          $ref: '#/components/schemas/Source'
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    DaoSourceAgg:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The count for the property value
+          format: int64
+        propertyvalue:
+          type: string
+          description: The value of a property being aggregated upon
     Source:
       type: object
       properties:
@@ -747,47 +788,6 @@ components:
         uname:
           type: string
       description: Runtime details
-    ApiSourceCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
-    DaoSourceAgg:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: The count for the property value
-          format: int64
-        propertyvalue:
-          type: string
-          description: The value of a property being aggregated upon
-    ApiSOARListHandlerOutput:
-      type: object
-      properties:
-        investigate_source_url:
-          type: string
-        source:
-          $ref: '#/components/schemas/Source'
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
     ValidationError:
       type: object
       properties:

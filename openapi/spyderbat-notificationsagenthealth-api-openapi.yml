@@ -275,27 +275,11 @@ components:
       properties:
         uid:
           type: string
-    SessionAgentHealthNotificationUpdateOutput:
+    SessionAgentHealthNotificationLoadOutput:
       type: object
       properties:
         agent_health_notification_settings:
           $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-    SessionAgentHealthNotificationListOutput:
-      type: object
-      properties:
-        agent_health_notifications_settings_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-        search_total:
-          type: integer
-          format: int32
-        total_agent_health_notifications:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
     DaoNotificationSettingsObj:
       type: object
       properties:
@@ -330,6 +314,22 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
+    DaoAgentHealthNotificationSettings:
+      type: object
+      properties:
+        agent_healthy:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_offline:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_online:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_unhealthy:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+    SessionAgentHealthNotificationUpdateOutput:
+      type: object
+      properties:
+        agent_health_notification_settings:
+          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
     AgentHealthNotificationSettingsCreateInput:
       type: object
       properties:
@@ -347,35 +347,6 @@ components:
           maxLength: 65535
       required:
       - name
-    AgentHealthNotificationSettingsUpdateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          maxLength: 500
-        name:
-          type: string
-          maxLength: 128
-          minLength: 1
-        notification_settings:
-          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
-        scope_query:
-          type: string
-          maxLength: 65535
-          minLength: 1
-      required:
-      - name
-    DaoAgentHealthNotificationSettings:
-      type: object
-      properties:
-        agent_healthy:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        agent_offline:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        agent_online:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        agent_unhealthy:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
     SessionOutputAgentHealthNotification:
       type: object
       properties:
@@ -416,11 +387,24 @@ components:
         version:
           type: integer
           format: int32
-    SessionAgentHealthNotificationLoadOutput:
+    AgentHealthNotificationSettingsUpdateInput:
       type: object
       properties:
-        agent_health_notification_settings:
-          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
+        scope_query:
+          type: string
+          maxLength: 65535
+          minLength: 1
+      required:
+      - name
     ValidationError:
       type: object
       properties:
@@ -436,6 +420,22 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    SessionAgentHealthNotificationListOutput:
+      type: object
+      properties:
+        agent_health_notifications_settings_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+        search_total:
+          type: integer
+          format: int32
+        total_agent_health_notifications:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
   securitySchemes:
     apiToken:
       type: http

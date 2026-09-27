@@ -214,26 +214,6 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
 components:
   schemas:
-    AgentSetAgentWorkInput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
-    ApiAgentWorkOutput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
     Orc_apiBatWork:
       type: object
       properties:
@@ -286,6 +266,16 @@ components:
           description: User defined tags
         work:
           $ref: '#/components/schemas/Orc_apiAgentWork'
+    AgentSetAgentWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
     ValidationError:
       type: object
       properties:
@@ -301,6 +291,16 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    ApiAgentWorkOutput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
   securitySchemes:
     apiToken:
       type: http

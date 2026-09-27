@@ -351,40 +351,6 @@ components:
         query:
           type: string
           maxLength: 65535
-    DaoNotificationSettings:
-      type: object
-      properties:
-        aggregate:
-          type: boolean
-          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
-        aggregate_by:
-          type: array
-          items:
-            type: string
-          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
-        aggregate_seconds:
-          type: integer
-          description: Overwrite the default notification aggregation window.
-          format: int64
-        cooldown:
-          type: integer
-          description: Cooldown in seconds for the notification.
-          format: int64
-        cooldown_by:
-          type: array
-          items:
-            type: string
-          description: Cooldown by the specified fields.
-        is_enabled:
-          type: boolean
-        target_map:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of notification targets to optional templates.
-        uid:
-          type: string
-          description: Not required for creation, will be auto-generated. Included in return values for reference.
     SessionOutputSavedQuery:
       type: object
       properties:
@@ -447,55 +413,6 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
-    SessionLoadSavedQueryOutput:
-      type: object
-      properties:
-        saved_query:
-          $ref: '#/components/schemas/SessionOutputSavedQuery'
-    SessionListSavedQueryOutput:
-      type: object
-      properties:
-        saved_queries:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputSavedQuery'
-          description: List of saved queries
-        search_total:
-          type: integer
-          description: Total number of saved queries matching the search criteria
-          format: int32
-        total_pages:
-          type: integer
-          description: Total number of pages of search results
-          format: int32
-        total_queries:
-          type: integer
-          description: Total number of saved queries
-          format: int32
-    SessionCreateSavedQueryOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    SessionSavedQueryShowAdditionalSettingsOutput:
-      type: object
-      properties:
-        additional_settings:
-          type: object
-          additionalProperties: {}
-          description: Additional settings fields and their corresponding types
-    SessionUpdateSavedQueryOutput:
-      type: object
-      properties:
-        saved_query:
-          $ref: '#/components/schemas/SessionOutputSavedQuery'
-    SessionQueryDependentResources:
-      type: object
-      properties:
-        custom_flags:
-          type: array
-          items:
-            type: string
     SavedQueryCreateInput:
       type: object
       properties:
@@ -522,6 +439,89 @@ components:
       - name
       - query
       - schema
+    SessionQueryDependentResources:
+      type: object
+      properties:
+        custom_flags:
+          type: array
+          items:
+            type: string
+    SessionCreateSavedQueryOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SessionSavedQueryShowAdditionalSettingsOutput:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+          description: Additional settings fields and their corresponding types
+    DaoNotificationSettings:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionLoadSavedQueryOutput:
+      type: object
+      properties:
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
+    SessionUpdateSavedQueryOutput:
+      type: object
+      properties:
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
+    SessionListSavedQueryOutput:
+      type: object
+      properties:
+        saved_queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputSavedQuery'
+          description: List of saved queries
+        search_total:
+          type: integer
+          description: Total number of saved queries matching the search criteria
+          format: int32
+        total_pages:
+          type: integer
+          description: Total number of pages of search results
+          format: int32
+        total_queries:
+          type: integer
+          description: Total number of saved queries
+          format: int32
     ValidationError:
       type: object
       properties:

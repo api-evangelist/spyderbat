@@ -257,22 +257,6 @@ paths:
           description: not found
 components:
   schemas:
-    ApiAgentCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    ApiAgentRegistrationDownloadLinkHandlerOutput:
-      type: object
-      properties:
-        agent_registration_uid:
-          type: string
-        orc_host:
-          type: string
-        orc_url:
-          type: string
-        url:
-          type: string
     DaoAgentClass:
       type: object
       properties:
@@ -317,6 +301,62 @@ components:
       description: Initial configuration to use when creating an agent
       required:
       - classes
+    DaoAgentLog:
+      type: object
+      properties:
+        agent_registration_uid:
+          type: string
+        agent_uid:
+          type: string
+        bytes_sent:
+          type: integer
+          format: int32
+        err_uid:
+          type: string
+        error:
+          type: string
+        ip_address:
+          type: string
+        msg:
+          type: string
+        org_uid:
+          type: string
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        source_uid:
+          type: string
+        time:
+          type: number
+          format: double
+        type:
+          type: string
+    AgentRegistrationUpdateInput:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/DaoAgentConfig'
+        created_by:
+          type: string
+          description: The user UID of the user who created the agent registration
+        description:
+          type: string
+          description: Description of the agent registration
+          maxLength: 512
+        name:
+          type: string
+          description: Name of the agent registration
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -396,89 +436,6 @@ components:
         uname:
           type: string
       description: Runtime details
-    DaoAgentLog:
-      type: object
-      properties:
-        agent_registration_uid:
-          type: string
-        agent_uid:
-          type: string
-        bytes_sent:
-          type: integer
-          format: int32
-        err_uid:
-          type: string
-        error:
-          type: string
-        ip_address:
-          type: string
-        msg:
-          type: string
-        org_uid:
-          type: string
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        source_uid:
-          type: string
-        time:
-          type: number
-          format: double
-        type:
-          type: string
-    AgentRegistrationCreateInput:
-      type: object
-      properties:
-        config:
-          $ref: '#/components/schemas/DaoAgentConfig'
-        created_by:
-          type: string
-          description: The user UID of the user who created the agent registration
-        description:
-          type: string
-          description: Description of the agent registration
-          maxLength: 512
-        name:
-          type: string
-          description: Name of the agent registration
-          maxLength: 64
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-    AgentRegistrationUpdateInput:
-      type: object
-      properties:
-        config:
-          $ref: '#/components/schemas/DaoAgentConfig'
-        created_by:
-          type: string
-          description: The user UID of the user who created the agent registration
-        description:
-          type: string
-          description: Description of the agent registration
-          maxLength: 512
-        name:
-          type: string
-          description: Name of the agent registration
-          maxLength: 64
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
     AgentRegistration:
       type: object
       properties:
@@ -506,6 +463,49 @@ components:
           type: string
           description: Agent Registration UID
           maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    ApiAgentCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    ApiAgentRegistrationDownloadLinkHandlerOutput:
+      type: object
+      properties:
+        agent_registration_uid:
+          type: string
+        orc_host:
+          type: string
+        orc_url:
+          type: string
+        url:
+          type: string
+    AgentRegistrationCreateInput:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/DaoAgentConfig'
+        created_by:
+          type: string
+          description: The user UID of the user who created the agent registration
+        description:
+          type: string
+          description: Description of the agent registration
+          maxLength: 512
+        name:
+          type: string
+          description: Name of the agent registration
+          maxLength: 64
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
         valid_from:
           type: string
           description: Valid from date, the first date this object was valid
