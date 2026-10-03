@@ -105,24 +105,24 @@ paths:
           description: permission denied
 components:
   schemas:
-    DaoOrgQuotaCases:
+    DaoOrgTypePolicy:
       type: object
       properties:
-        enabled:
-          type: boolean
-          description: Enable case creation (L1 analysis) for this org
-        l2_enabled:
-          type: boolean
-          description: Enable L2 (senior AI) analysis for this org; requires enabled
-        score_threshold:
+        processing_stack:
+          type: string
+          description: Name of the processing stack
+          maxLength: 64
+          minLength: 3
+        retention_period:
           type: integer
-          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          description: Retention period for stored data, in days
           format: int32
-          maximum: 10000
-        ui:
-          type: boolean
-          description: Expose the cases UI in the console for this org; requires enabled
-      description: Per-org feature gates for the cases service; replaces the existing block when present
+          maximum: 3650
+          minimum: 1
+      description: Policy for the org
+      required:
+      - processing_stack
+      - retention_period
     SessionOrgTypeMaxLimit:
       type: object
       properties:
@@ -148,27 +148,6 @@ components:
           type: integer
           description: The time window in seconds that the limit is calculated on
           format: int32
-    DaoOrgType:
-      type: object
-      properties:
-        default_quota:
-          $ref: '#/components/schemas/DaoOrgQuota'
-        description:
-          type: string
-          description: Type of organization
-          maxLength: 64
-          minLength: 3
-        org_uid:
-          type: string
-        policy:
-          $ref: '#/components/schemas/DaoOrgTypePolicy'
-        uid:
-          type: string
-          description: UID for OrgType
-          maxLength: 64
-      required:
-      - default_quota
-      - policy
     DaoOrgQuota:
       type: object
       properties:
@@ -219,24 +198,45 @@ components:
       required:
       - max_active_sources
       - max_org_roles
-    DaoOrgTypePolicy:
+    DaoOrgType:
       type: object
       properties:
-        processing_stack:
+        default_quota:
+          $ref: '#/components/schemas/DaoOrgQuota'
+        description:
           type: string
-          description: Name of the processing stack
+          description: Type of organization
           maxLength: 64
           minLength: 3
-        retention_period:
-          type: integer
-          description: Retention period for stored data, in days
-          format: int32
-          maximum: 3650
-          minimum: 1
-      description: Policy for the org
+        org_uid:
+          type: string
+        policy:
+          $ref: '#/components/schemas/DaoOrgTypePolicy'
+        uid:
+          type: string
+          description: UID for OrgType
+          maxLength: 64
       required:
-      - processing_stack
-      - retention_period
+      - default_quota
+      - policy
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
   securitySchemes:
     apiToken:
       type: http

@@ -475,151 +475,12 @@ paths:
           description: permission denied
 components:
   schemas:
-    ApiSourceCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
     ApiCountResponse:
       type: object
       properties:
         count:
           type: integer
           format: int32
-    SrcUpdateInput:
-      type: object
-      properties:
-        active:
-          type: integer
-          description: Is this source considered active
-          format: int32
-        agent_uid:
-          type: string
-          description: The agent this source is associated with
-        archived:
-          type: boolean
-          description: Is the source archived?
-        description:
-          type: string
-          description: User supplied description of the source
-          maxLength: 256
-        last_data:
-          type: string
-          format: date-time
-        last_ingest_chunk_end_time:
-          type: string
-          description: The end of the last chunk ingested from the agent
-          format: date-time
-        last_stored_chunk_end_time:
-          type: string
-          description: The end of the last chunk stored from the agent
-          format: date-time
-        name:
-          type: string
-          description: User supplied name of the source
-          maxLength: 32
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        runtime_description:
-          type: string
-          description: Description of the runtime of the source
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
-        type:
-          type: string
-          description: Type of source
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
-    SrcCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: User supplied description of the source
-          maxLength: 256
-        name:
-          type: string
-          description: User supplied name of the source
-          maxLength: 32
-        runtime_description:
-          type: string
-          description: Description of the runtime of the source
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
-        type:
-          type: string
-          description: Type of source
-        uid:
-          type: string
-          description: The UID of the source
-          maxLength: 64
-    RbacStatement:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            type: string
-          description: The actions that may be performed
-          maxItems: 50
-          minItems: 1
-        condition:
-          $ref: '#/components/schemas/RbacConditionMap'
-        effect:
-          type: string
-          description: The effect of the statement, i.e. allow or deny
-          maxLength: 5
-        resources:
-          type: array
-          items:
-            type: string
-          description: The resource the statement applies to
-          maxItems: 25
-          minItems: 1
-        sid:
-          type: string
-          description: Statement ID, used to identify the statement in audit logs
-          maxLength: 32
-      required:
-      - effect
-      - sid
     ApiSOARListHandlerOutput:
       type: object
       properties:
@@ -627,19 +488,6 @@ components:
           type: string
         source:
           $ref: '#/components/schemas/Source'
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
-    DaoSourceAgg:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: The count for the property value
-          format: int64
-        propertyvalue:
-          type: string
-          description: The value of a property being aggregated upon
     Source:
       type: object
       properties:
@@ -709,6 +557,99 @@ components:
           format: date-time
       required:
       - uid
+    ApiSourceCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SrcUpdateInput:
+      type: object
+      properties:
+        active:
+          type: integer
+          description: Is this source considered active
+          format: int32
+        agent_uid:
+          type: string
+          description: The agent this source is associated with
+        archived:
+          type: boolean
+          description: Is the source archived?
+        description:
+          type: string
+          description: User supplied description of the source
+          maxLength: 256
+        last_data:
+          type: string
+          format: date-time
+        last_ingest_chunk_end_time:
+          type: string
+          description: The end of the last chunk ingested from the agent
+          format: date-time
+        last_stored_chunk_end_time:
+          type: string
+          description: The end of the last chunk stored from the agent
+          format: date-time
+        name:
+          type: string
+          description: User supplied name of the source
+          maxLength: 32
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        runtime_description:
+          type: string
+          description: Description of the runtime of the source
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: Type of source
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    SrcCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: User supplied description of the source
+          maxLength: 256
+        name:
+          type: string
+          description: User supplied name of the source
+          maxLength: 32
+        runtime_description:
+          type: string
+          description: Description of the runtime of the source
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
+          type: string
+          description: Type of source
+        uid:
+          type: string
+          description: The UID of the source
+          maxLength: 64
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -788,6 +729,62 @@ components:
         uname:
           type: string
       description: Runtime details
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
+    DaoSourceAgg:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The count for the property value
+          format: int64
+        propertyvalue:
+          type: string
+          description: The value of a property being aggregated upon
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
     ValidationError:
       type: object
       properties:
@@ -803,6 +800,9 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
   securitySchemes:
     apiToken:
       type: http

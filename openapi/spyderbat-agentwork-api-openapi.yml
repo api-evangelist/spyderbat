@@ -214,6 +214,36 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
 components:
   schemas:
+    AgentSetOrgWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+    ApiAgentWorkOutput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+    Orc_apiAgentWork:
+      type: object
+      properties:
+        work:
+          type: array
+          items:
+            $ref: '#/components/schemas/Orc_apiBatWork'
+          description: Array of bats to execute
+          maxItems: 32
+      description: Agent work, which is sent to the agents
     Orc_apiBatWork:
       type: object
       properties:
@@ -246,36 +276,6 @@ components:
           type: object
           additionalProperties: {}
           description: Newest version of the bat from the repository
-    Orc_apiAgentWork:
-      type: object
-      properties:
-        work:
-          type: array
-          items:
-            $ref: '#/components/schemas/Orc_apiBatWork'
-          description: Array of bats to execute
-          maxItems: 32
-      description: Agent work, which is sent to the agents
-    AgentSetOrgWorkInput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
-    AgentSetAgentWorkInput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
     ValidationError:
       type: object
       properties:
@@ -291,7 +291,7 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    ApiAgentWorkOutput:
+    AgentSetAgentWorkInput:
       type: object
       properties:
         tags:

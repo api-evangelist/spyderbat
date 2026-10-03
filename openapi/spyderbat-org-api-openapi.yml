@@ -573,97 +573,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    DaoOrgRoleResponse:
-      type: object
-      properties:
-        org_name:
-          type: string
-          description: The organization name the user has the assigned role on
-        org_uid:
-          type: string
-          description: The organization UID the user has the assigned role on
-        role_uid:
-          type: string
-          description: The role the user is assigned
-        user_email:
-          type: string
-          description: The email address associated with the user
-        user_uid:
-          type: string
-          description: The user uid for the user
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
-    OrgInviteUsersInput:
-      type: object
-      properties:
-        emails:
-          type: array
-          items:
-            type: string
-          maxItems: 64
-          minItems: 1
-        roles:
-          type: array
-          items:
-            type: string
-          maxItems: 10
-          minItems: 1
-    OrgUnassignRoleInput:
-      type: object
-      properties:
-        role_uid:
-          type: string
-          description: RoleUID
-          maxLength: 64
-        user_uid:
-          type: string
-          description: UserUID
-    DaoOrgQuotaCases:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Enable case creation (L1 analysis) for this org
-        l2_enabled:
-          type: boolean
-          description: Enable L2 (senior AI) analysis for this org; requires enabled
-        score_threshold:
-          type: integer
-          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
-          format: int32
-          maximum: 10000
-        ui:
-          type: boolean
-          description: Expose the cases UI in the console for this org; requires enabled
-      description: Per-org feature gates for the cases service; replaces the existing block when present
-    NotificationPolicy:
-      type: object
-      properties:
-        routes:
-          type: array
-          items:
-            type: object
-            properties:
-              data:
-                description: UI-supplied data
-              description:
-                type: string
-              destination:
-                $ref: '#/components/schemas/NotificationPolicyDestination'
-              expr:
-                $ref: '#/components/schemas/Expr'
-              target:
-                type: string
-                description: One of the targets specified in `targets`
-        targets:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/NotificationPolicyDestination'
-      description: A notification policy in json or hjson
-      required:
-      - routes
-      - targets
     Org:
       type: object
       properties:
@@ -738,22 +647,94 @@ components:
       required:
       - name
       - owner_email
-    ResourcePolicy:
+    OrgInviteUsersInput:
       type: object
       properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
+        emails:
           type: array
           items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
+            type: string
+          maxItems: 64
+          minItems: 1
+        roles:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+          minItems: 1
+    OrgUpdateInput:
+      type: object
+      properties:
+        active_sources:
+          type: integer
+          description: Total number of active sources within the last 5 minutes
+          format: int32
+        active_users:
+          type: integer
+          description: Total number of active users within the last 7 days (which might be active on a different org)
+          format: int32
+        name:
           type: string
-          maxLength: 24
-      description: Resource policy for RBAC
+          description: Name of the organization
+          maxLength: 64
+          minLength: 3
+        org_type_uid:
+          type: string
+          description: Organization Type
+          maxLength: 64
+        owner_email:
+          type: string
+          description: The email address of the user who owns this org
+          format: email
+        owner_uid:
+          type: string
+          description: The user UID who owns this organization
+          maxLength: 64
+        processing_stack:
+          type: string
+          description: Deployment stack the org runs on, extracted from the org type's policy (e.g. 'saas', 'enterprise-us')
+        quota:
+          $ref: '#/components/schemas/DaoOrgQuota'
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        standby:
+          type: boolean
+          description: Is this org in standby mode?
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        total_sources:
+          type: integer
+          description: Total number of sources
+          format: int32
+        total_users:
+          type: integer
+          description: Total number of users
+          format: int32
+        user_workid:
+          type: integer
+          description: User selected workid
+          format: int32
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+      required:
+      - name
+      - owner_email
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
     NotificationPolicyDestination:
       type: object
       properties:
@@ -843,6 +824,36 @@ components:
       required:
       - max_active_sources
       - max_org_roles
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    RbacRole:
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+        uid:
+          type: string
+        version:
+          type: string
     RbacStatement:
       type: object
       properties:
@@ -873,21 +884,6 @@ components:
       required:
       - effect
       - sid
-    RbacRole:
-      type: object
-      properties:
-        description:
-          type: string
-        name:
-          type: string
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-        uid:
-          type: string
-        version:
-          type: string
     OrgTestNotificationTargetInput:
       type: object
       properties:
@@ -895,76 +891,105 @@ components:
           type: string
           maxLength: 64
           minLength: 1
-    OrgUpdateInput:
+    DaoOrgQuotaCases:
       type: object
       properties:
-        active_sources:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
           type: integer
-          description: Total number of active sources within the last 5 minutes
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
           format: int32
-        active_users:
-          type: integer
-          description: Total number of active users within the last 7 days (which might be active on a different org)
-          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
+    ResourcePolicy:
+      type: object
+      properties:
         name:
           type: string
-          description: Name of the organization
-          maxLength: 64
-          minLength: 3
-        org_type_uid:
-          type: string
-          description: Organization Type
-          maxLength: 64
-        owner_email:
-          type: string
-          description: The email address of the user who owns this org
-          format: email
-        owner_uid:
-          type: string
-          description: The user UID who owns this organization
-          maxLength: 64
-        processing_stack:
-          type: string
-          description: Deployment stack the org runs on, extracted from the org type's policy (e.g. 'saas', 'enterprise-us')
-        quota:
-          $ref: '#/components/schemas/DaoOrgQuota'
-        resource_name:
-          type: string
-          description: Resource name utilized by RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        standby:
-          type: boolean
-          description: Is this org in standby mode?
-        tags:
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
           type: array
           items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
-        total_sources:
-          type: integer
-          description: Total number of sources
-          format: int32
-        total_users:
-          type: integer
-          description: Total number of users
-          format: int32
-        user_workid:
-          type: integer
-          description: User selected workid
-          format: int32
-        valid_from:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
           type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
+          maxLength: 24
+      description: Resource policy for RBAC
+    DaoOrgRoleResponse:
+      type: object
+      properties:
+        org_name:
           type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
+          description: The organization name the user has the assigned role on
+        org_uid:
+          type: string
+          description: The organization UID the user has the assigned role on
+        role_uid:
+          type: string
+          description: The role the user is assigned
+        user_email:
+          type: string
+          description: The email address associated with the user
+        user_uid:
+          type: string
+          description: The user uid for the user
+    OrgAssignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    OrgUnassignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    NotificationPolicy:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            type: object
+            properties:
+              data:
+                description: UI-supplied data
+              description:
+                type: string
+              destination:
+                $ref: '#/components/schemas/NotificationPolicyDestination'
+              expr:
+                $ref: '#/components/schemas/Expr'
+              target:
+                type: string
+                description: One of the targets specified in `targets`
+        targets:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NotificationPolicyDestination'
+      description: A notification policy in json or hjson
       required:
-      - name
-      - owner_email
+      - routes
+      - targets
     Expr:
       type: object
       properties:
@@ -1017,31 +1042,6 @@ components:
           type: string
           description: Matches records with the specified schema
       description: A filter expression node. Exactly one condition field must be specified. Use `and`, `or`, `not` for compound expressions.
-    OrgAssignRoleInput:
-      type: object
-      properties:
-        role_uid:
-          type: string
-          description: RoleUID
-          maxLength: 64
-        user_uid:
-          type: string
-          description: UserUID
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http

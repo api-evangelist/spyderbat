@@ -110,47 +110,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    FingerprintDataSearchInput:
-      type: object
-      properties:
-        case_sensitive:
-          type: boolean
-          description: Whether the query is case sensitive (default false)
-        cluster_uid:
-          type: string
-          description: An optional pre-filter field that restricts results to one cluster
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        end_time:
-          type: integer
-          description: End time to query
-          format: int32
-        latest_version:
-          type:
-          - boolean
-          - 'null'
-          description: Whether to pre-filter the results to only search with the latest version of each object (default true)
-        muid:
-          type: string
-          description: An optional pre-filter field that restricts results to one machine
-        policy_types:
-          type: array
-          items:
-            type: string
-          description: 'Filters fingerprints by metadata.type. Valid values: container, linux-service. Adds (metadata.type = ''X'' OR ...) to query.'
-        query:
-          type: string
-          description: Query to execute
-          maxLength: 65536
-        start_time:
-          type: integer
-          description: Start time to query
-          format: int32
-      required:
-      - end_time
-      - query
-      - start_time
     SessionFingerprintSearchResults:
       type: object
       properties:
@@ -200,6 +159,47 @@ components:
           description: Whether to return unique results (default false)
       required:
       - policy_types
+    FingerprintDataSearchInput:
+      type: object
+      properties:
+        case_sensitive:
+          type: boolean
+          description: Whether the query is case sensitive (default false)
+        cluster_uid:
+          type: string
+          description: An optional pre-filter field that restricts results to one cluster
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        end_time:
+          type: integer
+          description: End time to query
+          format: int32
+        latest_version:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to pre-filter the results to only search with the latest version of each object (default true)
+        muid:
+          type: string
+          description: An optional pre-filter field that restricts results to one machine
+        policy_types:
+          type: array
+          items:
+            type: string
+          description: 'Filters fingerprints by metadata.type. Valid values: container, linux-service. Adds (metadata.type = ''X'' OR ...) to query.'
+        query:
+          type: string
+          description: Query to execute
+          maxLength: 65536
+        start_time:
+          type: integer
+          description: Start time to query
+          format: int32
+      required:
+      - end_time
+      - query
+      - start_time
   securitySchemes:
     apiToken:
       type: http

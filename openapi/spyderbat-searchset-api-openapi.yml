@@ -237,6 +237,32 @@ paths:
           description: permission denied
 components:
   schemas:
+    SearchSetUpdateInput:
+      type: object
+      properties:
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - searchset
+    SearchSetCreateInput:
+      type: object
+      properties:
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - searchset
     DaoSearchSetObject:
       type: object
       properties:
@@ -257,32 +283,6 @@ components:
       - apiVersion
       - metadata
       - spec
-    SearchSetCreateInput:
-      type: object
-      properties:
-        searchset:
-          $ref: '#/components/schemas/DaoSearchSetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - searchset
-    SearchSetUpdateInput:
-      type: object
-      properties:
-        searchset:
-          $ref: '#/components/schemas/DaoSearchSetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - searchset
     ApiSearchSetCreateHandlerOutput:
       type: object
       properties:

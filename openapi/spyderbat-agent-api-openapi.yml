@@ -177,55 +177,6 @@ paths:
           description: not found
 components:
   schemas:
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
-    RbacStatement:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            type: string
-          description: The actions that may be performed
-          maxItems: 50
-          minItems: 1
-        condition:
-          $ref: '#/components/schemas/RbacConditionMap'
-        effect:
-          type: string
-          description: The effect of the statement, i.e. allow or deny
-          maxLength: 5
-        resources:
-          type: array
-          items:
-            type: string
-          description: The resource the statement applies to
-          maxItems: 25
-          minItems: 1
-        sid:
-          type: string
-          description: Statement ID, used to identify the statement in audit logs
-          maxLength: 32
-      required:
-      - effect
-      - sid
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -305,6 +256,36 @@ components:
         uname:
           type: string
       description: Runtime details
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
     Agent:
       type: object
       properties:
@@ -375,6 +356,25 @@ components:
           type: string
           description: Valid to date, the date this object is valid to
           format: date-time
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
   securitySchemes:
     apiToken:
       type: http

@@ -354,11 +354,6 @@ paths:
           description: not found
 components:
   schemas:
-    SessionCreateCustomFlagOutput:
-      type: object
-      properties:
-        uid:
-          type: string
     SessionListCustomFlagOutput:
       type: object
       properties:
@@ -379,6 +374,48 @@ components:
           type: integer
           description: Total number of pages
           format: int32
+    SessionUpdateCustomFlagOutput:
+      type: object
+      properties:
+        custom_flag:
+          $ref: '#/components/schemas/SessionOutputCustomFlag'
+    SessionCreateCustomFlagOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    CustomFlagUpdateInput:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Optional Markdown content for additional details.
+          maxLength: 1500
+        description:
+          type: string
+          description: A brief description explaining what the flag detects.
+          maxLength: 500
+        impact:
+          type: string
+          description: Optional impact this flag has for your organization.
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        severity:
+          type: string
+          description: Optional severity level of the flag. One of [info|low|medium|high|critical]
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags to associate with the custom flag.
+        type:
+          type: string
+          description: The type of the flag. One of [redflag|opsflag]
     SessionOutputCustomFlag:
       type: object
       properties:
@@ -434,79 +471,6 @@ components:
         version:
           type: integer
           format: int32
-    DaoNotificationSettingsObj:
-      type: object
-      properties:
-        aggregate:
-          type: boolean
-          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
-        aggregate_by:
-          type: array
-          items:
-            type: string
-          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
-        aggregate_seconds:
-          type: integer
-          description: Overwrite the default notification aggregation window.
-          format: int64
-        cooldown:
-          type: integer
-          description: Cooldown in seconds for the notification.
-          format: int64
-        cooldown_by:
-          type: array
-          items:
-            type: string
-          description: Cooldown by the specified fields.
-        is_enabled:
-          type: boolean
-        target_map:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of notification targets to optional templates.
-        uid:
-          type: string
-          description: Not required for creation, will be auto-generated. Included in return values for reference.
-    DaoNotificationSettings:
-      type: object
-      properties:
-        aggregate:
-          type: boolean
-          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
-        aggregate_by:
-          type: array
-          items:
-            type: string
-          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
-        aggregate_seconds:
-          type: integer
-          description: Overwrite the default notification aggregation window.
-          format: int64
-        cooldown:
-          type: integer
-          description: Cooldown in seconds for the notification.
-          format: int64
-        cooldown_by:
-          type: array
-          items:
-            type: string
-          description: Cooldown by the specified fields.
-        is_enabled:
-          type: boolean
-        target_map:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of notification targets to optional templates.
-        uid:
-          type: string
-          description: Not required for creation, will be auto-generated. Included in return values for reference.
-    SessionLoadCustomFlagOutput:
-      type: object
-      properties:
-        custom_flag:
-          $ref: '#/components/schemas/SessionOutputCustomFlag'
     CustomFlagCreateInput:
       type: object
       properties:
@@ -550,43 +514,79 @@ components:
       - saved_query_uid
       - severity
       - type
-    CustomFlagUpdateInput:
+    DaoNotificationSettings:
       type: object
       properties:
-        content:
-          type: string
-          description: Optional Markdown content for additional details.
-          maxLength: 1500
-        description:
-          type: string
-          description: A brief description explaining what the flag detects.
-          maxLength: 500
-        impact:
-          type: string
-          description: Optional impact this flag has for your organization.
-          maxLength: 500
-        name:
-          type: string
-          maxLength: 128
-          minLength: 1
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-        severity:
-          type: string
-          description: Optional severity level of the flag. One of [info|low|medium|high|critical]
-        tags:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
           type: array
           items:
             type: string
-          description: Optional tags to associate with the custom flag.
-        type:
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
           type: string
-          description: The type of the flag. One of [redflag|opsflag]
-    SessionUpdateCustomFlagOutput:
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionLoadCustomFlagOutput:
       type: object
       properties:
         custom_flag:
           $ref: '#/components/schemas/SessionOutputCustomFlag'
+    DaoNotificationSettingsObj:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
+          type: array
+          items:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
+          type: integer
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
+          type: integer
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
     ValidationError:
       type: object
       properties:

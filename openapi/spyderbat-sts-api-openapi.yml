@@ -62,6 +62,21 @@ paths:
           description: permission denied
 components:
   schemas:
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     ApiStsAssumeRoleOutput:
       type: object
       properties:
@@ -94,21 +109,6 @@ components:
       required:
       - org_uid
       - role_uid
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http

@@ -164,6 +164,17 @@ paths:
           description: not found
 components:
   schemas:
+    SessionArchiveListResponse:
+      type: object
+      properties:
+        continuation_token:
+          type: string
+          description: If present, more archives match; pass it back as continuation_token (with the same other parameters) to fetch the next page
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionArchiveObject'
+          description: Archives matching the query, in no particular order
     SessionArchiveObject:
       type: object
       properties:
@@ -185,17 +196,6 @@ components:
           type: integer
           description: Unix seconds of the earliest record contained in the archive
           format: int64
-    SessionArchiveListResponse:
-      type: object
-      properties:
-        continuation_token:
-          type: string
-          description: If present, more archives match; pass it back as continuation_token (with the same other parameters) to fetch the next page
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionArchiveObject'
-          description: Archives matching the query, in no particular order
   securitySchemes:
     apiToken:
       type: http

@@ -185,6 +185,18 @@ paths:
           description: permission denied
 components:
   schemas:
+    WatchlistCreateInput:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+      required:
+      - files
+      - name
     WatchlistUpdateInput:
       type: object
       properties:
@@ -197,6 +209,11 @@ components:
       required:
       - files
       - name
+    ApiWatchlistCreateHandlerOutput:
+      type: object
+      properties:
+        id:
+          type: string
     DaoWatchlist:
       type: object
       properties:
@@ -217,23 +234,6 @@ components:
           type: string
         valid_from:
           type: string
-    ApiWatchlistCreateHandlerOutput:
-      type: object
-      properties:
-        id:
-          type: string
-    WatchlistCreateInput:
-      type: object
-      properties:
-        files:
-          type: array
-          items:
-            type: string
-        name:
-          type: string
-      required:
-      - files
-      - name
     ValidationError:
       type: object
       properties:
