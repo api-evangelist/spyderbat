@@ -237,32 +237,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    SearchSetUpdateInput:
-      type: object
-      properties:
-        searchset:
-          $ref: '#/components/schemas/DaoSearchSetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - searchset
-    SearchSetCreateInput:
-      type: object
-      properties:
-        searchset:
-          $ref: '#/components/schemas/DaoSearchSetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - searchset
     DaoSearchSetObject:
       type: object
       properties:
@@ -288,21 +262,6 @@ components:
       properties:
         uid:
           type: string
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
     DaoOutputSearchSet:
       type: object
       properties:
@@ -359,6 +318,47 @@ components:
       required:
       - name
       - type
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    SearchSetUpdateInput:
+      type: object
+      properties:
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - searchset
+    SearchSetCreateInput:
+      type: object
+      properties:
+        searchset:
+          $ref: '#/components/schemas/DaoSearchSetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - searchset
   securitySchemes:
     apiToken:
       type: http

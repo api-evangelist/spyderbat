@@ -332,13 +332,11 @@ paths:
           description: permission denied
 components:
   schemas:
-    SessionQueryDependentResources:
+    SessionUpdateSavedQueryOutput:
       type: object
       properties:
-        custom_flags:
-          type: array
-          items:
-            type: string
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
     SessionLoadSavedQueryOutput:
       type: object
       properties:
@@ -363,26 +361,6 @@ components:
         query:
           type: string
           maxLength: 65535
-    SessionListSavedQueryOutput:
-      type: object
-      properties:
-        saved_queries:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputSavedQuery'
-          description: List of saved queries
-        search_total:
-          type: integer
-          description: Total number of saved queries matching the search criteria
-          format: int32
-        total_pages:
-          type: integer
-          description: Total number of pages of search results
-          format: int32
-        total_queries:
-          type: integer
-          description: Total number of saved queries
-          format: int32
     SessionSavedQueryShowAdditionalSettingsOutput:
       type: object
       properties:
@@ -390,70 +368,21 @@ components:
           type: object
           additionalProperties: {}
           description: Additional settings fields and their corresponding types
-    SavedQueryCreateInput:
+    ValidationError:
       type: object
       properties:
-        additional_settings:
-          type: object
-          additionalProperties: {}
-        description:
+        err_msg:
           type: string
-          maxLength: 500
-        name:
+          description: Message regarding the validation failure
+        field:
           type: string
-          maxLength: 128
-          minLength: 1
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-        query:
+          description: Field name which failed validation
+        property:
           type: string
-          maxLength: 65535
-          minLength: 1
-        schema:
+          description: JSON property name of the field which failed validation
+        tags:
           type: string
-          maxLength: 64
-      required:
-      - name
-      - query
-      - schema
-    SessionUpdateSavedQueryOutput:
-      type: object
-      properties:
-        saved_query:
-          $ref: '#/components/schemas/SessionOutputSavedQuery'
-    SessionOutputSavedQuery:
-      type: object
-      properties:
-        additional_settings:
-          type: object
-          additionalProperties: {}
-        created_by:
-          type: string
-        description:
-          type: string
-        last_used:
-          type: integer
-          format: int64
-        name:
-          type: string
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        org_uid:
-          type: string
-        query:
-          type: string
-        schema:
-          type: string
-        uid:
-          type: string
-        valid_from:
-          type: integer
-          format: int64
-    SessionCreateSavedQueryOutput:
-      type: object
-      properties:
-        uid:
-          type: string
+          description: Validation tag which failed
     DaoNotificationSettings:
       type: object
       properties:
@@ -488,6 +417,44 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionQueryDependentResources:
+      type: object
+      properties:
+        custom_flags:
+          type: array
+          items:
+            type: string
+    SavedQueryCreateInput:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        query:
+          type: string
+          maxLength: 65535
+          minLength: 1
+        schema:
+          type: string
+          maxLength: 64
+      required:
+      - name
+      - query
+      - schema
+    SessionCreateSavedQueryOutput:
+      type: object
+      properties:
+        uid:
+          type: string
     DaoNotificationSettingsObj:
       type: object
       properties:
@@ -522,21 +489,54 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
-    ValidationError:
+    SessionListSavedQueryOutput:
       type: object
       properties:
-        err_msg:
+        saved_queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputSavedQuery'
+          description: List of saved queries
+        search_total:
+          type: integer
+          description: Total number of saved queries matching the search criteria
+          format: int32
+        total_pages:
+          type: integer
+          description: Total number of pages of search results
+          format: int32
+        total_queries:
+          type: integer
+          description: Total number of saved queries
+          format: int32
+    SessionOutputSavedQuery:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        created_by:
           type: string
-          description: Message regarding the validation failure
-        field:
+        description:
           type: string
-          description: Field name which failed validation
-        property:
+        last_used:
+          type: integer
+          format: int64
+        name:
           type: string
-          description: JSON property name of the field which failed validation
-        tags:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        org_uid:
           type: string
-          description: Validation tag which failed
+        query:
+          type: string
+        schema:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
   securitySchemes:
     apiToken:
       type: http

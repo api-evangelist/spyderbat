@@ -110,24 +110,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    SessionFingerprintSearchResults:
-      type: object
-      properties:
-        errors:
-          type: array
-          items: {}
-          description: Errors encountered during object hydration.
-        result_count:
-          type: integer
-          description: The number of results returned.
-          format: int32
-        results:
-          type: array
-          items: {}
-          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
-        status:
-          type: string
-          description: The status of the query. If non-empty, the job is still running or failed - poll again.
     ValidationError:
       type: object
       properties:
@@ -159,6 +141,24 @@ components:
           description: Whether to return unique results (default false)
       required:
       - policy_types
+    SessionFingerprintSearchResults:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: Errors encountered during object hydration.
+        result_count:
+          type: integer
+          description: The number of results returned.
+          format: int32
+        results:
+          type: array
+          items: {}
+          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
+        status:
+          type: string
+          description: The status of the query. If non-empty, the job is still running or failed - poll again.
     FingerprintDataSearchInput:
       type: object
       properties:

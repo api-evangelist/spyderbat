@@ -365,6 +365,120 @@ paths:
           description: too many requests
 components:
   schemas:
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    SessionLoadActionStatusOutput:
+      type: object
+      properties:
+        action_status:
+          $ref: '#/components/schemas/DaoActionStatus'
+    SessionAgentScanContainerOutput:
+      type: object
+      properties:
+        action_uid:
+          type: string
+          description: The uid of the action record
+    AgentActionEnqueueInput:
+      type: object
+      properties:
+        analytic_uid:
+          type: string
+        env:
+          type: object
+          additionalProperties:
+            type: string
+        object_uid:
+          type: string
+        principal:
+          type: string
+          description: Principal that created this action
+        reason:
+          type: string
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        script_hash:
+          type: string
+          maxLength: 64
+        script_name:
+          type: string
+          maxLength: 64
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+      required:
+      - script_hash
+      - script_name
+      - valid_to
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
+    AgentKillPodInput:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: The reason for killing the pod
+          maxLength: 500
+    Orc_apiAgentActionError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message containing context about how or why the error occurred
+          maxLength: 1024
+        reason:
+          type: string
+          description: A short, predictable string that identifies the type of error
+          maxLength: 128
     AgentKillProcessInput:
       type: object
       properties:
@@ -378,6 +492,21 @@ components:
           type: string
           description: The reason for killing the process
           maxLength: 500
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     DaoActionStatus:
       type: object
       properties:
@@ -426,56 +555,21 @@ components:
           - 'null'
           format: date-time
       description: The action status record
-    Orc_apiAgentActionError:
+    SessionAgentKillProcessOutput:
       type: object
       properties:
-        message:
+        action_uid:
           type: string
-          description: A human-readable error message containing context about how or why the error occurred
-          maxLength: 1024
-        reason:
-          type: string
-          description: A short, predictable string that identifies the type of error
-          maxLength: 128
-    AgentActionEnqueueInput:
+          description: The uid of the action record
+    SessionAgentKillPodOutput:
       type: object
       properties:
-        analytic_uid:
+        action_uid:
           type: string
-        env:
-          type: object
-          additionalProperties:
-            type: string
-        object_uid:
-          type: string
-        principal:
-          type: string
-          description: Principal that created this action
-        reason:
-          type: string
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        script_hash:
-          type: string
-          maxLength: 64
-        script_name:
-          type: string
-          maxLength: 64
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-      required:
-      - script_hash
-      - script_name
-      - valid_to
+          description: The uid of the action record
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
     SessionListActionStatusOutput:
       type: object
       properties:
@@ -492,30 +586,6 @@ components:
           type: integer
           description: The total number of pages
           format: int32
-    SessionAgentScanContainerOutput:
-      type: object
-      properties:
-        action_uid:
-          type: string
-          description: The uid of the action record
-    AgentKillPodInput:
-      type: object
-      properties:
-        reason:
-          type: string
-          description: The reason for killing the pod
-          maxLength: 500
-    SessionAgentKillPodOutput:
-      type: object
-      properties:
-        action_uid:
-          type: string
-          description: The uid of the action record
-    SessionLoadActionStatusOutput:
-      type: object
-      properties:
-        action_status:
-          $ref: '#/components/schemas/DaoActionStatus'
     AgentScanContainerInput:
       type: object
       properties:
@@ -526,76 +596,6 @@ components:
         scan_type:
           type: string
           description: The type of scan to run
-    SessionAgentKillProcessOutput:
-      type: object
-      properties:
-        action_uid:
-          type: string
-          description: The uid of the action record
-    RbacStatement:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            type: string
-          description: The actions that may be performed
-          maxItems: 50
-          minItems: 1
-        condition:
-          $ref: '#/components/schemas/RbacConditionMap'
-        effect:
-          type: string
-          description: The effect of the statement, i.e. allow or deny
-          maxLength: 5
-        resources:
-          type: array
-          items:
-            type: string
-          description: The resource the statement applies to
-          maxItems: 25
-          minItems: 1
-        sid:
-          type: string
-          description: Statement ID, used to identify the statement in audit logs
-          maxLength: 32
-      required:
-      - effect
-      - sid
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
   securitySchemes:
     apiToken:
       type: http

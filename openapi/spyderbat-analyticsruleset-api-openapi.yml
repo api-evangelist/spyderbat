@@ -242,11 +242,32 @@ paths:
           description: permission denied
 components:
   schemas:
-    ApiAnalyticsRulesetCreateHandlerOutput:
+    AnalyticsRulesetCreateInput:
       type: object
       properties:
-        uid:
-          type: string
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - ruleset
+    AnalyticsRulesetUpdateInput:
+      type: object
+      properties:
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - ruleset
     DaoOutputAnalyticsRuleset:
       type: object
       properties:
@@ -326,32 +347,6 @@ components:
       - kind
       - metadata
       - spec
-    AnalyticsRulesetUpdateInput:
-      type: object
-      properties:
-        ruleset:
-          $ref: '#/components/schemas/DaoRulesetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - ruleset
-    AnalyticsRulesetCreateInput:
-      type: object
-      properties:
-        ruleset:
-          $ref: '#/components/schemas/DaoRulesetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - ruleset
     ValidationError:
       type: object
       properties:
@@ -367,6 +362,11 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    ApiAnalyticsRulesetCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
   securitySchemes:
     apiToken:
       type: http

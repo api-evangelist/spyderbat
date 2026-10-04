@@ -185,6 +185,11 @@ paths:
           description: permission denied
 components:
   schemas:
+    ApiWatchlistCreateHandlerOutput:
+      type: object
+      properties:
+        id:
+          type: string
     WatchlistCreateInput:
       type: object
       properties:
@@ -209,11 +214,21 @@ components:
       required:
       - files
       - name
-    ApiWatchlistCreateHandlerOutput:
+    ValidationError:
       type: object
       properties:
-        id:
+        err_msg:
           type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     DaoWatchlist:
       type: object
       properties:
@@ -234,21 +249,6 @@ components:
           type: string
         valid_from:
           type: string
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
   securitySchemes:
     apiToken:
       type: http

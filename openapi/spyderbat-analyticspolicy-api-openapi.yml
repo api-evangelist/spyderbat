@@ -243,27 +243,7 @@ paths:
           description: permission denied
 components:
   schemas:
-    ApiAnalyticsPolicyCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    AnalyticsPolicyUpdateInput:
+    AnalyticsPolicyCreateInput:
       type: object
       properties:
         policy:
@@ -332,19 +312,26 @@ components:
       required:
       - name
       - type
-    AnalyticsPolicyCreateInput:
+    ApiAnalyticsPolicyCreateHandlerOutput:
       type: object
       properties:
-        policy:
-          $ref: '#/components/schemas/DaoPolicyObject'
+        uid:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
         tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - policy
+          type: string
+          description: Validation tag which failed
     DaoPolicyObject:
       type: object
       properties:
@@ -368,6 +355,19 @@ components:
       - kind
       - metadata
       - spec
+    AnalyticsPolicyUpdateInput:
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/DaoPolicyObject'
+        tags:
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - policy
   securitySchemes:
     apiToken:
       type: http

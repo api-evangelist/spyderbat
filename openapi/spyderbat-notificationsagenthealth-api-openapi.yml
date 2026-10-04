@@ -270,11 +270,58 @@ paths:
           description: not found
 components:
   schemas:
+    SessionAgentHealthNotificationUpdateOutput:
+      type: object
+      properties:
+        agent_health_notification_settings:
+          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+    SessionAgentHealthNotificationListOutput:
+      type: object
+      properties:
+        agent_health_notifications_settings_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
+        search_total:
+          type: integer
+          format: int32
+        total_agent_health_notifications:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     SessionAgentHealthNotificationCreateOutput:
       type: object
       properties:
         uid:
           type: string
+    DaoAgentHealthNotificationSettings:
+      type: object
+      properties:
+        agent_healthy:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_offline:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_online:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_unhealthy:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
     SessionOutputAgentHealthNotification:
       type: object
       properties:
@@ -315,6 +362,23 @@ components:
         version:
           type: integer
           format: int32
+    AgentHealthNotificationSettingsCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
+        scope_query:
+          type: string
+          maxLength: 65535
+      required:
+      - name
     AgentHealthNotificationSettingsUpdateInput:
       type: object
       properties:
@@ -331,49 +395,6 @@ components:
           type: string
           maxLength: 65535
           minLength: 1
-      required:
-      - name
-    SessionAgentHealthNotificationLoadOutput:
-      type: object
-      properties:
-        agent_health_notification_settings:
-          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-    SessionAgentHealthNotificationUpdateOutput:
-      type: object
-      properties:
-        agent_health_notification_settings:
-          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-    SessionAgentHealthNotificationListOutput:
-      type: object
-      properties:
-        agent_health_notifications_settings_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
-        search_total:
-          type: integer
-          format: int32
-        total_agent_health_notifications:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-    AgentHealthNotificationSettingsCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          maxLength: 500
-        name:
-          type: string
-          maxLength: 128
-          minLength: 1
-        notification_settings:
-          $ref: '#/components/schemas/DaoAgentHealthNotificationSettings'
-        scope_query:
-          type: string
-          maxLength: 65535
       required:
       - name
     DaoNotificationSettingsObj:
@@ -410,32 +431,11 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
-    ValidationError:
+    SessionAgentHealthNotificationLoadOutput:
       type: object
       properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    DaoAgentHealthNotificationSettings:
-      type: object
-      properties:
-        agent_healthy:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        agent_offline:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        agent_online:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        agent_unhealthy:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        agent_health_notification_settings:
+          $ref: '#/components/schemas/SessionOutputAgentHealthNotification'
   securitySchemes:
     apiToken:
       type: http

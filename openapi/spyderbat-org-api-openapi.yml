@@ -573,6 +573,161 @@ paths:
           description: permission denied
 components:
   schemas:
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    DaoOrgQuota:
+      type: object
+      properties:
+        cases:
+          $ref: '#/components/schemas/DaoOrgQuotaCases'
+        max_active_sources:
+          type: integer
+          description: Maximum number of active sources
+          format: int32
+          maximum: 10000
+        max_agent_health_notifications:
+          type: integer
+          description: Maximum number of agent health notifications settings
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_custom_flags:
+          type: integer
+          description: Maximum number of custom flags
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_notification_targets:
+          type: integer
+          description: Maximum number of notification targets
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_notification_templates:
+          type: integer
+          description: Maximum number of notification templates
+          format: int32
+          maximum: 10000
+          minimum: 1
+        max_org_roles:
+          type: integer
+          description: Maximum number of associated organizational roles
+          format: int32
+          maximum: 2000
+          minimum: 1
+        max_saved_queries:
+          type: integer
+          description: Maximum number of saved queries
+          format: int32
+          maximum: 10000
+          minimum: 1
+      description: Default quota for the orgtype
+      required:
+      - max_active_sources
+      - max_org_roles
+    Expr:
+      type: object
+      properties:
+        and:
+          type: array
+          items:
+            $ref: '#/components/schemas/Expr'
+          description: True if all sub-expressions are true
+        array_contains_str:
+          type: string
+          description: True if array property contains the string
+        contains_str:
+          type: string
+          description: True if property contains the string
+        equals:
+          description: True if property equals the value
+        exists:
+          type: boolean
+          description: True if property exists
+        greater_than:
+          type: number
+          description: True if property is greater than the value
+        has_prefix:
+          type: string
+          description: True if property starts with the string
+        has_suffix:
+          type: string
+          description: True if property ends with the string
+        in:
+          type: array
+          items: {}
+          description: True if property matches any value
+        less_than:
+          type: number
+          description: True if property is less than the value
+        not:
+          $ref: '#/components/schemas/Expr'
+        or:
+          type: array
+          items:
+            $ref: '#/components/schemas/Expr'
+          description: True if any sub-expression is true
+        property:
+          type: string
+          description: Property to match against, in dotted notation
+        re_match:
+          type: string
+          description: True if property matches the regex
+        schema:
+          type: string
+          description: Matches records with the specified schema
+      description: A filter expression node. Exactly one condition field must be specified. Use `and`, `or`, `not` for compound expressions.
+    RbacStatement:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: string
+          description: The actions that may be performed
+          maxItems: 50
+          minItems: 1
+        condition:
+          $ref: '#/components/schemas/RbacConditionMap'
+        effect:
+          type: string
+          description: The effect of the statement, i.e. allow or deny
+          maxLength: 5
+        resources:
+          type: array
+          items:
+            type: string
+          description: The resource the statement applies to
+          maxItems: 25
+          minItems: 1
+        sid:
+          type: string
+          description: Statement ID, used to identify the statement in audit logs
+          maxLength: 32
+      required:
+      - effect
+      - sid
+    OrgTestNotificationTargetInput:
+      type: object
+      properties:
+        target:
+          type: string
+          maxLength: 64
+          minLength: 1
     Org:
       type: object
       properties:
@@ -662,6 +817,104 @@ components:
             type: string
           maxItems: 10
           minItems: 1
+    OrgUnassignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    DaoOrgRoleResponse:
+      type: object
+      properties:
+        org_name:
+          type: string
+          description: The organization name the user has the assigned role on
+        org_uid:
+          type: string
+          description: The organization UID the user has the assigned role on
+        role_uid:
+          type: string
+          description: The role the user is assigned
+        user_email:
+          type: string
+          description: The email address associated with the user
+        user_uid:
+          type: string
+          description: The user uid for the user
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    OrgAssignRoleInput:
+      type: object
+      properties:
+        role_uid:
+          type: string
+          description: RoleUID
+          maxLength: 64
+        user_uid:
+          type: string
+          description: UserUID
+    NotificationPolicy:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            type: object
+            properties:
+              data:
+                description: UI-supplied data
+              description:
+                type: string
+              destination:
+                $ref: '#/components/schemas/NotificationPolicyDestination'
+              expr:
+                $ref: '#/components/schemas/Expr'
+              target:
+                type: string
+                description: One of the targets specified in `targets`
+        targets:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NotificationPolicyDestination'
+      description: A notification policy in json or hjson
+      required:
+      - routes
+      - targets
     OrgUpdateInput:
       type: object
       properties:
@@ -735,6 +988,21 @@ components:
     RbacConditionMap:
       type: object
       description: Additional conditions which may be applied
+    RbacRole:
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+        uid:
+          type: string
+        version:
+          type: string
     NotificationPolicyDestination:
       type: object
       properties:
@@ -774,274 +1042,6 @@ components:
       description: A notification policy destination, containing one and only one of the available types
       maxProperties: 3
       minProperties: 1
-    DaoOrgQuota:
-      type: object
-      properties:
-        cases:
-          $ref: '#/components/schemas/DaoOrgQuotaCases'
-        max_active_sources:
-          type: integer
-          description: Maximum number of active sources
-          format: int32
-          maximum: 10000
-        max_agent_health_notifications:
-          type: integer
-          description: Maximum number of agent health notifications settings
-          format: int32
-          maximum: 10000
-          minimum: 1
-        max_custom_flags:
-          type: integer
-          description: Maximum number of custom flags
-          format: int32
-          maximum: 10000
-          minimum: 1
-        max_notification_targets:
-          type: integer
-          description: Maximum number of notification targets
-          format: int32
-          maximum: 10000
-          minimum: 1
-        max_notification_templates:
-          type: integer
-          description: Maximum number of notification templates
-          format: int32
-          maximum: 10000
-          minimum: 1
-        max_org_roles:
-          type: integer
-          description: Maximum number of associated organizational roles
-          format: int32
-          maximum: 2000
-          minimum: 1
-        max_saved_queries:
-          type: integer
-          description: Maximum number of saved queries
-          format: int32
-          maximum: 10000
-          minimum: 1
-      description: Default quota for the orgtype
-      required:
-      - max_active_sources
-      - max_org_roles
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    RbacRole:
-      type: object
-      properties:
-        description:
-          type: string
-        name:
-          type: string
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-        uid:
-          type: string
-        version:
-          type: string
-    RbacStatement:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            type: string
-          description: The actions that may be performed
-          maxItems: 50
-          minItems: 1
-        condition:
-          $ref: '#/components/schemas/RbacConditionMap'
-        effect:
-          type: string
-          description: The effect of the statement, i.e. allow or deny
-          maxLength: 5
-        resources:
-          type: array
-          items:
-            type: string
-          description: The resource the statement applies to
-          maxItems: 25
-          minItems: 1
-        sid:
-          type: string
-          description: Statement ID, used to identify the statement in audit logs
-          maxLength: 32
-      required:
-      - effect
-      - sid
-    OrgTestNotificationTargetInput:
-      type: object
-      properties:
-        target:
-          type: string
-          maxLength: 64
-          minLength: 1
-    DaoOrgQuotaCases:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Enable case creation (L1 analysis) for this org
-        l2_enabled:
-          type: boolean
-          description: Enable L2 (senior AI) analysis for this org; requires enabled
-        score_threshold:
-          type: integer
-          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
-          format: int32
-          maximum: 10000
-        ui:
-          type: boolean
-          description: Expose the cases UI in the console for this org; requires enabled
-      description: Per-org feature gates for the cases service; replaces the existing block when present
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
-    DaoOrgRoleResponse:
-      type: object
-      properties:
-        org_name:
-          type: string
-          description: The organization name the user has the assigned role on
-        org_uid:
-          type: string
-          description: The organization UID the user has the assigned role on
-        role_uid:
-          type: string
-          description: The role the user is assigned
-        user_email:
-          type: string
-          description: The email address associated with the user
-        user_uid:
-          type: string
-          description: The user uid for the user
-    OrgAssignRoleInput:
-      type: object
-      properties:
-        role_uid:
-          type: string
-          description: RoleUID
-          maxLength: 64
-        user_uid:
-          type: string
-          description: UserUID
-    OrgUnassignRoleInput:
-      type: object
-      properties:
-        role_uid:
-          type: string
-          description: RoleUID
-          maxLength: 64
-        user_uid:
-          type: string
-          description: UserUID
-    NotificationPolicy:
-      type: object
-      properties:
-        routes:
-          type: array
-          items:
-            type: object
-            properties:
-              data:
-                description: UI-supplied data
-              description:
-                type: string
-              destination:
-                $ref: '#/components/schemas/NotificationPolicyDestination'
-              expr:
-                $ref: '#/components/schemas/Expr'
-              target:
-                type: string
-                description: One of the targets specified in `targets`
-        targets:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/NotificationPolicyDestination'
-      description: A notification policy in json or hjson
-      required:
-      - routes
-      - targets
-    Expr:
-      type: object
-      properties:
-        and:
-          type: array
-          items:
-            $ref: '#/components/schemas/Expr'
-          description: True if all sub-expressions are true
-        array_contains_str:
-          type: string
-          description: True if array property contains the string
-        contains_str:
-          type: string
-          description: True if property contains the string
-        equals:
-          description: True if property equals the value
-        exists:
-          type: boolean
-          description: True if property exists
-        greater_than:
-          type: number
-          description: True if property is greater than the value
-        has_prefix:
-          type: string
-          description: True if property starts with the string
-        has_suffix:
-          type: string
-          description: True if property ends with the string
-        in:
-          type: array
-          items: {}
-          description: True if property matches any value
-        less_than:
-          type: number
-          description: True if property is less than the value
-        not:
-          $ref: '#/components/schemas/Expr'
-        or:
-          type: array
-          items:
-            $ref: '#/components/schemas/Expr'
-          description: True if any sub-expression is true
-        property:
-          type: string
-          description: Property to match against, in dotted notation
-        re_match:
-          type: string
-          description: True if property matches the regex
-        schema:
-          type: string
-          description: Matches records with the specified schema
-      description: A filter expression node. Exactly one condition field must be specified. Use `and`, `or`, `not` for compound expressions.
   securitySchemes:
     apiToken:
       type: http

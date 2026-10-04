@@ -105,49 +105,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    DaoOrgTypePolicy:
-      type: object
-      properties:
-        processing_stack:
-          type: string
-          description: Name of the processing stack
-          maxLength: 64
-          minLength: 3
-        retention_period:
-          type: integer
-          description: Retention period for stored data, in days
-          format: int32
-          maximum: 3650
-          minimum: 1
-      description: Policy for the org
-      required:
-      - processing_stack
-      - retention_period
-    SessionOrgTypeMaxLimit:
-      type: object
-      properties:
-        current_value:
-          type: number
-          description: What is the current value
-          format: double
-        description:
-          type: string
-          description: Description of the limit
-        limit_exceeded:
-          type: boolean
-          description: Has the limit been met or exceeded
-        limit_value:
-          type: number
-          description: What is the max limit value
-          format: double
-        remaining_capacity:
-          type: number
-          description: How many items can be added to the current value before it is exceeded
-          format: double
-        time_window_in_seconds:
-          type: integer
-          description: The time window in seconds that the limit is calculated on
-          format: int32
     DaoOrgQuota:
       type: object
       properties:
@@ -198,6 +155,67 @@ components:
       required:
       - max_active_sources
       - max_org_roles
+    SessionOrgTypeMaxLimit:
+      type: object
+      properties:
+        current_value:
+          type: number
+          description: What is the current value
+          format: double
+        description:
+          type: string
+          description: Description of the limit
+        limit_exceeded:
+          type: boolean
+          description: Has the limit been met or exceeded
+        limit_value:
+          type: number
+          description: What is the max limit value
+          format: double
+        remaining_capacity:
+          type: number
+          description: How many items can be added to the current value before it is exceeded
+          format: double
+        time_window_in_seconds:
+          type: integer
+          description: The time window in seconds that the limit is calculated on
+          format: int32
+    DaoOrgQuotaCases:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable case creation (L1 analysis) for this org
+        l2_enabled:
+          type: boolean
+          description: Enable L2 (senior AI) analysis for this org; requires enabled
+        score_threshold:
+          type: integer
+          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
+          format: int32
+          maximum: 10000
+        ui:
+          type: boolean
+          description: Expose the cases UI in the console for this org; requires enabled
+      description: Per-org feature gates for the cases service; replaces the existing block when present
+    DaoOrgTypePolicy:
+      type: object
+      properties:
+        processing_stack:
+          type: string
+          description: Name of the processing stack
+          maxLength: 64
+          minLength: 3
+        retention_period:
+          type: integer
+          description: Retention period for stored data, in days
+          format: int32
+          maximum: 3650
+          minimum: 1
+      description: Policy for the org
+      required:
+      - processing_stack
+      - retention_period
     DaoOrgType:
       type: object
       properties:
@@ -219,24 +237,6 @@ components:
       required:
       - default_quota
       - policy
-    DaoOrgQuotaCases:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Enable case creation (L1 analysis) for this org
-        l2_enabled:
-          type: boolean
-          description: Enable L2 (senior AI) analysis for this org; requires enabled
-        score_threshold:
-          type: integer
-          description: Minimum spydertrace score for case creation; 0 means the cases service default applies
-          format: int32
-          maximum: 10000
-        ui:
-          type: boolean
-          description: Expose the cases UI in the console for this org; requires enabled
-      description: Per-org feature gates for the cases service; replaces the existing block when present
   securitySchemes:
     apiToken:
       type: http

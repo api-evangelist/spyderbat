@@ -539,251 +539,6 @@ paths:
           description: not found
 components:
   schemas:
-    NotificationTemplateEmailUpdateInput:
-      type: object
-      properties:
-        body_html:
-          type: string
-          description: HTML body of the email.
-        body_text:
-          type: string
-          description: Simple text body of the email.
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification template.
-        subject:
-          type: string
-          description: Subject of the email.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - subject
-    SessionListNotificationTemplateOutput:
-      type: object
-      properties:
-        notification_templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-        search_total:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_templates:
-          type: integer
-          format: int32
-    SessionUpdateNotificationTemplateOutput:
-      type: object
-      properties:
-        notification_template:
-          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-    NotificationTemplatePagerDutyUpdateInput:
-      type: object
-      properties:
-        class:
-          type: string
-          description: The class/type of the event.
-        component:
-          type: string
-          description: Component of the source machine that is responsible for the event.
-        custom_details:
-          type: object
-          additionalProperties: {}
-          description: Custom details to include in the event.
-        dedup_key:
-          type: string
-          description: A unique identifier for the event, used to deduplicate events.
-          maxLength: 255
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        group:
-          type: string
-          description: Logical grouping of components of a service, useful for filtering alerts.
-        name:
-          type: string
-          description: Name of the notification template.
-        severity:
-          type: string
-          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
-        source:
-          type: string
-          description: The Source machine of the event.
-        summary:
-          type: string
-          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - severity
-      - source
-      - summary
-    SessionCreateNotificationTemplateOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    SessionLoadNotificationTemplateOutput:
-      type: object
-      properties:
-        notification_template:
-          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
-    NotificationTemplateWebhookCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        entire_object:
-          type: boolean
-          description: Send the entire object as the payload. Overrides the payload field.
-        name:
-          type: string
-          description: Name of the notification template.
-        payload:
-          type: object
-          additionalProperties: {}
-          description: Custom payload to send to the webhook.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-    NotificationTemplatePagerDutyCreateInput:
-      type: object
-      properties:
-        class:
-          type: string
-          description: The class/type of the event.
-        component:
-          type: string
-          description: Component of the source machine that is responsible for the event.
-        custom_details:
-          type: object
-          additionalProperties: {}
-          description: Custom details to include in the event.
-        dedup_key:
-          type: string
-          description: A unique identifier for the event, used to deduplicate events.
-          maxLength: 255
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        group:
-          type: string
-          description: Logical grouping of components of a service, useful for filtering alerts.
-        name:
-          type: string
-          description: Name of the notification template.
-        severity:
-          type: string
-          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
-        source:
-          type: string
-          description: The Source machine of the event.
-        summary:
-          type: string
-          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - severity
-      - source
-      - summary
-    NotificationTemplateEmailCreateInput:
-      type: object
-      properties:
-        body_html:
-          type: string
-          description: HTML body of the email.
-        body_text:
-          type: string
-          description: Simple text body of the email.
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification template.
-        subject:
-          type: string
-          description: Subject of the email.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - subject
-    NotificationTemplateWebhookUpdateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        entire_object:
-          type: boolean
-          description: Send the entire object as the payload. Overrides the payload field.
-        name:
-          type: string
-          description: Name of the notification template.
-        payload:
-          type: object
-          additionalProperties: {}
-          description: Custom payload to send to the webhook.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-    NotificationTemplateSlackCreateInput:
-      type: object
-      properties:
-        blocks:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          description: Blocks to send to Slack.
-        description:
-          type: string
-          description: A brief description explaining what the template is for.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification template.
-        tags:
-          type: array
-          items:
-            type: string
-        text:
-          type: string
-          description: Message to send to Slack.
-      required:
-      - name
-      - text
     NotificationTemplateSlackUpdateInput:
       type: object
       properties:
@@ -810,21 +565,6 @@ components:
       required:
       - name
       - text
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
     SessionOutputNotificationTemplate:
       type: object
       properties:
@@ -873,6 +613,266 @@ components:
         version:
           type: integer
           format: int32
+      required:
+      - name
+    NotificationTemplateSlackCreateInput:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Blocks to send to Slack.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        tags:
+          type: array
+          items:
+            type: string
+        text:
+          type: string
+          description: Message to send to Slack.
+      required:
+      - name
+      - text
+    NotificationTemplateEmailUpdateInput:
+      type: object
+      properties:
+        body_html:
+          type: string
+          description: HTML body of the email.
+        body_text:
+          type: string
+          description: Simple text body of the email.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        subject:
+          type: string
+          description: Subject of the email.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - subject
+    SessionListNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+        search_total:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_templates:
+          type: integer
+          format: int32
+    NotificationTemplatePagerDutyUpdateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    SessionLoadNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_template:
+          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+    NotificationTemplatePagerDutyCreateInput:
+      type: object
+      properties:
+        class:
+          type: string
+          description: The class/type of the event.
+        component:
+          type: string
+          description: Component of the source machine that is responsible for the event.
+        custom_details:
+          type: object
+          additionalProperties: {}
+          description: Custom details to include in the event.
+        dedup_key:
+          type: string
+          description: A unique identifier for the event, used to deduplicate events.
+          maxLength: 255
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        group:
+          type: string
+          description: Logical grouping of components of a service, useful for filtering alerts.
+        name:
+          type: string
+          description: Name of the notification template.
+        severity:
+          type: string
+          description: The perceived severity of the notification. Can be one of info, warning, error, or critical or dereference a field or use a template function to populate it such as {{ __pd_severity__ }}.
+        source:
+          type: string
+          description: The Source machine of the event.
+        summary:
+          type: string
+          description: A brief text summary of the event, used to generate the summaries/titles of any associated alerts.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - severity
+      - source
+      - summary
+    NotificationTemplateWebhookUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        entire_object:
+          type: boolean
+          description: Send the entire object as the payload. Overrides the payload field.
+        name:
+          type: string
+          description: Name of the notification template.
+        payload:
+          type: object
+          additionalProperties: {}
+          description: Custom payload to send to the webhook.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+    SessionCreateNotificationTemplateOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    NotificationTemplateEmailCreateInput:
+      type: object
+      properties:
+        body_html:
+          type: string
+          description: HTML body of the email.
+        body_text:
+          type: string
+          description: Simple text body of the email.
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification template.
+        subject:
+          type: string
+          description: Subject of the email.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - subject
+    SessionUpdateNotificationTemplateOutput:
+      type: object
+      properties:
+        notification_template:
+          $ref: '#/components/schemas/SessionOutputNotificationTemplate'
+    NotificationTemplateWebhookCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief description explaining what the template is for.
+          maxLength: 500
+        entire_object:
+          type: boolean
+          description: Send the entire object as the payload. Overrides the payload field.
+        name:
+          type: string
+          description: Name of the notification template.
+        payload:
+          type: object
+          additionalProperties: {}
+          description: Custom payload to send to the webhook.
+        tags:
+          type: array
+          items:
+            type: string
       required:
       - name
   securitySchemes:

@@ -94,6 +94,22 @@ paths:
           description: cluster not found
 components:
   schemas:
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
     ClusterDetails:
       type: object
       properties:
@@ -187,22 +203,6 @@ components:
       description: Cluster details
       required:
       - cluster_uid
-    ResourcePolicy:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
-          type: string
-          maxLength: 24
-      description: Resource policy for RBAC
     RbacConditionMap:
       type: object
       description: Additional conditions which may be applied

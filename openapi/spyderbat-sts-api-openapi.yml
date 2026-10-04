@@ -77,16 +77,6 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    ApiStsAssumeRoleOutput:
-      type: object
-      properties:
-        expires_at:
-          type: integer
-          description: Unix timestamp (seconds) at which the token expires.
-          format: int64
-        token:
-          type: string
-          description: Signed scoped JWT. Present in the Authorization header as 'Bearer <token>' on subsequent requests.
     StsAssumeRoleInput:
       type: object
       properties:
@@ -109,6 +99,16 @@ components:
       required:
       - org_uid
       - role_uid
+    ApiStsAssumeRoleOutput:
+      type: object
+      properties:
+        expires_at:
+          type: integer
+          description: Unix timestamp (seconds) at which the token expires.
+          format: int64
+        token:
+          type: string
+          description: Signed scoped JWT. Present in the Authorization header as 'Bearer <token>' on subsequent requests.
   securitySchemes:
     apiToken:
       type: http
