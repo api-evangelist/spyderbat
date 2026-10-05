@@ -1,0 +1,12 @@
+{
+ "url": "https://api.prod.spyderbat.com/openapi.json",
+ "requested_url": "https://api.prod.spyderbat.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 312183,
+ "sha256": "7612a50a5f56d0c0357f2d20bb6fc327b3f3ca4c09eda8842b139fcfc08d2fef",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.975), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
