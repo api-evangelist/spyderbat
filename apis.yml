@@ -30,7 +30,7 @@ accessModel:
   method: derived
 specificationVersion: '0.20'
 created: '2026-08-29'
-modified: '2026-09-16'
+modified: '2026-10-06'
 image: https://spyderbat.com/favicon.ico
 tags:
 - Company
@@ -673,6 +673,10 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- url: https://spyderbat.com/-news
+  type: Blog
+- url: https://spyderbat.com/-news?format=rss
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/spyderbat-capability-edges.yml
   name: Spyderbat Business Capability Map
