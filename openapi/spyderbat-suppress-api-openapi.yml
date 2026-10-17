@@ -63,6 +63,96 @@ paths:
           description: permission denied
 components:
   schemas:
+    SessionSuppressTraceOutput:
+      type: object
+      properties:
+        applied_policy:
+          $ref: '#/components/schemas/DaoOutputAnalyticsPolicy'
+        matching_policy_exists:
+          type: boolean
+          description: Indicates if a suppression policy already exists for the trace signature
+        policy_preview:
+          $ref: '#/components/schemas/DaoTraceSuppressionPolicy'
+        update_performed:
+          type: boolean
+          description: Indicates if an existing suppression policy was updated instead of a new one being created
+        warnings:
+          type: array
+          items:
+            type: string
+    DaoNamespaceSelectorV2:
+      type: object
+      properties:
+        matchExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
+        matchLabels:
+          type: object
+          additionalProperties:
+            type: string
+    DaoUserSelectorV2:
+      type: object
+      properties:
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
+        user:
+          type: array
+          items:
+            type: string
+    DaoAllowedFlagRule:
+      type: object
+      properties:
+        class:
+          type: string
+        display_name:
+          type: string
+        display_severity:
+          type: string
+    DaoClusterSelectorV2:
+      type: object
+      properties:
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
+    DaoContainerSelectorV2:
+      type: object
+      properties:
+        containerID:
+          type: array
+          items:
+            type: string
+        containerName:
+          type: array
+          items:
+            type: string
+        image:
+          type: array
+          items:
+            type: string
+        imageID:
+          type: array
+          items:
+            type: string
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
     SuppressTraceInput:
       type: object
       properties:
@@ -99,25 +189,34 @@ components:
           description: The UID of the trace signature to suppress. Does not suppress the trace itself, but all traces that match the signature going forward.
       required:
       - trace_uid
-    DaoContainerSelectorV2:
+    DaoPolicyObject:
       type: object
       properties:
-        containerID:
-          type: array
-          items:
-            type: string
-        containerName:
-          type: array
-          items:
-            type: string
-        image:
-          type: array
-          items:
-            type: string
-        imageID:
-          type: array
-          items:
-            type: string
+        apiVersion:
+          type: string
+          description: API Version
+        kind:
+          type: string
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: Policy
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    DaoLinuxServiceSelectorV2:
+      type: object
+      properties:
+        cgroup:
+          type: string
         matchFields:
           type: object
           additionalProperties:
@@ -145,6 +244,63 @@ components:
           type: array
           items:
             type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    DaoExpression:
+      type: object
+      properties:
+        key:
+          type: string
+        operator:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+    DaoTraceSuppressionMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        uid:
+          type: string
+      required:
+      - name
+      - type
+    DaoMachineSelectorV2:
+      type: object
+      properties:
+        hostname:
+          type: array
+          items:
+            type: string
+        machineUID:
+          type: array
+          items:
+            type: string
+        matchFields:
+          type: object
+          additionalProperties:
+            type: string
+        matchFieldsExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoExpression'
     DaoOutputAnalyticsPolicy:
       type: object
       properties:
@@ -201,107 +357,6 @@ components:
       required:
       - name
       - type
-    DaoClusterSelectorV2:
-      type: object
-      properties:
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    SessionSuppressTraceOutput:
-      type: object
-      properties:
-        applied_policy:
-          $ref: '#/components/schemas/DaoOutputAnalyticsPolicy'
-        matching_policy_exists:
-          type: boolean
-          description: Indicates if a suppression policy already exists for the trace signature
-        policy_preview:
-          $ref: '#/components/schemas/DaoTraceSuppressionPolicy'
-        update_performed:
-          type: boolean
-          description: Indicates if an existing suppression policy was updated instead of a new one being created
-        warnings:
-          type: array
-          items:
-            type: string
-    DaoMachineSelectorV2:
-      type: object
-      properties:
-        hostname:
-          type: array
-          items:
-            type: string
-        machineUID:
-          type: array
-          items:
-            type: string
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    DaoNamespaceSelectorV2:
-      type: object
-      properties:
-        matchExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-        matchLabels:
-          type: object
-          additionalProperties:
-            type: string
-    DaoTraceSuppressionMetadata:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-        uid:
-          type: string
-      required:
-      - name
-      - type
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    DaoTraceSuppressionPolicy:
-      type: object
-      properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-        metadata:
-          $ref: '#/components/schemas/DaoTraceSuppressionMetadata'
-        spec:
-          $ref: '#/components/schemas/DaoTraceSuppressionSpec'
-      required:
-      - apiVersion
-      - kind
-      - metadata
-      - spec
     DaoTraceSuppressionSpec:
       type: object
       properties:
@@ -332,77 +387,22 @@ components:
       - enabled
       - mode
       - traceSelector
-    DaoPolicyObject:
+    DaoTraceSuppressionPolicy:
       type: object
       properties:
         apiVersion:
           type: string
-          description: API Version
         kind:
           type: string
-          description: Kind
         metadata:
-          type: object
-          additionalProperties: {}
-          description: Metadata
+          $ref: '#/components/schemas/DaoTraceSuppressionMetadata'
         spec:
-          type: object
-          additionalProperties: {}
-          description: Spec
-      description: Policy
+          $ref: '#/components/schemas/DaoTraceSuppressionSpec'
       required:
       - apiVersion
       - kind
       - metadata
       - spec
-    DaoLinuxServiceSelectorV2:
-      type: object
-      properties:
-        cgroup:
-          type: string
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-    DaoExpression:
-      type: object
-      properties:
-        key:
-          type: string
-        operator:
-          type: string
-        values:
-          type: array
-          items:
-            type: string
-    DaoAllowedFlagRule:
-      type: object
-      properties:
-        class:
-          type: string
-        display_name:
-          type: string
-        display_severity:
-          type: string
-    DaoUserSelectorV2:
-      type: object
-      properties:
-        matchFields:
-          type: object
-          additionalProperties:
-            type: string
-        matchFieldsExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DaoExpression'
-        user:
-          type: array
-          items:
-            type: string
   securitySchemes:
     apiToken:
       type: http

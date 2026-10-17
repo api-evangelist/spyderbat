@@ -475,23 +475,52 @@ paths:
           description: permission denied
 components:
   schemas:
-    ResourcePolicy:
+    DaoSourceAgg:
       type: object
       properties:
+        count:
+          type: integer
+          description: The count for the property value
+          format: int64
+        propertyvalue:
+          type: string
+          description: The value of a property being aggregated upon
+    SrcCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: User supplied description of the source
+          maxLength: 256
         name:
           type: string
-          description: Name of the resource policy
+          description: User supplied name of the source
           maxLength: 32
-        statements:
+        runtime_description:
+          type: string
+          description: Description of the runtime of the source
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
+            type: string
+          description: User supplied tags
+          maxItems: 20
+        type:
           type: string
-          maxLength: 24
-      description: Resource policy for RBAC
-    Source:
+          description: Type of source
+        uid:
+          type: string
+          description: The UID of the source
+          maxLength: 64
+    ApiCountResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+    SrcUpdateInput:
       type: object
       properties:
         active:
@@ -523,10 +552,6 @@ components:
           type: string
           description: User supplied name of the source
           maxLength: 32
-        org_uid:
-          type: string
-          description: The org this source is associated with
-          maxLength: 64
         resource_name:
           type: string
           description: Resource name used for RBAC
@@ -546,10 +571,6 @@ components:
         type:
           type: string
           description: Type of source
-        uid:
-          type: string
-          description: The UID of the source
-          maxLength: 64
         valid_from:
           type: string
           description: Valid from date, the first date this object was valid
@@ -558,8 +579,14 @@ components:
           type: string
           description: Valid to date, the date this object is valid to
           format: date-time
-      required:
-      - uid
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
+    ApiSourceCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
     RbacStatement:
       type: object
       properties:
@@ -590,6 +617,44 @@ components:
       required:
       - effect
       - sid
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
+    ApiSOARListHandlerOutput:
+      type: object
+      properties:
+        investigate_source_url:
+          type: string
+        source:
+          $ref: '#/components/schemas/Source'
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -669,50 +734,7 @@ components:
         uname:
           type: string
       description: Runtime details
-    ApiCountResponse:
-      type: object
-      properties:
-        count:
-          type: integer
-          format: int32
-    ApiSourceCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    ApiSOARListHandlerOutput:
-      type: object
-      properties:
-        investigate_source_url:
-          type: string
-        source:
-          $ref: '#/components/schemas/Source'
-    DaoSourceAgg:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: The count for the property value
-          format: int64
-        propertyvalue:
-          type: string
-          description: The value of a property being aggregated upon
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    SrcUpdateInput:
+    Source:
       type: object
       properties:
         active:
@@ -744,6 +766,10 @@ components:
           type: string
           description: User supplied name of the source
           maxLength: 32
+        org_uid:
+          type: string
+          description: The org this source is associated with
+          maxLength: 64
         resource_name:
           type: string
           description: Resource name used for RBAC
@@ -763,6 +789,10 @@ components:
         type:
           type: string
           description: Type of source
+        uid:
+          type: string
+          description: The UID of the source
+          maxLength: 64
         valid_from:
           type: string
           description: Valid from date, the first date this object was valid
@@ -771,38 +801,8 @@ components:
           type: string
           description: Valid to date, the date this object is valid to
           format: date-time
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
-    SrcCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: User supplied description of the source
-          maxLength: 256
-        name:
-          type: string
-          description: User supplied name of the source
-          maxLength: 32
-        runtime_description:
-          type: string
-          description: Description of the runtime of the source
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 20
-        type:
-          type: string
-          description: Type of source
-        uid:
-          type: string
-          description: The UID of the source
-          maxLength: 64
+      required:
+      - uid
   securitySchemes:
     apiToken:
       type: http

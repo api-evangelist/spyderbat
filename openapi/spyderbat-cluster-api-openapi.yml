@@ -94,22 +94,30 @@ paths:
           description: cluster not found
 components:
   schemas:
-    ResourcePolicy:
+    Orc_apiClusterDetails:
       type: object
       properties:
-        name:
+        agent_uid:
           type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
+          maxLength: 64
+        cluid:
           type: string
-          maxLength: 24
-      description: Resource policy for RBAC
+          maxLength: 64
+        cluster_name:
+          type: string
+          maxLength: 64
+        cluster_uid:
+          type: string
+        spyder_tags:
+          type: object
+          additionalProperties:
+            type: string
+        src_uid:
+          type: string
+          maxLength: 64
+      description: Cluster details
+      required:
+      - cluster_uid
     ClusterDetails:
       type: object
       properties:
@@ -149,6 +157,9 @@ components:
           type: string
           description: Valid to date, the date this object is valid to
           format: date-time
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
     RbacStatement:
       type: object
       properties:
@@ -179,33 +190,22 @@ components:
       required:
       - effect
       - sid
-    Orc_apiClusterDetails:
+    ResourcePolicy:
       type: object
       properties:
-        agent_uid:
+        name:
           type: string
-          maxLength: 64
-        cluid:
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
           type: string
-          maxLength: 64
-        cluster_name:
-          type: string
-          maxLength: 64
-        cluster_uid:
-          type: string
-        spyder_tags:
-          type: object
-          additionalProperties:
-            type: string
-        src_uid:
-          type: string
-          maxLength: 64
-      description: Cluster details
-      required:
-      - cluster_uid
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
+          maxLength: 24
+      description: Resource policy for RBAC
   securitySchemes:
     apiToken:
       type: http

@@ -110,21 +110,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
     FingerprintDataSearchJobInput:
       type: object
       properties:
@@ -141,24 +126,21 @@ components:
           description: Whether to return unique results (default false)
       required:
       - policy_types
-    SessionFingerprintSearchResults:
+    ValidationError:
       type: object
       properties:
-        errors:
-          type: array
-          items: {}
-          description: Errors encountered during object hydration.
-        result_count:
-          type: integer
-          description: The number of results returned.
-          format: int32
-        results:
-          type: array
-          items: {}
-          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
-        status:
+        err_msg:
           type: string
-          description: The status of the query. If non-empty, the job is still running or failed - poll again.
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     FingerprintDataSearchInput:
       type: object
       properties:
@@ -200,6 +182,24 @@ components:
       - end_time
       - query
       - start_time
+    SessionFingerprintSearchResults:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: Errors encountered during object hydration.
+        result_count:
+          type: integer
+          description: The number of results returned.
+          format: int32
+        results:
+          type: array
+          items: {}
+          description: Fingerprint objects with covered_by_policy boolean indicating if matched by any analytics policy of the requested types.
+        status:
+          type: string
+          description: The status of the query. If non-empty, the job is still running or failed - poll again.
   securitySchemes:
     apiToken:
       type: http

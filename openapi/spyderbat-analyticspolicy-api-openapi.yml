@@ -243,6 +243,11 @@ paths:
           description: permission denied
 components:
   schemas:
+    ApiAnalyticsPolicyCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
     AnalyticsPolicyCreateInput:
       type: object
       properties:
@@ -256,6 +261,44 @@ components:
           maxItems: 30
       required:
       - policy
+    DaoPolicyObject:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: API Version
+        kind:
+          type: string
+          description: Kind
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Metadata
+        spec:
+          type: object
+          additionalProperties: {}
+          description: Spec
+      description: Policy
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     DaoOutputAnalyticsPolicy:
       type: object
       properties:
@@ -312,49 +355,6 @@ components:
       required:
       - name
       - type
-    ApiAnalyticsPolicyCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    DaoPolicyObject:
-      type: object
-      properties:
-        apiVersion:
-          type: string
-          description: API Version
-        kind:
-          type: string
-          description: Kind
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: Metadata
-        spec:
-          type: object
-          additionalProperties: {}
-          description: Spec
-      description: Policy
-      required:
-      - apiVersion
-      - kind
-      - metadata
-      - spec
     AnalyticsPolicyUpdateInput:
       type: object
       properties:

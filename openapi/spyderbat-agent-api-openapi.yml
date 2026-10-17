@@ -177,22 +177,79 @@ paths:
           description: not found
 components:
   schemas:
-    ResourcePolicy:
+    Agent:
       type: object
       properties:
-        name:
+        agent_registration_uid:
           type: string
-          description: Name of the resource policy
-          maxLength: 32
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/RbacStatement'
-          description: List of statements to be examined by the resource policy
-        version:
+          description: Agent registration associated with the agent
+        agent_type:
+          type: integer
+          description: Agent type
+          format: int32
+        agent_version:
           type: string
-          maxLength: 24
-      description: Resource policy for RBAC
+          description: Version of the agent installed
+        agent_work_id:
+          type: integer
+          description: Agent work Id
+          format: int32
+        archived:
+          type: boolean
+          description: Is the agent archived?
+        description:
+          type: string
+          description: Description of the purpose of the agent
+        kernel_version:
+          type: string
+          description: Kernel version of the installed system
+        live_test_ran:
+          type: integer
+          description: Did the live test run?
+          format: int32
+        live_test_result:
+          type: integer
+          description: Result of the live test
+          format: int32
+        muid:
+          type: string
+          description: Muid created on by the agent on the system
+        org_uid:
+          type: string
+          description: Agent OrgUID
+        os_pretty_name:
+          type: string
+          description: Pretty name of the operating system the agent is installed on
+        resource_name:
+          type: string
+          description: Resource name used for RBAC
+        resource_policy:
+          $ref: '#/components/schemas/ResourcePolicy'
+        runtime_description:
+          type: string
+          description: Description of the runtime of the agent
+        runtime_details:
+          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
+        standby:
+          type: boolean
+          description: Is the agent in standby mode?
+        uid:
+          type: string
+          description: Agent UID
+        user_work_id:
+          type: integer
+          format: int32
+        valid_from:
+          type: string
+          description: Valid from date, the first date this object was valid
+          format: date-time
+        valid_to:
+          type: string
+          description: Valid to date, the date this object is valid to
+          format: date-time
+    RbacConditionMap:
+      type: object
+      description: Additional conditions which may be applied
     RbacStatement:
       type: object
       properties:
@@ -223,6 +280,22 @@ components:
       required:
       - effect
       - sid
+    ResourcePolicy:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the resource policy
+          maxLength: 32
+        statements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacStatement'
+          description: List of statements to be examined by the resource policy
+        version:
+          type: string
+          maxLength: 24
+      description: Resource policy for RBAC
     Orc_apiRuntimeDetails:
       type: object
       properties:
@@ -302,79 +375,6 @@ components:
         uname:
           type: string
       description: Runtime details
-    Agent:
-      type: object
-      properties:
-        agent_registration_uid:
-          type: string
-          description: Agent registration associated with the agent
-        agent_type:
-          type: integer
-          description: Agent type
-          format: int32
-        agent_version:
-          type: string
-          description: Version of the agent installed
-        agent_work_id:
-          type: integer
-          description: Agent work Id
-          format: int32
-        archived:
-          type: boolean
-          description: Is the agent archived?
-        description:
-          type: string
-          description: Description of the purpose of the agent
-        kernel_version:
-          type: string
-          description: Kernel version of the installed system
-        live_test_ran:
-          type: integer
-          description: Did the live test run?
-          format: int32
-        live_test_result:
-          type: integer
-          description: Result of the live test
-          format: int32
-        muid:
-          type: string
-          description: Muid created on by the agent on the system
-        org_uid:
-          type: string
-          description: Agent OrgUID
-        os_pretty_name:
-          type: string
-          description: Pretty name of the operating system the agent is installed on
-        resource_name:
-          type: string
-          description: Resource name used for RBAC
-        resource_policy:
-          $ref: '#/components/schemas/ResourcePolicy'
-        runtime_description:
-          type: string
-          description: Description of the runtime of the agent
-        runtime_details:
-          $ref: '#/components/schemas/Orc_apiRuntimeDetails'
-        standby:
-          type: boolean
-          description: Is the agent in standby mode?
-        uid:
-          type: string
-          description: Agent UID
-        user_work_id:
-          type: integer
-          format: int32
-        valid_from:
-          type: string
-          description: Valid from date, the first date this object was valid
-          format: date-time
-        valid_to:
-          type: string
-          description: Valid to date, the date this object is valid to
-          format: date-time
-    RbacConditionMap:
-      type: object
-      description: Additional conditions which may be applied
   securitySchemes:
     apiToken:
       type: http

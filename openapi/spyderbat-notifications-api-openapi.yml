@@ -315,25 +315,37 @@ paths:
           description: not found
 components:
   schemas:
-    SessionLoadNotificationSettingsOutput:
-      type: object
-      properties:
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
-    SessionTestNotificationOutput:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Contains information on inspecting the success or failure of the test notification.
-    NotificationSettingsSetInput:
+    SessionDisableNotificationSettingsOutput:
       type: object
       properties:
         notification_settings:
           $ref: '#/components/schemas/DaoNotificationSettings'
-        trigger:
-          type: string
-          description: Used when setting the notifications for a specific trigger is required. Agent health has multiple so it must be specified.
+    SessionInitializeNotificationSettingsOutput:
+      type: object
+      properties:
+        NotificationSettings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    SessionSetNotificationSettingsOutput:
+      type: object
+      properties:
+        NotificationSettings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+    SessionListNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          type: array
+          items:
+            $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
+        search_total:
+          type: integer
+          format: int32
+        total_notification_settings:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
     NotificationSettingsInitializeInput:
       type: object
       properties:
@@ -342,61 +354,6 @@ components:
           items:
             type: string
           description: The uids of the notification targets to send notifications to. This can be configured later.
-    SessionInitializeNotificationSettingsOutput:
-      type: object
-      properties:
-        NotificationSettings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-    NotificationSettingsTestInput:
-      type: object
-      properties:
-        notification_settings_uid:
-          type: string
-          description: The notification settings UID to test.
-        record:
-          type: object
-          additionalProperties: {}
-          description: Record is the data to use when testing the notification. Fields in the record can be dereferenced by the template. For saved query notifications this will be the model or event record that matched the query.
-        target_uid:
-          type: string
-          description: The target UID to test.
-        template_uid:
-          type: string
-          description: The template UID to test.
-    DaoNotificationSettings:
-      type: object
-      properties:
-        aggregate:
-          type: boolean
-          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
-        aggregate_by:
-          type: array
-          items:
-            type: string
-          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
-        aggregate_seconds:
-          type: integer
-          description: Overwrite the default notification aggregation window.
-          format: int64
-        cooldown:
-          type: integer
-          description: Cooldown in seconds for the notification.
-          format: int64
-        cooldown_by:
-          type: array
-          items:
-            type: string
-          description: Cooldown by the specified fields.
-        is_enabled:
-          type: boolean
-        target_map:
-          type: object
-          additionalProperties:
-            type: string
-          description: Map of notification targets to optional templates.
-        uid:
-          type: string
-          description: Not required for creation, will be auto-generated. Included in return values for reference.
     DaoNotificationSettingsDBObj:
       type: object
       properties:
@@ -449,32 +406,75 @@ components:
       properties:
         notification_settings:
           $ref: '#/components/schemas/DaoNotificationSettings'
-    SessionSetNotificationSettingsOutput:
+    NotificationSettingsTestInput:
       type: object
       properties:
-        NotificationSettings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-    SessionDisableNotificationSettingsOutput:
+        notification_settings_uid:
+          type: string
+          description: The notification settings UID to test.
+        record:
+          type: object
+          additionalProperties: {}
+          description: Record is the data to use when testing the notification. Fields in the record can be dereferenced by the template. For saved query notifications this will be the model or event record that matched the query.
+        target_uid:
+          type: string
+          description: The target UID to test.
+        template_uid:
+          type: string
+          description: The template UID to test.
+    NotificationSettingsSetInput:
       type: object
       properties:
         notification_settings:
           $ref: '#/components/schemas/DaoNotificationSettings'
-    SessionListNotificationSettingsOutput:
+        trigger:
+          type: string
+          description: Used when setting the notifications for a specific trigger is required. Agent health has multiple so it must be specified.
+    SessionTestNotificationOutput:
       type: object
       properties:
-        notification_settings:
+        message:
+          type: string
+          description: Contains information on inspecting the success or failure of the test notification.
+    DaoNotificationSettings:
+      type: object
+      properties:
+        aggregate:
+          type: boolean
+          description: Aggregate notifications sent for this object. If enabled, notifications are aggregated over a minute before being sent out as a single notification.
+        aggregate_by:
           type: array
           items:
-            $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
-        search_total:
+            type: string
+          description: Aggregate notifications by the specified fields. By default, Spyderbat will identify the best fields to aggregate by.
+        aggregate_seconds:
           type: integer
-          format: int32
-        total_notification_settings:
+          description: Overwrite the default notification aggregation window.
+          format: int64
+        cooldown:
           type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
+          description: Cooldown in seconds for the notification.
+          format: int64
+        cooldown_by:
+          type: array
+          items:
+            type: string
+          description: Cooldown by the specified fields.
+        is_enabled:
+          type: boolean
+        target_map:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map of notification targets to optional templates.
+        uid:
+          type: string
+          description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionLoadNotificationSettingsOutput:
+      type: object
+      properties:
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsDBObj'
   securitySchemes:
     apiToken:
       type: http

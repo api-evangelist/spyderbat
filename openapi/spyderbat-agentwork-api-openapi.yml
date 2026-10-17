@@ -214,6 +214,41 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
 components:
   schemas:
+    AgentSetAgentWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+    AgentSetOrgWorkInput:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: User defined tags
+        work:
+          $ref: '#/components/schemas/Orc_apiAgentWork'
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     ApiAgentWorkOutput:
       type: object
       properties:
@@ -224,6 +259,16 @@ components:
           description: User defined tags
         work:
           $ref: '#/components/schemas/Orc_apiAgentWork'
+    Orc_apiAgentWork:
+      type: object
+      properties:
+        work:
+          type: array
+          items:
+            $ref: '#/components/schemas/Orc_apiBatWork'
+          description: Array of bats to execute
+          maxItems: 32
+      description: Agent work, which is sent to the agents
     Orc_apiBatWork:
       type: object
       properties:
@@ -256,51 +301,6 @@ components:
           type: object
           additionalProperties: {}
           description: Newest version of the bat from the repository
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    AgentSetOrgWorkInput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
-    AgentSetAgentWorkInput:
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: User defined tags
-        work:
-          $ref: '#/components/schemas/Orc_apiAgentWork'
-    Orc_apiAgentWork:
-      type: object
-      properties:
-        work:
-          type: array
-          items:
-            $ref: '#/components/schemas/Orc_apiBatWork'
-          description: Array of bats to execute
-          maxItems: 32
-      description: Agent work, which is sent to the agents
   securitySchemes:
     apiToken:
       type: http

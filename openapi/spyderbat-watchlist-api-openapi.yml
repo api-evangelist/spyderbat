@@ -185,11 +185,46 @@ paths:
           description: permission denied
 components:
   schemas:
+    DaoWatchlist:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        name:
+          type: string
+        org_uid:
+          type: string
+        resource_name:
+          type: string
+          description: Resource name utilized by RBAC
+        updated_at:
+          type: string
+        valid_from:
+          type: string
     ApiWatchlistCreateHandlerOutput:
       type: object
       properties:
         id:
           type: string
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     WatchlistCreateInput:
       type: object
       properties:
@@ -214,41 +249,6 @@ components:
       required:
       - files
       - name
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    DaoWatchlist:
-      type: object
-      properties:
-        files:
-          type: array
-          items:
-            type: string
-        id:
-          type: string
-        name:
-          type: string
-        org_uid:
-          type: string
-        resource_name:
-          type: string
-          description: Resource name utilized by RBAC
-        updated_at:
-          type: string
-        valid_from:
-          type: string
   securitySchemes:
     apiToken:
       type: http

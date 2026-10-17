@@ -395,180 +395,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    ResultsInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        limit:
-          type: integer
-          description: Maximum number of results to return
-          format: int32
-          maximum: 10000
-        token:
-          type: string
-          description: Where to start the query in the result set from
-          maxLength: 128
-    ObjectsWalkGraphInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        ids:
-          type: array
-          items:
-            type: string
-          description: Array of IDs to resolve into records
-          maxItems: 2000
-          minItems: 1
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionGraphLinkRule'
-          description: The rules to use to walk the graph
-          maxItems: 2000
-      required:
-      - ids
-    SessionObjectStartQueryResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items: {}
-          description: List of ids that are not in the database
-        query_id:
-          type: string
-          description: Optional ID that can be passed to poll results to get the rest of the results
-          maxLength: 128
-        results:
-          type: array
-          items: {}
-          description: Objects matching the requested ids
-    ObjectsPollResultsInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        query_id:
-          type: string
-          description: Query ID returned by start query
-          maxLength: 128
-      required:
-      - query_id
-    ConvertInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        query:
-          type: string
-    SessionGraphLinkRule:
-      type: object
-      properties:
-        field:
-          type: string
-          description: The field of the object which contains an ID or list of IDs
-        max_depth:
-          type:
-          - integer
-          - 'null'
-          description: The maximum number of times to resolve this link
-          format: int32
-        object_schema:
-          type: string
-          description: The short schema of the objects with this link
-      required:
-      - field
-      - object_schema
-    ValidateInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        group_by:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionGrouping'
-          description: What fields to use for grouping, a non-empty array causes the output to be treated as a histogram
-        is_for_realtime_search:
-          type: boolean
-        order_by:
-          description: Fields to order the results by
-        output_fields:
-          type: array
-          items:
-            type: string
-          description: 'What fields to output from the query; default: ["id"]'
-        query:
-          type: string
-        schema:
-          type: string
-    ObjectsStopQueryInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        query_id:
-          type: string
-          description: Query ID returned by start query
-          maxLength: 128
-      required:
-      - query_id
-    SessionObjectQueryResponse:
-      type: object
-      properties:
-        err_array:
-          type: array
-          items: {}
-          description: List of errors from object query
-        results:
-          type: array
-          items: {}
-          description: Objects matching the requested ids
-        retryable:
-          type: array
-          items:
-            type: string
-          description: List of IDs that were not found and can be retried
-    ObjectsStartQueryInput:
-      type: object
-      properties:
-        context_uid:
-          type: string
-          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
-        ids:
-          type: array
-          items:
-            type: string
-          description: Array of IDs to resolve into records
-          maxItems: 2000
-          minItems: 1
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionGraphLinkRule'
-          description: The rules to use to walk the graph
-          maxItems: 2000
-      required:
-      - ids
-    SessionGrouping:
-      type: object
-      properties:
-        bins:
-          type: array
-          items:
-            type: number
-            format: double
-          description: The bins to use for grouping this field, if it is numeric
-        name:
-          type: string
-          description: The field name to group by
     SearchInput:
       type: object
       properties:
@@ -622,7 +448,51 @@ components:
       - query
       - schema
       - start_time
-    ObjectsInput:
+    SessionObjectStartQueryResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: {}
+          description: List of ids that are not in the database
+        query_id:
+          type: string
+          description: Optional ID that can be passed to poll results to get the rest of the results
+          maxLength: 128
+        results:
+          type: array
+          items: {}
+          description: Objects matching the requested ids
+    SessionObjectPollResultsResponse:
+      type: object
+      properties:
+        complete:
+          type: boolean
+          description: Whether or not the data is complete, meaning there are no more results
+        errors:
+          type: array
+          items: {}
+          description: List of errors from object query
+        results:
+          type: array
+          items: {}
+          description: Objects matching the requested ids
+    ResultsInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        limit:
+          type: integer
+          description: Maximum number of results to return
+          format: int32
+          maximum: 10000
+        token:
+          type: string
+          description: Where to start the query in the result set from
+          maxLength: 128
+    ObjectsStartQueryInput:
       type: object
       properties:
         context_uid:
@@ -635,8 +505,84 @@ components:
           description: Array of IDs to resolve into records
           maxItems: 2000
           minItems: 1
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGraphLinkRule'
+          description: The rules to use to walk the graph
+          maxItems: 2000
       required:
       - ids
+    SessionGraphLinkRule:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field of the object which contains an ID or list of IDs
+        max_depth:
+          type:
+          - integer
+          - 'null'
+          description: The maximum number of times to resolve this link
+          format: int32
+        object_schema:
+          type: string
+          description: The short schema of the objects with this link
+      required:
+      - field
+      - object_schema
+    ValidateInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        group_by:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionGrouping'
+          description: What fields to use for grouping, a non-empty array causes the output to be treated as a histogram
+        is_for_realtime_search:
+          type: boolean
+        order_by:
+          description: Fields to order the results by
+        output_fields:
+          type: array
+          items:
+            type: string
+          description: 'What fields to output from the query; default: ["id"]'
+        query:
+          type: string
+        schema:
+          type: string
+    ObjectsPollResultsInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        query_id:
+          type: string
+          description: Query ID returned by start query
+          maxLength: 128
+      required:
+      - query_id
+    SessionObjectQueryResponse:
+      type: object
+      properties:
+        err_array:
+          type: array
+          items: {}
+          description: List of errors from object query
+        results:
+          type: array
+          items: {}
+          description: Objects matching the requested ids
+        retryable:
+          type: array
+          items:
+            type: string
+          description: List of IDs that were not found and can be retried
     Parse_Search_QueryInput:
       type: object
       properties:
@@ -690,20 +636,74 @@ components:
       - query
       - schema
       - start_time
-    SessionObjectPollResultsResponse:
+    ObjectsWalkGraphInput:
       type: object
       properties:
-        complete:
-          type: boolean
-          description: Whether or not the data is complete, meaning there are no more results
-        errors:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        ids:
           type: array
-          items: {}
-          description: List of errors from object query
-        results:
+          items:
+            type: string
+          description: Array of IDs to resolve into records
+          maxItems: 2000
+          minItems: 1
+        rules:
           type: array
-          items: {}
-          description: Objects matching the requested ids
+          items:
+            $ref: '#/components/schemas/SessionGraphLinkRule'
+          description: The rules to use to walk the graph
+          maxItems: 2000
+      required:
+      - ids
+    ObjectsInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        ids:
+          type: array
+          items:
+            type: string
+          description: Array of IDs to resolve into records
+          maxItems: 2000
+          minItems: 1
+      required:
+      - ids
+    SessionGrouping:
+      type: object
+      properties:
+        bins:
+          type: array
+          items:
+            type: number
+            format: double
+          description: The bins to use for grouping this field, if it is numeric
+        name:
+          type: string
+          description: The field name to group by
+    ConvertInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        query:
+          type: string
+    ObjectsStopQueryInput:
+      type: object
+      properties:
+        context_uid:
+          type: string
+          description: Context UID for this query, it's used to track the query as it flows through the system, and shouldn't be exposed to customers
+        query_id:
+          type: string
+          description: Query ID returned by start query
+          maxLength: 128
+      required:
+      - query_id
   securitySchemes:
     apiToken:
       type: http

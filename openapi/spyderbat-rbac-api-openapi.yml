@@ -96,14 +96,6 @@ components:
         tags:
           type: string
           description: Validation tag which failed
-    ApiRBACActions:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/RBACAction'
-          maxItems: 25
     RBACAction:
       type: object
       properties:
@@ -122,6 +114,14 @@ components:
           description: ResourceName which meets the requirements of RBAC resource naming
           maxLength: 128
     CanUserPerformInput:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RBACAction'
+          maxItems: 25
+    ApiRBACActions:
       type: object
       properties:
         actions:

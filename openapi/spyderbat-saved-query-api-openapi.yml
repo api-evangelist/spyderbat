@@ -332,35 +332,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    SessionUpdateSavedQueryOutput:
-      type: object
-      properties:
-        saved_query:
-          $ref: '#/components/schemas/SessionOutputSavedQuery'
-    SessionLoadSavedQueryOutput:
-      type: object
-      properties:
-        saved_query:
-          $ref: '#/components/schemas/SessionOutputSavedQuery'
-    SavedQueryUpdateInput:
-      type: object
-      properties:
-        additional_settings:
-          type: object
-          additionalProperties: {}
-        description:
-          type: string
-          maxLength: 500
-          minLength: 1
-        name:
-          type: string
-          maxLength: 128
-          minLength: 1
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettings'
-        query:
-          type: string
-          maxLength: 65535
     SessionSavedQueryShowAdditionalSettingsOutput:
       type: object
       properties:
@@ -368,22 +339,7 @@ components:
           type: object
           additionalProperties: {}
           description: Additional settings fields and their corresponding types
-    ValidationError:
-      type: object
-      properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
-        tags:
-          type: string
-          description: Validation tag which failed
-    DaoNotificationSettings:
+    DaoNotificationSettingsObj:
       type: object
       properties:
         aggregate:
@@ -417,6 +373,83 @@ components:
         uid:
           type: string
           description: Not required for creation, will be auto-generated. Included in return values for reference.
+    SessionLoadSavedQueryOutput:
+      type: object
+      properties:
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
+    SavedQueryUpdateInput:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        description:
+          type: string
+          maxLength: 500
+          minLength: 1
+        name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettings'
+        query:
+          type: string
+          maxLength: 65535
+    SessionUpdateSavedQueryOutput:
+      type: object
+      properties:
+        saved_query:
+          $ref: '#/components/schemas/SessionOutputSavedQuery'
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
+    SessionCreateSavedQueryOutput:
+      type: object
+      properties:
+        uid:
+          type: string
+    SessionOutputSavedQuery:
+      type: object
+      properties:
+        additional_settings:
+          type: object
+          additionalProperties: {}
+        created_by:
+          type: string
+        description:
+          type: string
+        last_used:
+          type: integer
+          format: int64
+        name:
+          type: string
+        notification_settings:
+          $ref: '#/components/schemas/DaoNotificationSettingsObj'
+        org_uid:
+          type: string
+        query:
+          type: string
+        schema:
+          type: string
+        uid:
+          type: string
+        valid_from:
+          type: integer
+          format: int64
     SessionQueryDependentResources:
       type: object
       properties:
@@ -450,12 +483,7 @@ components:
       - name
       - query
       - schema
-    SessionCreateSavedQueryOutput:
-      type: object
-      properties:
-        uid:
-          type: string
-    DaoNotificationSettingsObj:
+    DaoNotificationSettings:
       type: object
       properties:
         aggregate:
@@ -509,34 +537,6 @@ components:
           type: integer
           description: Total number of saved queries
           format: int32
-    SessionOutputSavedQuery:
-      type: object
-      properties:
-        additional_settings:
-          type: object
-          additionalProperties: {}
-        created_by:
-          type: string
-        description:
-          type: string
-        last_used:
-          type: integer
-          format: int64
-        name:
-          type: string
-        notification_settings:
-          $ref: '#/components/schemas/DaoNotificationSettingsObj'
-        org_uid:
-          type: string
-        query:
-          type: string
-        schema:
-          type: string
-        uid:
-          type: string
-        valid_from:
-          type: integer
-          format: int64
   securitySchemes:
     apiToken:
       type: http

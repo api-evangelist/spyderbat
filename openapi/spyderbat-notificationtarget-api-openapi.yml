@@ -571,7 +571,7 @@ paths:
           description: not found
 components:
   schemas:
-    NotificationTargetSlackCreateInput:
+    NotificationTargetWebhookCreateInput:
       type: object
       properties:
         description:
@@ -581,21 +581,22 @@ components:
         name:
           type: string
           description: Name of the notification target.
+        password:
+          type: string
+          description: Optional password for basic auth.
         tags:
           type: array
           items:
             type: string
         url:
           type: string
-          description: URL to send the notification to.
+          description: URL to send the webhook to.
+        user_name:
+          type: string
+          description: Optional username for basic auth.
       required:
       - name
       - url
-    SessionNotificationTargetLoadOutput:
-      type: object
-      properties:
-        notification_target:
-          $ref: '#/components/schemas/SessionOutputNotificationTarget'
     NotificationTargetSlackUpdateInput:
       type: object
       properties:
@@ -616,7 +617,100 @@ components:
       required:
       - name
       - url
-    NotificationTargetWebhookCreateInput:
+    SessionNotificationTargetUpdateOutput:
+      type: object
+      properties:
+        notification_target:
+          $ref: '#/components/schemas/SessionOutputNotificationTarget'
+    NotificationTargetEmailUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        emails:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send notifications to.
+          maxItems: 100
+          minItems: 1
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - emails
+      - name
+    NotificationTargetSlackCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          description: URL to send the notification to.
+      required:
+      - name
+      - url
+    NotificationTargetPagerDutyUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        name:
+          type: string
+          description: Name of the notification target.
+        routing_key:
+          type: string
+          description: Routing key for the PagerDuty service.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - routing_key
+    NotificationTargetEmailCreateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification target.
+          maxLength: 500
+        emails:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send notifications to.
+          maxItems: 100
+          minItems: 1
+        name:
+          type: string
+          description: Name of the notification target.
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - emails
+      - name
+    NotificationTargetWebhookUpdateInput:
       type: object
       properties:
         description:
@@ -657,6 +751,22 @@ components:
         tags:
           type: string
           description: Validation tag which failed
+    SessionNotificationTargetListOutput:
+      type: object
+      properties:
+        notification_targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionOutputNotificationTarget'
+        search_total:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_targets:
+          type: integer
+          format: int32
     SessionOutputNotificationTarget:
       type: object
       properties:
@@ -704,32 +814,6 @@ components:
           format: int32
       required:
       - name
-    NotificationTargetWebhookUpdateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the notification target.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification target.
-        password:
-          type: string
-          description: Optional password for basic auth.
-        tags:
-          type: array
-          items:
-            type: string
-        url:
-          type: string
-          description: URL to send the webhook to.
-        user_name:
-          type: string
-          description: Optional username for basic auth.
-      required:
-      - name
-      - url
     NotificationTargetPagerDutyCreateInput:
       type: object
       properties:
@@ -750,96 +834,12 @@ components:
       required:
       - name
       - routing_key
-    SessionNotificationTargetListOutput:
-      type: object
-      properties:
-        notification_targets:
-          type: array
-          items:
-            $ref: '#/components/schemas/SessionOutputNotificationTarget'
-        search_total:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_targets:
-          type: integer
-          format: int32
     SessionCreateNotificationTargetOutput:
       type: object
       properties:
         uid:
           type: string
-    NotificationTargetPagerDutyUpdateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the notification target.
-          maxLength: 500
-        name:
-          type: string
-          description: Name of the notification target.
-        routing_key:
-          type: string
-          description: Routing key for the PagerDuty service.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - routing_key
-    NotificationTargetEmailUpdateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the notification target.
-          maxLength: 500
-        emails:
-          type: array
-          items:
-            type: string
-          description: List of email addresses to send notifications to.
-          maxItems: 100
-          minItems: 1
-        name:
-          type: string
-          description: Name of the notification target.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - emails
-      - name
-    NotificationTargetEmailCreateInput:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description of the notification target.
-          maxLength: 500
-        emails:
-          type: array
-          items:
-            type: string
-          description: List of email addresses to send notifications to.
-          maxItems: 100
-          minItems: 1
-        name:
-          type: string
-          description: Name of the notification target.
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - emails
-      - name
-    SessionNotificationTargetUpdateOutput:
+    SessionNotificationTargetLoadOutput:
       type: object
       properties:
         notification_target:

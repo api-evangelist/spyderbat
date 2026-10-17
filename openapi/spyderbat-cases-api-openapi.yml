@@ -1466,47 +1466,91 @@ paths:
           description: not found
 components:
   schemas:
-    CaseSendToSeniorAIInput:
+    CaseCloseInput:
       type: object
       properties:
-        instructions:
+        aiRating:
           type: string
-          description: Optional free-text instructions to the senior AI
+          description: Optional AI rating
+          maxLength: 64
+        note:
+          type: string
+          description: Optional closing note
           maxLength: 10000
-        priorityOverride:
+        verdict:
+          type: string
+          description: Verdict; when set, an assessment row is written
+          maxLength: 64
+        verdictReason:
+          type: string
+          description: Optional verdict reason
+          maxLength: 10000
+    CaseAddNoteInput:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Note text (1–10000 characters)
+          maxLength: 10000
+          minLength: 1
+      required:
+      - text
+    CaseAugmentInput:
+      type: object
+      properties:
+        additional_content:
+          type: string
+          description: Additional context to feed to the AI
+          maxLength: 100000
+    CaseCreateInput:
+      type: object
+      properties:
+        author:
+          type: string
+          description: Author of the case
+          minLength: 1
+        priority:
+          type: string
+          description: 'Case priority: Low, Normal, or High'
+        refIds:
+          type: array
+          items:
+            type: string
+          description: Reference IDs (e.g. alert IDs)
+        rootTraceId:
+          type: string
+          description: Root trace ID for the case
+          minLength: 1
+      required:
+      - author
+      - rootTraceId
+    CaseSearchInput:
+      type: object
+      properties:
+        filters:
+          description: Search filters (state, assignedTo, priority, score ranges, MITRE tactic, date ranges, search text)
+        includeFacets:
           type:
           - boolean
           - 'null'
-          description: Optional priority override
-        references:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-          description: Optional reference objects
-    CaseSnoozeInput:
+          description: Include disjunctive facet counts
+        page:
+          description: Pagination {offset, limit}
+        sort:
+          description: Sort specification [{field, order}]
+    CaseAddHelperInput:
       type: object
       properties:
-        reason:
+        helperUser:
           type: string
-          description: Optional reason
-          maxLength: 10000
-        until:
-          type: string
-          description: Wake time (RFC 3339)
-          format: date-time
-      required:
-      - until
-    CaseAssignInput:
-      type: object
-      properties:
-        assignedTo:
-          type: string
-          description: UID of the target assignee
+          description: UID of the user to add as a helper
           maxLength: 256
           minLength: 1
+        reason:
+          type: string
+          description: Optional free-text reason
       required:
-      - assignedTo
+      - helperUser
     CaseRegenSummaryInput:
       type: object
       properties:
@@ -1545,6 +1589,44 @@ components:
       - agent
       - caseIds
       - pipeline
+    CaseSendToSeniorAIInput:
+      type: object
+      properties:
+        instructions:
+          type: string
+          description: Optional free-text instructions to the senior AI
+          maxLength: 10000
+        priorityOverride:
+          type:
+          - boolean
+          - 'null'
+          description: Optional priority override
+        references:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          description: Optional reference objects
+    CaseEditNoteInput:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Updated note text (1–10000 characters)
+          maxLength: 10000
+          minLength: 1
+      required:
+      - text
+    CaseAssignInput:
+      type: object
+      properties:
+        assignedTo:
+          type: string
+          description: UID of the target assignee
+          maxLength: 256
+          minLength: 1
+      required:
+      - assignedTo
     CaseBulkMergeInput:
       type: object
       properties:
@@ -1567,72 +1649,23 @@ components:
       required:
       - sourceIds
       - targetCaseId
-    CaseAddHelperInput:
-      type: object
-      properties:
-        helperUser:
-          type: string
-          description: UID of the user to add as a helper
-          maxLength: 256
-          minLength: 1
-        reason:
-          type: string
-          description: Optional free-text reason
-      required:
-      - helperUser
-    CaseEditNoteInput:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Updated note text (1–10000 characters)
-          maxLength: 10000
-          minLength: 1
-      required:
-      - text
-    CaseAddNoteInput:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Note text (1–10000 characters)
-          maxLength: 10000
-          minLength: 1
-      required:
-      - text
-    CaseCloseInput:
+    CaseAssessmentInput:
       type: object
       properties:
         aiRating:
           type: string
           description: Optional AI rating
           maxLength: 64
+        flag:
+          description: Optional flag payload
         note:
           type: string
-          description: Optional closing note
+          description: Optional note (max 10000 chars)
           maxLength: 10000
         verdict:
           type: string
-          description: Verdict; when set, an assessment row is written
+          description: Optional verdict
           maxLength: 64
-        verdictReason:
-          type: string
-          description: Optional verdict reason
-          maxLength: 10000
-    CaseMergeInput:
-      type: object
-      properties:
-        note:
-          type: string
-          description: Optional free-text note attached to both merge events
-          maxLength: 10000
-        targetCaseId:
-          type: string
-          description: ID of the case to merge into
-          maxLength: 36
-          minLength: 1
-      required:
-      - targetCaseId
     CasePatchInput:
       type: object
       properties:
@@ -1705,66 +1738,33 @@ components:
           - string
           - 'null'
           description: Updated title
-    CaseSearchInput:
+    CaseSnoozeInput:
       type: object
       properties:
-        filters:
-          description: Search filters (state, assignedTo, priority, score ranges, MITRE tactic, date ranges, search text)
-        includeFacets:
-          type:
-          - boolean
-          - 'null'
-          description: Include disjunctive facet counts
-        page:
-          description: Pagination {offset, limit}
-        sort:
-          description: Sort specification [{field, order}]
-    CaseCreateInput:
-      type: object
-      properties:
-        author:
+        reason:
           type: string
-          description: Author of the case
-          minLength: 1
-        priority:
+          description: Optional reason
+          maxLength: 10000
+        until:
           type: string
-          description: 'Case priority: Low, Normal, or High'
-        refIds:
-          type: array
-          items:
-            type: string
-          description: Reference IDs (e.g. alert IDs)
-        rootTraceId:
-          type: string
-          description: Root trace ID for the case
-          minLength: 1
+          description: Wake time (RFC 3339)
+          format: date-time
       required:
-      - author
-      - rootTraceId
-    CaseAssessmentInput:
+      - until
+    CaseMergeInput:
       type: object
       properties:
-        aiRating:
-          type: string
-          description: Optional AI rating
-          maxLength: 64
-        flag:
-          description: Optional flag payload
         note:
           type: string
-          description: Optional note (max 10000 chars)
+          description: Optional free-text note attached to both merge events
           maxLength: 10000
-        verdict:
+        targetCaseId:
           type: string
-          description: Optional verdict
-          maxLength: 64
-    CaseAugmentInput:
-      type: object
-      properties:
-        additional_content:
-          type: string
-          description: Additional context to feed to the AI
-          maxLength: 100000
+          description: ID of the case to merge into
+          maxLength: 36
+          minLength: 1
+      required:
+      - targetCaseId
   securitySchemes:
     apiToken:
       type: http

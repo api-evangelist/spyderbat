@@ -242,19 +242,6 @@ paths:
           description: permission denied
 components:
   schemas:
-    AnalyticsRulesetCreateInput:
-      type: object
-      properties:
-        ruleset:
-          $ref: '#/components/schemas/DaoRulesetObject'
-        tags:
-          type: array
-          items:
-            type: string
-          description: User supplied tags
-          maxItems: 30
-      required:
-      - ruleset
     AnalyticsRulesetUpdateInput:
       type: object
       properties:
@@ -268,6 +255,11 @@ components:
           maxItems: 30
       required:
       - ruleset
+    ApiAnalyticsRulesetCreateHandlerOutput:
+      type: object
+      properties:
+        uid:
+          type: string
     DaoOutputAnalyticsRuleset:
       type: object
       properties:
@@ -324,6 +316,21 @@ components:
       required:
       - name
       - type
+    ValidationError:
+      type: object
+      properties:
+        err_msg:
+          type: string
+          description: Message regarding the validation failure
+        field:
+          type: string
+          description: Field name which failed validation
+        property:
+          type: string
+          description: JSON property name of the field which failed validation
+        tags:
+          type: string
+          description: Validation tag which failed
     DaoRulesetObject:
       type: object
       properties:
@@ -347,26 +354,19 @@ components:
       - kind
       - metadata
       - spec
-    ValidationError:
+    AnalyticsRulesetCreateInput:
       type: object
       properties:
-        err_msg:
-          type: string
-          description: Message regarding the validation failure
-        field:
-          type: string
-          description: Field name which failed validation
-        property:
-          type: string
-          description: JSON property name of the field which failed validation
+        ruleset:
+          $ref: '#/components/schemas/DaoRulesetObject'
         tags:
-          type: string
-          description: Validation tag which failed
-    ApiAnalyticsRulesetCreateHandlerOutput:
-      type: object
-      properties:
-        uid:
-          type: string
+          type: array
+          items:
+            type: string
+          description: User supplied tags
+          maxItems: 30
+      required:
+      - ruleset
   securitySchemes:
     apiToken:
       type: http
